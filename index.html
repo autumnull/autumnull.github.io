@@ -1,0 +1,95 @@
+<canvas id="artbox" style="border:1px solid #c3c3c3;" width="600px" height="800px">
+
+<script>
+var canvas = document.getElementById("artbox");
+var ctx = canvas.getContext("2d");
+
+var TAU = Math.PI * 2;
+
+var moverRadius = 100;
+var moverSpeed = 3;
+var turnSpeed = 0.5;
+
+var colours = [
+    [0,   255, 253],
+    [255, 0,   0  ],
+    [237, 255, 0  ],
+    [255, 135, 0  ],
+    [78,  236, 89 ],
+    [249, 7,   116]
+]
+
+movers = []
+
+function mod(n, m) {
+    return ((n % m) + m) % m;
+};
+
+class Mover {
+    constructor(colour, position) {
+        this.colour = colour;
+        this.x = position[0];
+        this.y = position[1];
+        this.direction = Math.random()*TAU;
+        this.opacity = Math.random()*0.05;
+    }
+
+    draw() {
+        for (var dx = -1; dx <= 1; dx++) {
+            for (var dy = -1; dy <= 1; dy++) {
+                ctx.beginPath();
+                ctx.arc(
+                    this.x + dx*canvas.width,
+                    this.y + dy*canvas.height,
+                    moverRadius, 0, TAU, false);
+                ctx.fillStyle = "rgba(" +
+                    this.colour[0] + "," +
+                    this.colour[1] + "," +
+                    this.colour[2] + "," +
+                    this.opacity + ")"
+                ;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+    }
+
+    update() {
+        this.x += moverSpeed*Math.cos(this.direction);
+        this.y += moverSpeed*Math.sin(this.direction);
+        this.x = mod(this.x, canvas.width);
+        this.y = mod(this.y, canvas.height);
+
+        this.direction += turnSpeed*(Math.random()-1/2);
+
+        this.opacity = Math.random()*2/255+2/255;
+    }
+}
+
+function setup() {
+    var img = new Image();
+    img.src = "movers.png";
+    img.onload = function() {
+        ctx.drawImage(img, 0, 0);
+    }
+
+    movers = [];
+    for (const colour of colours) {
+        var position = [Math.random()*canvas.width, Math.random()*canvas.height];
+        var mover = new Mover(colour, position);
+        movers.push(mover);
+    }
+}
+
+function draw() {
+    for (const mover of movers) {
+        mover.update();
+        mover.draw();
+    }
+    requestAnimationFrame(draw);
+}
+
+setup();
+draw();
+</script>
+</canvas>
