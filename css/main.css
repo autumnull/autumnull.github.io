@@ -1,0 +1,39 @@
+/**
+ * Canvas
+**/
+#artbox {
+  border: 1px solid #c3c3c3;
+  width: 600px;
+  height: 800px;
+}
+
+/**
+ * Cursor (extremely important)
+**/
+#cool-cursor-zone {
+  width: 100%;
+  height: 100%;
+}
+ 
+* {
+  animation: cursorAnimation 0.5s infinite;
+  animation-timing-function: steps(4, jump-start);
+}
+
+@keyframes cursorAnimation {
+  0% {
+    cursor: url("/img/flame_cursor/cursor0.png") 2 11, auto;
+  }
+  25% {
+    cursor: url("/img/flame_cursor/cursor1.png") 2 11, auto;
+  }
+  50% {
+    cursor: url("/img/flame_cursor/cursor2.png") 2 11, auto;
+  }
+  75% {
+    cursor: url("/img/flame_cursor/cursor3.png") 2 11, auto;
+  }
+  100% {
+    cursor: url("/img/flame_cursor/cursor0.png") 2 11, auto;
+  }
+}
