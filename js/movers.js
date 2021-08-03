@@ -48,7 +48,7 @@ class Mover {
                 var y = this.y + dy * canvas.height;
 
                 // generate random opacity between 2 and 4
-                var opacity = (Math.random() + 1) * 2;
+                var opacity = Math.random() * 3 + 1;
                 var opacity_hex = '0' + Math.round(opacity);
                 var color = this.color + opacity_hex;
 
