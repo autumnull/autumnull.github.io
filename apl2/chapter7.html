@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"/>
+    <title>Chapter 7: Working with Program Control </title>
+</head>
+<body>
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="/apl2/chapter6.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="/apl2/contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="/apl2/chapter8.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+<div class="chapter-rule">
+    <hr class="chapter-long">
+    <p>Chapter</p>
+    <hr class="chapter-short">
+    <div>
+        <div>
+            7
+        </div>
+    </div>
+</div>
+<h2>Working with Program Control</h2>
+<p>You have now been introduced to most of the <span class="small-caps">APL2</span> primitive functions and operators. The objectives of this text will be complete once you learn more about building and working with programs. This chapter and the next cover several important programming topics:</p>
+<ul>
+<li>Branching</li>
+<li>Debugging</li>
+<li>Controlling input and output</li>
+<li>Iteration</li>
+<li>Recursion</li>
+</ul>
+<h3 id="section-7.1-control-of-execution-branching">Section 7.1 — Control of Execution: Branching<a href="#section-7.1-control-of-execution-branching" class="section-link">§</a></h3>
+<p>In the previous chapters, program control was managed with array operations, operators, and the normal sequencing of <span class="small-caps">APL2</span> expressions in a program from first to last. This is good <span class="small-caps">APL2</span> style. Sometimes, however, you cannot avoid a requirement to execute the lines of a program in a different order, to execute them repeatedly (a <em>loop</em>), or not to execute them at all. For example, before executing a program, you might want to test a user’s input fgr validity and give an error message if there is a problem. Or you might want to repeat a set of lines—perhaps in a drill program that presents a series of exercises to a student.</p>
+<h4 id="branch-in-a-program">Branch in a Program<a href="#branch-in-a-program" class="section-link">§</a></h4>
+<p><span class="small-caps">APL2</span> provides <strong>branch</strong> (<code>→</code>) to request that a specific line be executed next instead of the next line in sequence. The <strong>branch</strong> function used inside a program differs from the other <span class="small-caps">APL2</span> primitives in two ways:</p>
+<ul>
+<li>It must always be the leftmost symbol in an expression.</li>
+<li>It has no explicit result. That is, it produces no value. Instead, branch determines the next line to be executed.</li>
+</ul>
+<p><strong>Branch</strong> determines the next line to be executed according to the following rules:</p>
+<ol>
+<li><p>If the argument is an empty vector, execution continues with the next line in sequence:</p>
+<pre>      →⍳0</pre></li>
+<li><p>If the argument is a non-empty vector, execution continues with the line whose number is the first item in the vector. That number must be an integer. This expression is a branch to line 5:</p>
+<pre>      →5 7 9</pre></li>
+<li><p>If the integer line number selected is zero or greater than the number of lines in the program, the program terminates normally. If the program has an explicit result, the result is returned. If the program was called by another program, execution of the calling program resumes. The standard way to request termination of a program is to branch to zero:</p>
+<pre>      →0</pre></li>
+<li><p>If <strong>branch</strong> has no argument, execution of the program terminates and execution of any other programs in the calling sequence also terminate. <strong>Branch</strong> without an argument is sometimes called <em>escape</em> or <em>abort</em> or <em>niladic branch</em>. For example, if program <code>A</code> calls program <code>B</code>, which in turn calls program <code>C</code>, an escape branch (<code>→</code>) in <code>C</code> terminates execution of <code>C</code>, <code>B</code>, and <code>A</code>.</p>
+<p>You have used this form of <strong>branch</strong> to clear the state indicator.</p></li>
+</ol>
+<p>As an example of these branching rules, the program <code>AVGCHK</code>, which finds the average of the input vector, includes branching to check that the user’s input is a simple vector:</p>
+<pre>      ∇ Z←AVGCHK V
+[1]   →((1≠⍴⍴V)∨(1≠≡V))/4   ⍝ simple vector?
+[2]   Z←(+/V)÷⍴V            ⍝ find average
+[3]   →0
+[4]   'ARGUMENT NOT A SIMPLE VECTOR. TRY AGAIN.'
+[5]   ∇</pre>
+<p><code>AVGCHK</code> has two branch expressions. The first at line <code>[1]</code> is the validity test. It evaluates to <code>4</code> if <code>V</code> is not both a vector and simple. Then, according to rule 2, the next line executed is line <code>[4]</code>, which displays the error message. If <code>V</code> is a simple vector, the expression at line 1 evaluates to an empty vector. Then, according to rule 1, the next sequential line is executed (line <code>[2]</code> here), which finds the average.</p>
+<p>The second branch expression, at line <code>[3]</code>, terminates the function execution normally (according to rule 3). If the program did not have this second branch expression, line <code>[4]</code> would be executed even though <code>V</code> was a valid argument.</p>
+<h4 id="labels">Labels<a href="#labels" class="section-link">§</a></h4>
+<p>There is a problem with branching to a specific line number: Editing can ruin your branch expressions. Look what happens to the first branch expression when a comment line is inserted at the beginning of <code>AVGCHK</code>:</p>
+<pre>      ∇ Z←AVGCHK V
+[1]  ⍝ finds the average of a simple vector
+[2]   →((1≠⍴⍴V)∨(1≠≡V))/4   ⍝ simple vector?
+[3]   Z←(+/V)÷⍴V            ⍝ find average
+[4]   →0
+[5]   'ARGUMENT NOT A SIMPLE VECTOR. TRY AGAIN.'
+[6]   ∇</pre>
+<p>The insertion causes the line numbers to change, but the value of the branch expression at line <code>[2]</code> does not change. It is still the constant <code>4</code>. If the argument is not a simple vector, program execution terminates without the error messages being displayed on line <code>[5]</code>—not what was intended.</p>
+<p>The way to avoid this problem is to use line labels. A label is a name written at the left edge of an expression and separated from the expression by a colon. When program execution begins, each label is given as its value the line number where it occurs. For example, suppose the following is line <code>[3]</code> of function <code>F</code>:</p>
+<pre>[3] HERE: any APL2 expression</pre>
+<p>When <code>F</code> is called, the local name <code>HERE</code> is given the value 3. Elsewhere in <code>F</code>, if you want to branch to this line, you code:</p>
+<pre>      [10]   →HERE</pre>
+<p>as opposed to:</p>
+<pre>      [10]   →3</pre>
+<p>Later, if you insert a line before line <code>[3]</code>, and the old line <code>[3]</code> becomes line <code>[4]</code>, you won’t need to recode anything. On the next execution of the function, <code>HERE</code> will mean 4.</p>
+<p>Here is the function <code>AVGCHK</code> rewritten with a label:</p>
+<pre>      ∇ Z←AVGCHK V
+[1]  ⍝ finds the average of a simple vector
+[2]   →((1≠⍴⍴V)∨(1≠≡V))/MSG   ⍝ simple vector?
+[3]   Z←(+/V)÷⍴V            ⍝ find average
+[4]   →0
+[5]  MSG:'ARGUMENT NOT A SIMPLE VECTOR. TRY AGAIN.'
+[6]   ∇</pre>
+<p>Always use labels in your programs. The only exception is when the branch terminates program execution (that is, it evaluates to <code>0</code>).</p>
+<p>The branch expressions used in lines <code>[2]</code> and <code>[4]</code> of <code>AVGCHK</code> have a basic difference. Whenever line <code>[4]</code> is executed, the terminating branch to 0 occurs. Such a branch expression is an <em>unconditional branch</em>.</p>
+<p>In contrast, when line <code>[2]</code> is executed, the branch occurs only if the branch expression is not an empty vector. If the branch expression is an empty vector, there is no branch and the next sequential line is executed. Such a branch expression is a <em>conditional branch</em>.</p>
+<h4 id="more-about-conditional-branching">More about Conditional Branching<a href="#more-about-conditional-branching" class="section-link">§</a></h4>
+<p>Any expression that evaluates to an empty vector, a scalar integer, or a vector whose first item is an integer, can be the branch expression. However, the recommended way to write a conditional branch is in this form:</p>
+<pre>      → (condition) / label</pre>
+<p>It is the form used in <code>AVGCHK</code>:</p>
+<pre>[2] →((1≠⍴⍴V)∨(1≠≡V))/MSG ⍝ simple vector?</pre>
+<p>This branch expression uses <strong>replicate</strong> (<code>/</code>). If the condition <code>((1≠⍴⍴V)∨(1≠≡V))</code> evaluates to 1 (true), <code>1/MSG</code> evaluates to <code>MSG</code> and the program branches to <code>MSG</code> (which is line <code>[5]</code> in the example). If the condition evaluates to 0 (false), <code>0/MSG</code> is an empty vector, and so execution of the program continues with the next sequential line.</p>
+<p>This is the most important thing to remember:</p>
+<pre>      → (condition) / label</pre>
+<p>This means “branch to the label <em>if</em> the condition is true.”</p>
+<p>Here’s another example using a conditional branch, The program <code>LOOKUP</code>, when given someone’s name, looks it up in a global list of names. If the name is found, the program returns the index position of the name in the list. If the name is not found, the program appends the name to the list and returns its index:</p>
+<pre>      ∇ Z←LOOKUP NAME
+[1]   Z←NAMES⍳⊂NAME     ⍝ search for NAME
+[2]   →(Z≤⍴NAMES)/0     ⍝ if found, all done
+[3]   NAMES←NAMES,⊂NAME ⍝ else add name to list
+[4]   ∇</pre>
+<p>The execution of <code>LOOKUP</code> is as follows:</p>
+<ul>
+<li>Line <code>[1]</code> searches for the name. Notice that <code>NAME</code> is enclosed to treat it as an entity,</li>
+<li>Line <code>[2]</code> exits from the program if the name is found. The explicit result is its index.</li>
+<li>Line <code>[3]</code> appends the name to the end of the list. <code>Z</code> will already be the index to this new name because <strong>index of</strong> (<code>⍳</code>) produces a number one larger than the length of the vector if an item is not found.</li>
+</ul>
+<p>Although any expression that evaluates to an integer (or to an empty vector) can be used for branching, the standard method shown here makes your programs easier to read and maintain by other people. Occasionally, however, other forms of branch expressions can be used. You will see some of these in programs later in this chapter.</p>
+<p>You can use <strong>replicate</strong> to branch to one of a series of labels as in this example:</p>
+<pre>[2]  →((N&lt;0),(N&gt;0))/MSG1 MSG2</pre>
+<p>This expression causes a branch to <code>MSG1</code> if <code>N</code> is less than zero, and | to <code>MSG2</code> if <code>N</code> is greater than zero. If <code>N</code> is equal to zero, the <strong>replicate</strong> function produces an empty vector, and branch to an empty vector means go to the the next line.</p>
+<h4 id="more-about-unconditional-branching">More about Unconditional Branching<a href="#more-about-unconditional-branching" class="section-link">§</a></h4>
+<p>Unconditional branches have two principal uses:</p>
+<ul>
+<li>Terminate execution of the program.</li>
+<li>Create a branch back to the beginning of a loop.</li>
+</ul>
+<p>You have seen the unconditional branch used in <code>AVGCHK</code> to terminate execution of the program. The unconditional branch at line <code>[6]</code> in the program <code>SQRT</code>, shown next, is used for looping. <code>SQRT</code> implements the algorithm for Newton’s method of approximating the square root of a positive number:</p>
+<pre>      ∇ Z←SQRT N;EST
+[1]  ⍝ square root using Newton's method
+[2]   Z←1                 ⍝ guess at root
+[3]  REFINE:EST←.5×Z+N÷Z  ⍝ refining the guess
+[4]   →(Z=EST)/0          ⍝ quit if no change
+[5]   Z←EST               ⍝ use new guess
+[6]   →REFINE             ⍝ repeat
+[7]   ∇</pre>
+<p>As long as the value of the result generated continues to differ, the program continues execution, looping from line <code>[6]</code> to line <code>[3]</code>.</p>
+<h4 id="stopping-your-program">Stopping Your Program<a href="#stopping-your-program" class="section-link">§</a></h4>
+<p>As soon as you introduce branching into a program, you complicate its execution and open up the possibility for error. For example, you may incorrectly express the condition to terminate a program, potentially causing it to run forever. This condition is called an <em>endless</em> or <em>infinite loop</em>.</p>
+<p>In fact, it is so likely you will run into this situation, that you must learn how to make a program stop at your command before you write programs that include branch expressions.</p>
+<h5 id="attention">Attention<a href="#attention" class="section-link">§</a></h5>
+<p>You tell the system to stop executing programs with an <em>attention</em> signal. Every <span class="small-caps">APL2</span> system has a way to signal attention. Exactly how this is done is different for different systems and even varies depending on the kind of terminal or keyboard you are using. You need to know the right way to signal attention on the device you are using. Some terminals actually have a button labeled <span class="small-caps">ATTN</span> or <span class="small-caps">BREAK</span>. Pressing this button once signals an attention. On <span class="small-caps">IBM</span> 3270-style terminals, pressing the key labeled <span class="small-caps">PA2</span> (<span class="small-caps">PA1</span> in <span class="small-caps">TSO</span> or when session manager not in use) signals attention. If you’re using a session manager and your program produces a lot of output, you may have to take some special action to enable the attention key. For example, using the <span class="small-caps">APL2</span> session manager on an <span class="small-caps">IBM</span> 370 with a 3270-style terminal, you have to press <span class="small-caps">RESET</span> before pressing <span class="small-caps">PA2</span> if the screen is filled with output.</p>
+<p>Here’s a pair of programs you can enter and run to help you determine whether you have found the right key:</p>
+<pre>      ∇Z←PROGA X
+[1]   Z←1000⍴2 '
+[2]   Z←PROGB X
+[3]   ∇
+      
+      ∇Z←PROGB X
+[1]   BCNT←BCNT+1
+[2]   BCNT
+[3]   Z←PROGA X
+[4]   ∇</pre>
+<p><code>PROGA</code> sets the local variable <code>Z</code> to a 1000-item vector, then calls <code>PROGB</code>. <code>PROGB</code> increments a global counter, displays it, then calls <code>PROGA</code>. <code>X</code> is passed from function to function but never used. Clearly, once started, these programs will not terminate on their own. They may use up all available space and terminate with a <code>WS FULL</code> error, but they won’t terminate because of the programming error. In fact, the assignment to <code>Z</code> in <code>PROGA</code> is done precisely so space will be used up before you’ve done too much computing.</p>
+<p>When you’ve located the attention key on the device you’re using, enter the following two expressions, wait a few seconds, then signal attention:</p>
+<pre>      BCNT←0
+      PROGA 5
+1
+2
+3
+4
+5
+6
+7
+8
+  &lt;---(attention signaled)
+PROGA[1]</pre>
+<p>You may get a different response from the one shown here. The program name and the line number in the response you get depend on what function and which line of it are being executed when you press the attention key. The rule is that once attention is signaled, program execution terminates as soon as the end of a line has been reached.</p>
+<p>The global variable <code>BCNT</code> tells you how many times <code>PROGB</code> has been executed. If you enter <code>)SIS</code>, you should find many occurrences of <code>PROGB</code> in the state indicator and many occurrences of <code>PROGA</code> also. Be prepared for a lot of output if you enter <code>)SIS</code>, although on most systems you can also use the attention key to stop output. (On <span class="small-caps">IBM</span> systems using the <span class="small-caps">APL2</span> session manager, output is terminated by the session manager <span class="small-caps">SUPRESS</span> command, normally located on the <span class="small-caps">PF5</span> key.)</p>
+<p>If you reset the state indicator—with <code>)RESET</code>—and enter the two expressions again, you will probably find that execution stops somewhere else and that <code>BCNT</code> has a different value. When you have finished experimenting with these functions, be sure to enter <code>)RESET</code> to clear the state indicator.</p>
+<h5 id="interrupt">Interrupt<a href="#interrupt" class="section-link">§</a></h5>
+<p>Sometimes an attention signal is not enough to make a program stop. Here is a program that looks simple but on most systems will execute a long time:</p>
+<pre>      ∇Z←PROGC X
+[1]   Z←⍟\10000⍴1
+[2]   ∇</pre>
+<p>The expression on line <code>[1]</code> executes almost one hundred million logarithms before reaching the end of line <code>[1]</code>. If you press attention, nothing happens because attention is recognized at end of line.</p>
+<p>A second signal, similar to attention, is available to terminate a program immediately without waiting for the end of a line. This signal is an <em>interrupt</em>. Typically, pressing the attention key twice signals an interrupt. The interrupt causes a line to terminate before the end is reached. possibly in the middle of executing a primitive function. An interrupt signal produces a response very much like an error in the line.</p>
+<p>Call the program <code>PROGC</code>, wait a few seconds, then signal an interrupt (two attentions). You should get something like this:</p>
+<pre>      PROGC 5
+  &lt;---(interrupt signaled)
+INTERRUPT
+PROGC[1] Z←⍟\10000⍴1
+          ^ ^</pre>
+<h5 id="infinite-loops">Infinite Loops<a href="#infinite-loops" class="section-link">§</a></h5>
+<p>When you write programs that loop, it is entirely possible you might write a program that just keeps running. Here’s an example that creates a loop by the unconditional branch at line <code>[2]</code>. In effect, line <code>[1]</code> is evaluated over and over again:</p>
+<pre>      ∇COUNT;I
+[1]   I←0
+[2]  L1:I←I+1
+[3]   →L1
+[4]   ∇</pre>
+<p>Enter the following expression, wait a few seconds, then press attention:</p>
+<pre>      COUNT
+  &lt;---(attention signaled)
+COUNT[1]</pre>
+<p>The value of <code>I</code> tells you how many times line <code>[1]</code> was evaluated.</p>
+<p>As usual, make sure you clean up the state indicator:</p>
+<pre>      )RESET</pre>
+<p>Infinite loops are not necessarily bad. Because <span class="small-caps">APL2</span> is interactive, you can start a computation and stop it when you want to. Maybe it will even eventually stop itself with an error. Even errors are not necessarily bad. It’s alright to write a “quick-and-dirty” program— maybe even with an infinite loop that stops with an error. For example, you write a loop that indexes a vector and does something, then prints a result before incrementing an index and going on to the next item of the vector. This is an infinite loop because you have coded no termination. It will stop because eventually you will index off the end of the vector and get an <code>INDEX ERROR</code>. You’ve got your answers printed out, so who cares about the error? You should <em>not</em>, of course, put “quick-and-dirty” programs into an application you’re building for others. Use them for your own personal computing only.</p>
+<p>Here’s an example of a useful infinite loop. You know that to compute an amount of money after receiving 5% interest, you multiply by 1.05. Here is a program that prints out a report of your balance after each year:</p>
+<pre>      ∇ INT AMT;Y
+[1]   Y←1
+[2]   'YEARS  AMOUNT AT 5% A YEAR'
+[3]  LP:'55555  5555555.55555'⍕ Y(AMT←AMT×1.05)
+[4]   Y←Y+1
+[5]   →LP
+[6]   ∇</pre>
+<p>Line <code>[3]</code> uses the <strong>format</strong> function (<code>⍕</code>) to format the output. <a href="#section-7.5-controlling-output">Section 7.5</a> discusses <strong>format</strong>.</p>
+<p>Here is a sample execution of <code>INT</code>:</p>
+<pre>      INT 331.25
+YEARS   AMOUNT AT 5% A YEAR
+    1     347.8125
+    2     365.20313
+    3     383.46328
+    4     402.63645
+    5     422.76827
+    6     443.90668
+    7     466.10202
+    8     489.40712
+    9     513.87747
+   10     539.57135
+   11     566.54991
+  ...     ...</pre>
+<p>And the report just keeps on going. When you’ve seen enough, press attention and <code>)RESET</code>.</p>
+<h4 id="good-programming-practices-with-branching">Good Programming Practices with Branching<a href="#good-programming-practices-with-branching" class="section-link">§</a></h4>
+<p>In some programming languages, branching is the only means to control the program. In <span class="small-caps">APL2</span>, you often don’t need to write branch statements. Instead, the array operations of the language implicitly do looping. If you ever have a choice between using an array operation and writing a loop, use the array operation. When you are beginning to use <span class="small-caps">APL2</span>, it is a good idea to take the time to look for array operations where they are not apparent. You might be surprised how often they arise. Most <span class="small-caps">APL2</span> systems are optimized for array operations. On these systems, looping is the most inefficient thing you can do. So, if you are about to write a program you think requires a loop, review the problem—maybe you can solve it with <strong>each</strong> or some other operator instead of a loop. Sometimes, however, you cannot avoid looping.</p>
+<h5 id="placing-the-test-for-more-data">Placing the Test for More Data<a href="#placing-the-test-for-more-data" class="section-link">§</a></h5>
+<p>If you determine that your solution requires a loop, you must consider where to place the test for more data. This test can be near the end of the program (a <em>trailing test</em>) or near the beginning (<em>leading test</em>). Here is an outline of the program logic for a trailing test:</p>
+<ol>
+<li>Initialize a counter.</li>
+<li>Use the counter to select some data.</li>
+<li>Apply some computation to the data.</li>
+<li>Increment the counter.</li>
+<li>Test to see whether there is any more data and go back to step 2 if there is.</li>
+</ol>
+<p>The trailing-test logic is common and works for many problems. But when you think about writing a program to solve a problem, you should try to think of some real examples of the data the program will operate on. More often than you might expect, the program will be given empty data. For example, a banking program that selects all the accounts for one person and adds them together might come across someone who is registered with the bank but has no active accounts. The program had better be ready to take the sum of no accounts. Using trailing-test logic will cause the program to fail for this case.</p>
+<p>Here is an outline of the program logic for a leading test:</p>
+<ol>
+<li>Initialize a counter.</li>
+<li>Test to see whether there is any more data and exit if not.</li>
+<li>Use the counter to select some data.</li>
+<li>Apply some computation to the data.</li>
+<li>Increment the counter.</li>
+<li>Branch back to step 2.</li>
+</ol>
+<p>It is usually better to use a leading test rather than a trailing test even though you think you’ll never get an empty case. If you always use this second outline for writing loops, you will have only one scheme to learn to write, and only one scheme to remember when you look at your programs later.</p>
+<h5 id="style-of-branch-expressions">Style of Branch Expressions<a href="#style-of-branch-expressions" class="section-link">§</a></h5>
+<p>Given that you are going to write branch expressions, you have a large choice of possible styles. Any <span class="small-caps">APL2</span> expression that produces a vector whose leading item is an integer can serve as the right argument of a branch. As mentioned before, however, there is one recommended way of branching: <strong>replicate</strong>. Here are two forms of branching using <strong>replicate</strong>:</p>
+<ul>
+<li><p>Branch to <code>L1</code> if a condition is true:</p>
+<pre>       →(condition)/L1</pre></li>
+<li><p>Branch to <code>L1</code> if a condition is false:</p>
+<pre>       →(∼condition)/L1</pre></li>
+</ul>
+<p>These have become the standard forms, but you will often see other forms, like the following:</p>
+<ul>
+<li><p>Branch to <code>L1</code> if a condition is true:</p>
+<pre>       →(condition)↑L1
+       →(condition)⍴L1
+       →L1×⍳condition</pre></li>
+<li><p>Branch to <code>L1</code> if a condition is false:</p>
+<pre>       →(condition)↓L1</pre></li>
+</ul>
+<p>Once you become a proficient programmer, it’s all right to deviate from <strong>replicate</strong> now and again; but to the extent you do, other people will experience trouble reading your programs.</p>
+<h4 id="exercises-for-section-7.1">Exercises for Section 7.1<sup class="answers-note">[<a href="answers.html#section-7.1-control-of-execution-branching">Answers</a>]</sup><a href="#exercises-for-section-7.1" class="section-link">§</a></h4>
+<ol>
+<li><p>Rewrite the <code>SQRT</code> function to check whether the argument is a positive simple scalar.</p></li>
+<li><p>Write a <strong>branch</strong> expression to branch to <code>L1</code> if <code>I</code> is 1, to <code>L2</code> if <code>I</code> is 2, and to <code>L3</code> if <code>I</code> is 3:</p>
+<ol type="a">
+<li>Using <strong>replicate</strong>.</li>
+<li>Using <strong>indexing</strong>.</li>
+</ol></li>
+<li><p>Here is a program that simulates a <strong>multiplication-reduction</strong>:</p>
+<pre>      ∇Z←TIMESR R;I
+[1]  ⍝ times reduction of a simple vector
+[2]   I←Z←1             ⍝ set result and counter
+[3]  L1:Z←Z×R[I]        ⍝ include next product
+[4]   →((⍴R)≥I←I+1)/L1 ⍝ loop back if more
+[5]   ∇</pre>
+<ol type="a">
+<li>Explain why this program fails when given an empty vector.</li>
+<li>Rewrite the program to use a leading test.</li>
+</ol></li>
+<li><p>For each of the following expressions, state under what conditions the branch is taken:</p>
+<ol type="a">
+<li><code>→(1≥≡A)/SIM</code></li>
+<li><code>→(N=⌈N)/INT</code></li>
+<li><code>→('END'∧.=3↑ANS)/0UT</code></li>
+<li><code>→(C=5)↑EQ</code></li>
+<li><code>→(C=5)↓IEQ</code></li>
+<li><code>→('AEIOU'∨.∊WORD)⍴VOW</code></li>
+<li><code>→(NEG,EQ,POS)[2+×DATA]</code></li>
+<li><code>→(0=⍴ANS)/OUT</code></li>
+</ol></li>
+<li><p>The last four decimal digits of a number can be determined with the following expression:</p>
+<pre>      (4⍴10)⊤N</pre>
+<p>However, attempting to find the last four digits of the number <code>2⋆2⋆N</code>, even for a small integer <code>N</code>, would exceed the capacity of a computer. However, if you do multiplication in a loop and truncate the result to four digits at each step, you can produce the last four digits easily.</p>
+<p>Write a function <code>LASTFOUR</code> which will find the last four digits of <code>2⋆2⋆N</code> for any positive integer <code>N</code>.</p>
+<p>Here are some test cases:</p>
+<pre>      2⋆2⋆4
+65536
+      LASTFOUR 4
+5536
+      2⋆2⋆5
+4294967296
+      LASTFOUR 5
+7296
+      LASTFOUR 73
+4896</pre></li>
+</ol>
+<h3 id="section-7.2-debugging-your-program">Section 7.2 — Debugging Your Program<a href="#section-7.2-debugging-your-program" class="section-link">§</a></h3>
+<p>Once a program stops, either with an error or in response to an attention or interrupt signal, you can look for the error and correct it. Earlier you were told that after an error you should always clean up the state indicator with <code>→</code> or <code>)RESET</code>. When you are debugging a program, however, you normally do not clean up the state indicator until after you have determined what has gone wrong. You want to look at the state indicator, and you want to check the values of local variables.</p>
+<p>Here are some things to look at and do:</p>
+<ol>
+<li>Look at the state indicator—<code>)SIS</code>—to see how you got to where you are.</li>
+<li>Look at the arguments of the function that stopped. Are they reasonable values? Are their shapes correct?</li>
+<li>Look at the values of other local variables to see whether inter- mediate results are correct. You can look at any name in the workspace, provided a local name does not shadow it. In the course of your investigation, you may enter <code>)RESET 1</code> to remove one line from the state indicator so that you can look at the values of names that are shadowed. In doing so, you will lose the value of some local names.</li>
+<li>Try sample expressions in immediate execution. If any of them fail, enter <code>→</code> to clear each failed one. Don’t use <code>)RESET</code> because that would clear everything, including the error you’re investigating. If you find the error, you can correct it immediately by editing the function.</li>
+</ol>
+<p>Note the difference between use of <code>→</code> and <code>)RESET 1</code>. The <code>→</code> clears the state indicator of everything up to an immediate execution line. <code>)RESET 1</code> removes exactly one line from the state indicator.</p>
+<p>Here’s an example of how the state indicator is used in debugging. Suppose you have a large set of programs. When you execute them you get the following:</p>
+<pre>      START
+LENGTH ERROR
+COMPUTE[3] Z←X+Y+1
+            ^ ^</pre>
+<p>You wrote the function <code>COMPUTE</code>, and you know it is correct. What could be wrong? Look at the state indicator:</p>
+<pre>      )SIS
+COMPUTE[3] Z←X+Y+1
+            ^ ^
+SCALE[5] <span class="syntax--storage syntax--type syntax--class syntax--temp">TEMP←VALUE÷COMPUTE VALUE
+                   ^^
+START[1] SCALE INPUT
+         ^
+⋆  START
+   ^</pre>
+<p>This looks reasonable to you although you realize you forgot to put a descriptive comment on line 1 of <code>START</code>. You make a note to fix that later.</p>
+<p>You know that in <code>COMPUTE</code>, <code>X</code> and <code>Y</code> are the arguments and are supposed to be the same length. Check it:</p>
+<pre>      ⍴X
+3
+      ⍴Y
+3</pre>
+<p>You got a <code>LENGTH ERROR</code> adding two three-item vectors—very strange. Use the <code>DISPLAY</code> function to look at the structures of the arrays:</p>
+<pre>      DISPLAY X
+.→------------------.
+| .→--. .→--. .→--. |
+| |2 3| |4 5| |6 7| |
+| '∼--' '∼--' '∼--' |
+'∊------------------'
+      DISPLAY Y
+.→---------------------------.
+| .→----. .→----. .→-------. |
+| |1 2 0| |4 3 2| |10 20 30| |
+| '∼----' '∼----' '∼-------' |
+'∊---------------------------'</pre>
+<p>Ask for the shapes of the items:</p>
+<pre>      ⍴¨X
+2 2 2
+      ⍴¨Y
+3 3 3</pre>
+<p>Now you see the problem. <code>X</code> and <code>Y</code> are nested and the items don’t match in length. <code>COMPUTE</code> is not supposed to be called with nested arguments, so the error must be in the caller of <code>COMPUTE</code>.</p>
+<p>Now you can begin to look at the caller of <code>COMPUTE</code>. Start by removing <code>COMPUTE</code> from the state indicator so any variables shadowed by it become visible again:</p>
+<pre>      )RESET 1
+      )SIS
+SCALE[5] <span class="syntax--storage syntax--type syntax--class syntax--temp">TEMP←VALUE÷COMPUTE VALUE
+                   ^^
+START[1] SCALE INPUT
+         ^
+⋆  START
+   ^</pre>
+<p>And repeat the process, looking at the arguments of <code>SCALE</code> and so forth.</p>
+<h4 id="stopping-where-you-choose">Stopping Where You Choose<a href="#stopping-where-you-choose" class="section-link">§</a></h4>
+<p>When <span class="small-caps">APL2</span> detects an error in a program, it terminates execution and displays a message. When you stop a program with attention or interrupt, execution stops—but where it stops is a matter of chance.</p>
+<p>As part of debugging a program called <code>MYPROG</code>, you may want your program to stop if it ever reaches lines <code>[3]</code> or <code>[9]</code>. You could edit the function and make an intentional error on lines <code>[3]</code> and <code>[9]</code>, but there is a better way. <span class="small-caps">APL2</span> permits you to request a program stop with the stop facility. The stop facility is indicated by <code>S∆</code> and the program name, for example, <code>S∆MYPROG</code>. To this name, you assign line numbers as in this example:</p>
+<pre>      S∆MYPROG←3 9</pre>
+<p>When you execute <code>MYPROG</code>, its execution will stop every time line <code>[3]</code> or <code>[9]</code> is selected for execution. Execution stops before anything on the line is evaluated.</p>
+<p>You can see what stops are set by entering the following:</p>
+<pre>      S∆MYPROG
+3 9</pre>
+<p>Whenever you set some stops in a program, they replace the old stops.</p>
+<pre>      S∆MYPROG←5
+      S∆MYPROG
+5</pre>
+<p>You can add a stop to existing stops by using catenate as follows:</p>
+<pre>      S∆MYPROG←S∆MYPROG,3 9
+      S∆MYPROG
+3 5 9</pre>
+<p>You can stop on all lines of a function by entering this:</p>
+<pre>      S∆MYPROG←150</pre>
+<p>If there are fewer than 50 lines, the extra requests are ignored. (Of course, if there are more than 50 lines in the function, you didn’t enter a large enough integer.)</p>
+<p>You remove all stops by setting no stops:</p>
+<pre>      S∆MYPROG←⍳0</pre>
+<h4 id="restarting-your-program">Restarting Your Program<a href="#restarting-your-program" class="section-link">§</a></h4>
+<p>After you’ve stopped your program, you may want to start it again. You may have fixed a program error, altered the value of a variable, or, perhaps, made no change at all.</p>
+<p>There are two ways to restart a program without starting over from the beginning.</p>
+<p>You can restart the execution of the function at the top of the state indicator or at any line of the function by entering a branch arrow (<code>→</code>) followed by the number of the line you want executed next:</p>
+<pre>      →3</pre>
+<p>Typically, you want to restart at the line whose number is in brackets in the <code>)SIS</code> display. However, you can restart on any line you choose.</p>
+<p>You may want to restart execution at the point where execution stopped—perhaps in the middle of a line. You do this by entering:</p>
+<pre>      →⍳0</pre>
+<p>This is true no matter how the program was stopped, but its use is most appropriate after an interrupt. Here’s an example of an expression with an error:</p>
+<pre>      2+QQ×⍳10
+VALUE ERROR
+      2+QQ×⍳10
+         ^</pre>
+<p>You can fix this expression by giving a value to <code>QQ</code> and entering the expression again:</p>
+<pre>      →
+      QQ←10
+      2+QQ×⍳10
+12 22 32 42 52 62 72 82 92 102</pre>
+<p>Alternately, you can give <code>QQ</code> a value and resume the expression from where it left off:</p>
+<pre>      )ERASE QQ
+      2+QQ×⍳10
+VALUE ERROR
+      2+QQ×⍳10
+         ^
+      
+      QQ←10
+12 22 32 42 52 62 72 82 92 102</pre>
+<p>Execution stopped because a value for <code>QQ</code> could not be located. After <code>QQ</code> had a value, <code>→⍳0</code> resumed execution from where it left off without repeating the computation of <code>⍳10</code>. Not having to recompute <strong>interval</strong> is a minimal savings. On the other hand, if instead of <strong>interval</strong>, the function that did not need to be reevaluated was a program that runs for an hour, the savings would be more significant.</p>
+<p>If function <code>F</code> calls function <code>G</code> and <code>G</code> stops, the state indicator looks like this:</p>
+<pre>      )SIS
+G[5] A←X⋆.5
+      ^ ^
+F[7] Z←G X
+      ^^</pre>
+<p>You may want to restart execution in <code>F</code>, not <code>G</code>. To restart on line 7 of <code>7</code>, clear the first line in the state indicator before restarting execution:</p>
+<pre>      )RESET 1
+      )SIS
+F[7] Z←G X
+      ^^
+      →7</pre>
+<p>You can restart on any line of a program you choose as long as the function is at the top of the state indicator.</p>
+<h4 id="tracing-execution">Tracing Execution<a href="#tracing-execution" class="section-link">§</a></h4>
+<p>If you set a stop on every line of a program, you can trace its execution. Each time tho program stops, you can branch to resume execution. This approach, while it works, is tedious; so <span class="small-caps">APL2</span> provides a trace facility (<code>T∆</code>) similar to the stop facility. Unlike the stop facility, the trace facility does not stop execution, Rather, after each line traced has boon completely evaluated, output is generated containing the name of the function, the line number, and the last value computed on that line (if any).</p>
+<p>The use of <code>T∆</code> is the same as <code>S∆</code> in every respect. To set a trace on lines <code>[3]</code> and <code>[9]</code> of <code>MYPROG</code>, enter:</p>
+<pre>      T∆MYPROG←3 9</pre>
+<p>To remove a trace, assign an empty vector:</p>
+<pre>      T∆MYPROG←⍳0</pre>
+<p>As an extended example of tracing, consider the <code>SQRT</code> program. Here are the request and the result for it:</p>
+<pre>      SQRT 5
+2.236067977
+      (SQRT 5)⋆2
+5</pre>
+<p>The program clearly works, but you have no idea how many times the program loops before converging on the answer.</p>
+<p>You can watch the convergence of the approximations by tracing line <code>[3]</code>:</p>
+<pre>      T∆SQRT←3
+      SQRT 5
+SQRT[3] 3
+SQRT[3] 2.333333333
+SQRT[3] 2.238095238
+SQRT[3] 2.236068896
+SQRT[3] 2.236067977
+SQRT[3] 2.236067977
+2.236067977</pre>
+<p>Tracing functions can generate a lot of output. If you get tired of looking at it, press attention. Attention stops the output and stops the program. You can then remove the traces and restart execution.</p>
+<h4 id="exercises-for-section-7.2">Exercises for Section 7.2<sup class="answers-note">[<a href="answers.html#section-7.2-debugging-your-program">Answers</a>]</sup><a href="#exercises-for-section-7.2" class="section-link">§</a></h4>
+<ol>
+<li>Modify the initial guess in the <code>SQRT</code> function to <code>.5 × N</code> and see if the result converges faster.</li>
+<li>Modify the <code>SQRT</code> function and change the estimate of line <code>[2]</code> to <code>Z←1E25</code>.
+<ol type="a">
+<li>Put a trace on line <code>[3]</code> and see how many iterations are needed to compute <code>SQRT 5</code>.</li>
+<li>Try <code>SQRT 1E50</code>.</li>
+<li>Change the initial guess to <code>1</code> and try <code>SQRT 1E50</code>.</li>
+</ol></li>
+</ol>
+<h3 id="section-7.3-prompting-for-input">Section 7.3 — Prompting for Input<a href="#section-7.3-prompting-for-input" class="section-link">§</a></h3>
+<p>Often in the course of running, a program needs some information from the program’s user. The program may want the user to choose which of several reports to print or may want to prompt the user to enter data. This section discusses <span class="small-caps">APL2</span>’s two styles of input: evaluated input and character input.</p>
+<h4 id="evaluated-input">Evaluated Input<a href="#evaluated-input" class="section-link">§</a></h4>
+<p>Putting a <strong>quad</strong> (<code>⎕</code>) anywhere in an expression except to the left of an assignment arrow causes a request for input. The input request is signaled by <code>⎕:</code>, after which <span class="small-caps">APL2</span> expects an entry from the keyboard. Here’s an example:</p>
+<pre>      2×⎕
+⎕:
+      10
+20</pre>
+<p><strong>Quad</strong> is called <em>evaluated input</em> because whatever is entered in response to the <code>⎕:</code> prompt is evaluated as though it were entered in immediate execution mode. It is also sometimes simply called <em>quad input</em>.</p>
+<p>You can enter a long vector by catenating a <strong>quad</strong> at the end of each line of data to be continued:</p>
+<pre>      MAT←3 12⍴6 8 2 5 9 1 2 5 3 7 5 12 4 6,⎕
+⎕:
+      1 0 9 1 2 3 6 9 3 10 4 7 9 12 5 3 9 0 1,⎕
+⎕:
+      7 3 2
+      
+      MAT
+6  8  2   5  9  1  2  5  3  7  5  12
+4  6  1   0  9  1  2  3  6  9  3  10
+4  7  9  12  5  3  9  0  1  7  3   2</pre>
+<p>Inside a program, you can use <strong>quad</strong> to accept an input requested by the program. Here’s a program that asks for your age and produces an output that varies with your entry:</p>
+<pre>      ∇Z←AGE;R1;R2;R3 ⍝ GET AGE OF USER
+[1]   R1←'You''re not born yet'
+[2]   R2←'Thanks'
+[3]   R3←'Wishful thinking'
+[4]   'Enter your age'
+[5]   Z←⎕
+[6]   ⎕←(1++/Z&gt;200 0)⊃R1 R2 R3
+[7]   ∇</pre>
+<p>Here are some sample calls:</p>
+<pre>      AGE
+Enter your age
+⎕:
+      31
+Thanks
+31
+      
+      AGE
+Enter your age
+⎕:
+      300
+Wishful thinking
+300
+      
+      AGE
+Enter your age
+⎕:
+      ¯1
+You're not born yet
+¯1</pre>
+<p>Entering a <code>→</code> or <code>)RESET</code> in response to a <strong>quad</strong> input request terminates the program. As the user of a program, you can use such a response to <strong>quad</strong> to stop execution whenever you want. As a programmer, you cannot prevent a user from stopping a program this way.</p>
+<h4 id="character-input">Character Input<a href="#character-input" class="section-link">§</a></h4>
+<p>A common situation is the need to prompt for character data. For example, a program may request that the user enter his or her name. The program <code>GETNAME</code> uses <strong>quad</strong> to prompt for input. As soon as you test it, you will see the problem it creates:</p>
+<pre>      ∇Z←GETNAME  ⍝ PROMPT FOR USER'S NAME
+[1]   'Enter your name'
+[2]   Z←⎕
+[3]   ∇
+      
+      GETNAME
+Enter your name
+⎕:
+      JIM
+VALUE ERROR
+      JIM
+      ^
+⎕:
+      →</pre>
+<p>The problem is that the user must enter legal <span class="small-caps">APL2</span> expressions in response to a <strong>quad</strong> input request. <code>JIM</code> has no value, so a <code>VALUE ERROR</code> is reported. Worse would be if <code>JIM</code> did have some value. Your program would get a wrong response. For <strong>quad</strong> input, the name (a character string) must be surrounded by quotation marks. People, however, do not use quotation marks when they write their name. Jim would not think to enter:</p>
+<pre>      'JIM'</pre>
+<p>in response to a request for his name. You could, of course, change the prompt to say “Enter your name in single quotes” but this creates extra work for the user and is cumbersome.</p>
+<p>To accept character input, <span class="small-caps">APL2</span> provides <strong>quote-quad</strong> (<code>⍞</code>) input—also called <em>quad-prime input</em>. <strong>Quote-quad</strong> used anywhere in an expression, except to the left of an assignment arrow causes a request for input. No characters are displayed, the keyboard just opens for input. Whatever is typed is gathered into a character vector. It is not evaluated. Here is an example:</p>
+<pre>      ∇Z←GETNAME1
+[1]   'Enter your name'
+[2]   Z←⍞
+[3]   ∇
+      
+      GETNAME1
+Enter your name
+JIM      &lt;---(user typed this)
+JIM      &lt;---(explicit result prints this)</pre>
+<p>The first <code>JIM</code> is the user’s typed response. The second <code>JIM</code> is the explicit result from <code>GETNAME1</code>. It is a three-item character vector. If an <span class="small-caps">APL2</span> expression is entered in response to <strong>quote-quad</strong> input, it is not evaluated. It is accepted as a character string:</p>
+<pre>      X←⍞
+3+4
+      X
+3+4
+      ⍴X
+3</pre>
+<p><strong>Quote-quad</strong> input can be used to enter a vector of character vectors:</p>
+<pre>      VOFV←⌽⍞ ⍞ ⍞
+JIM
+JOHN
+KAREN
+      VOFV
+ KAREN JOHN JIM</pre>
+<p>Note the right-to-left execution and its effect on the result. Because the rightmost quote-quad is the first processed, you can use the following expression for input of a vector of character vectors:</p>
+<pre>      VOFV←⌽⍞ ⍞ ⍞
+JIM
+JOHN
+KAREN
+      VOFV
+ JIM JOHN KAREN</pre>
+<p>Applying <strong>reverse</strong> puts the result into the same order as the entries.</p>
+<p>Here is a practical example of using <strong>quote-quad</strong>:</p>
+<pre>      ∇INVENTORY;ANS  ⍝ inventory program
+[1]   'Need instructions? (Y/N)'
+[2]  ANS←⍞
+[3]   →('N'=↑ANS)/L1  ⍝ branch if answer is no
+[4]   DESCRIBE        ⍝ explain program
+[5]  L1:              ⍝ rest of program
+[6]   ∇</pre>
+<p>Line <code>[1]</code> prints a question. Line <code>[2]</code> asks for character input. Line <code>[3]</code> checks the input and if the response begins with the letter <code>N</code>, branches to <code>L1</code> (line <code>[5]</code>), skipping the output of the description (an incomplete test but simple and effective). Line <code>[4]</code> prints the contents of the variable named <code>DESCRIBE</code>.</p>
+<h4 id="executing-character-input">Executing Character Input<a href="#executing-character-input" class="section-link">§</a></h4>
+<p>There is a problem with using evaluated input (<code>⎕</code>) in a program: You have no means of checking the user’s input before it is evaluated, For example, the program <code>MULT</code> shown next drills the user in the multiplication tables.</p>
+<pre>      ∇MULT N;A;B;ANS;I  ⍝ drill up to N
+[1]  NEXT:(A B)←?2⍴N
+[2]   'How much is' A 'times' B '?'
+[3]   I←¯1
+[4]  L1:I←I+1           ⍝ count wrong answers
+[5]   ANS←⎕             ⍝ prompt for answer
+[6]   →(ANS=A×B)/NEXT   ⍝ branch if good answer
+[7]   →(I=0 1)/L2 L3    ⍝ three way branch
+[8]   'Correct answer is '(A×B)
+[9]   →NEXT
+[10] L2:'Look at this and try again'
+[11]  (−N+5)↑[2]A B⍴'○' ⍝ picture correct answer
+[12]  →L1
+[13] L3:'No.  One more try'
+[141  →L1
+[15]   ∇</pre>
+<p>Because <code>MULT</code> has no means for the user to quit, the user must enter a <code>→</code> in response to <code>⎕:</code> in order to quit. Here’s how the program works:</p>
+<pre>      MULT 12
+ How much is 5 times 4 ?
+⎕:
+      20
+ How much is 6 times 6 ?
+⎕:
+      36
+ How much is 4 times 3 ?
+⎕:
+10
+Look at this and try again
+              ○○○
+              ○○○
+              ○○○
+              ○○○
+⎕:
+      15
+No.  One more try
+⎕:
+      16
+ Correct answer is  12
+ How much is 5 times 6 ?
+⎕:
+      30
+ How much is 5 times 2 ?
+⎕:
+      →</pre>
+<p>Notice the use of <strong>quad</strong> input on line 5 of <code>MULT</code>. Knowing that any <span class="small-caps">APL2</span> expression works in response to a <strong>quad</strong> input, a clever user might give <code>13×2</code> in response to the problem “How much is 13 times 2 ?” Because this response computes the answer, it defeats the purpose of the program.</p>
+<p>Using <strong>quote-quad</strong> input, you can make the program more immune to misuse and more friendly as well. Because the user response with <strong>quote-quad</strong> input is a character vector, you can check that the response contains only numbers. The program can even check for the string <code>HELP</code> and branch to a help routine. Once the user’s input is checked, you need a way to <em>execute</em> the character vector response and evaluate the expression represented by the vector.</p>
+<p>The <span class="small-caps">APL2</span> function <strong>execute</strong> (<code>⍎</code>) converts a character string to an executable expression and attempts to execute it, as in this example:</p>
+<pre>       ⍎'3+4'
+7</pre>
+<p>If you have a character string that represents a vector of numbers, you can use <strong>execute</strong> to get the vector of numbers:</p>
+<pre>      CN1←'23.5 1.76 ¯127'
+      ⍴CN1
+14
+      
+      ⍎CN1
+23.5 1.76 ¯127
+      ⍴⍎CN1
+3</pre>
+<p>You may have a character string representing amounts of money:</p>
+<pre>      CN2←'$1.56 $128.50 $2,400.00'</pre>
+<p>You can’t apply <strong>execute</strong> to this string because it is not the proper representation of an <span class="small-caps">APL2</span> numeric vector. The dollar signs are illegal and the comma is the <span class="small-caps">APL2</span> function <strong>catenate</strong>. However, if you remove the illegal characters, you can execute the string:</p>
+<pre>      ⍎CN2∼'$,'
+1.56 128.5 2400</pre>
+<p>Suppose you have a matrix of characters that represents a set of expressions:</p>
+<pre>      CN3←2 4⍴'6×⍳3⌽−⍳3"
+      
+      CN3
+6×⍳3
+⌽−⍳3</pre>
+<p>You can’t use <strong>execute</strong> on matrices or higher rank arrays—only on vectors and scalars. You can, however, turn a matrix into a vector of its rows, execute each item, and rebuild the matrix:</p>
+<pre>      ⊃⍎¨⊂[2]CN3
+ 6 12 18
+¯3 ¯2 ¯1
+      
+      ⍴⊃⍎¨⊂[2]CN3
+2 3</pre>
+<p>A somewhat different use of <strong>execute</strong> is to extract the value from a variable, given its name. Here is a function that prints information about a variable:</p>
+<pre>      ∇PRINTV NAME;PRINTV
+[1]   PRINTV←⍎NAME
+[2]   'NAME:' NAME ' DEPTH:' (≡PRINTV)
+[3]   'RANK:' (⍴⍴PRINTV) ' SHAPE:' (⍴PRINTV)
+[4]   ∇
+      PRINTV 'CN3'
+ NAME: CN3 DEPTH: 1
+ RANK:  2  SHAPE:  2 4</pre>
+<p>There’s something new in this function: The name of the function is shadowed. This is done to minimize name conflicts. <code>PRINTV</code> can be used to print information about any variable in the workspace except those shadowed by <code>PRINTV</code> itself. Thus, you cannot apply the function to either of the names <code>NAME</code> or <code>PRINTV</code>.</p>
+<p>Using <strong>quote-quad</strong> input and <strong>execute</strong>, you can write a new version of the multiplication drill program that is less likely to fail if the user enters an improper answer:</p>
+<pre>    ∇ MULT1 N;A;B;ANS  ⍝ drill up to N
+[1]  NEXT:(A B)←?2⍴N
+[2]   'How much is' A 'times' B '?'
+[3]   I←¯1
+[4]  L1:I←I+1           ⍝ count wrong answers
+[5]  L1R:ANS←⍞          ⍝ prompt for answer
+[6]   →(∼∧/ANS∊'0123456789')/ER ⍝ only digits
+[7]   ANS←⍎ANS          ⍝ get numeric answer ‘
+[8]   →(ANS=A×B)/NEXT   ⍝ branch if good answer
+[9]   →I↓L2 L3          ⍝ three-way branch
+[10]  'Correct answer is '(A×B)
+[11]  →NEXT
+[12] L2:'Look at this and try again'
+[13]  (−N+5)↑[2]A B⍴'○' ⍝ picture correct answer
+[14]  →L1
+[15] L3:'No.  One more try'
+[16]  →L1
+[17] ER:'Please enter an integer'
+[18]  →L1R
+[19]   ∇</pre>
+<p>The input is now requested using <strong>quote-quad</strong> input. Line <code>[6]</code> checks to ensure that only characters valid in integers were entered.</p>
+<p>This function is still not foolproof. For example, a user could enter more digits than possible in the maximum representable integer. To be completely safe, you need error trapping facilities which are not discussed in this book.</p>
+<h4 id="exercises-for-section-7.3">Exercises for Section 7.3<sup class="answers-note">[<a href="answers.html#section-7.3-prompting-for-input">Answers</a>]</sup><a href="#exercises-for-section-7.3" class="section-link">§</a></h4>
+<ol>
+<li><p>The <code>MULT1</code> program will fail if the user presses enter in response to the prompt for an answer. This failure occurs because an empty character vector does not contain any invalid characters. The <strong>execute</strong> function will not produce any result and <code>MULT1</code> will get a <code>VALUE ERROR</code>. Modify <code>MULT1</code> to check for the empty response.</p></li>
+<li><p>Define a function that converts a given character matrix representation of numeric data to a vector of numbers. Each row of the input character matrix <code>M</code> forms one number in the output matrix.</p></li>
+<li><p>Modify <code>MULT1</code> so it does the following:</p>
+<ol type="a">
+<li>Checks for the entry <code>HELP</code> and prints out instructions.</li>
+<li>Checks for the entries <code>STOP</code> or <code>QUIT</code> and terminates execution.</li>
+<li>Offers a congratulatory message when the user enters a correct answer.</li>
+</ol></li>
+<li><p>Variable <code>N</code> is a two-item vector of character strings and <code>AA</code> and <code>BB</code> are two other variables as follows:</p>
+<pre>      N←'AA' 'BB'
+      AA←'VARIABLE 1'
+      BB←⍳¨⍳4</pre>
+<p>Without mentioning the names <code>AA</code> or <code>BB</code>, write an expression that will produce a new variable <code>AABB</code> which is a two-item vector containing the values of <code>AA</code> and <code>BB</code>.</p></li>
+<li><p>Replace the following sequence of statements from a program with one expression, using <strong>execute</strong>:</p>
+<pre>     →(2=⍴,V)/COLN
+     T←M
+     →CONT
+    COLN:T←M[;1↓V]
+    CONT:</pre></li>
+<li><p>Suppose character matrix <code>M</code> contains the character representation of a numeric array:</p>
+<pre>      M←2 7⍴'2.1 2.22.3 2.4</pre>
+<ol type="a">
+<li>Write an expression to convert <code>M</code> to the equivalent numeric matrix.</li>
+<li>If row <code>1</code> of <code>M</code> contained the representation of two numbers and row 2 contained the representation of three numbers, what error message would be generated by the expression you wrote in part a?</li>
+</ol></li>
+<li><p>State the result of each of the following expressions. State if the result displays or if it is suppressed and where appropriate, give the values of <code>X</code> and <code>Y</code>.</p>
+<ol type="a">
+<li><code>⍎'5×3'</code></li>
+<li><code>⍎'2','5×3'</code></li>
+<li><code>⍎'''5×3'''</code></li>
+<li><code>⍎⍎'''5×3'''</code></li>
+<li><code>⍎'X←5'</code></li>
+<li><code>⍎X←'5×7'</code></li>
+<li><code>⍎'X←5×7‘</code></li>
+<li><code>⍎X,X←'5+3'</code></li>
+<li><code>⍎X,X←' .5+3 '</code></li>
+<li><code>⍎'X←','5+3'</code></li>
+<li><code>⍎X←⍎'5×3'</code></li>
+<li><code>Y←⍎X←''' 3×5'''</code></li>
+</ol></li>
+</ol>
+<h3 id="section-7.4-output-with-quad-and-quote-quad">Section 7.4 — Output with Quad and Quote-Quad<a href="#section-7.4-output-with-quad-and-quote-quad" class="section-link">§</a></h3>
+<p>You can use either <strong>quad</strong> or <strong>quote-quad</strong> for output by placing the symbol to the left of an assignment arrow.</p>
+<h3 id="quad-for-output">Quad for Output<a href="#quad-for-output" class="section-link">§</a></h3>
+<p><code>⎕</code> produces output when it appears on the left of an assignment arrow (<code>←</code>). For an expression that causes output to display, <code>⎕←</code> makes no difference:</p>
+<pre>      ⎕←150.20×1.05⋆5
+191.6974907</pre>
+<p>But <code>⎕</code> is effective when you want to assign a value to a variable and display the value at the same time:</p>
+<pre>      ⎕←T←150.20×1.05⋆5
+191.6974907</pre>
+<p><strong>Quad</strong> is also effective in the middle of an expression to display an intermediate result:</p>
+<pre>      T←150.20×⎕←1.05⋆5
+1.276281562</pre>
+<p>By using <strong>quad</strong> to display an intermediate result, you can trace the internal execution of an expression.</p>
+<h4 id="quote-quad-for-output">Quote-Quad for Output<a href="#quote-quad-for-output" class="section-link">§</a></h4>
+<p>When a value is displayed because of <strong>quote-quad</strong> output, it looks the same as if it had been displayed without the <strong>quote-quad</strong>, but the next output starts at the end of that output instead of on a new line.</p>
+<p>Here’s an example for vectors:</p>
+<pre>      ∇QQO   ⍝ quote-quad output
+[1]   ⍞←1 2 3
+[2]   'ABC'
+[3]   ∇
+      
+1 2 3ABC</pre>
+<p>Programs primarily use <strong>quote-quad</strong> output for output of vectors. You may want to experiment to see what your system does with quote-quad output of higher-rank arrays.</p>
+<h4 id="character-input-following-character-output">Character Input Following Character Output<a href="#character-input-following-character-output" class="section-link">§</a></h4>
+<p>Output following a <strong>quote-quad</strong> output takes place on the same line as the <strong>quote-quad</strong> output. The same is true for <strong>quote-quad</strong> input. Here’s an example:</p>
+<pre>      ∇Z←GETNAME2
+[1]   ⍞←'Enter your name '
+[2]   Z←⍞
+[3]   ∇
+      
+      N←GETNAME2
+Enter your name JIM
+      
+      N
+                JIM
+      ⍴N
+19</pre>
+<p>Using character input after character output you can have a response entered on the same line as the question. The result returned to the program is what was entered. Characters on the line that were not entered become blanks when the value of <code>⍞</code> is given to the program.</p>
+<h4 id="exercises-for-section-7.4">Exercises for Section 7.4<sup class="answers-note">[<a href="answers.html#section-7.4-output-with-quad-and-quote-quad">Answers</a>]</sup><a href="#exercises-for-section-7.4" class="section-link">§</a></h4>
+<ol>
+<li>Write a <code>GETNAME3</code> function similar to <code>GETNAME2</code> shown in the section “Character Input Following Character Output” that deletes leading blanks before returning the result.</li>
+<li>A programming problem often given in earlier programming language courses was: “Write a program to read in a set of numbers, compute their average, place the result in a variable named <code>AVER</code>, and finally display the result.” Write an equivalent <span class="small-caps">APL2</span> expression.</li>
+</ol>
+<h3 id="section-7.5-controlling-output">Section 7.5 — Controlling Output<a href="#section-7.5-controlling-output" class="section-link">§</a></h3>
+<p>Without applying <span class="small-caps">APL2</span> functions, you cannot control output. The system—not you—decides how output should look. Output is not, however, undisciplined. <span class="small-caps">APL2</span> has rules for output, as described in <a href="/apl2/chapter5.html">Chapter 5</a>, and if you know the rules, you can exploit them to gain some control. For example, catenating titles onto a table gives you control over spacing of the columns. The individual numbers, however, are always displayed in some default format. By converting numeric arrays into simple character arrays, the <strong>format</strong> function (<code>⍕</code>) gives you control over the appearance of numbers.</p>
+<h4 id="format">Format<a href="#format" class="section-link">§</a></h4>
+<p>In its simplest form, monadic <strong>format</strong> (<code>⍕</code>) produces a simple character array, which displays the same way as the argument array:</p>
+<pre>      AN←3 3⍴1 134.23 100000 0 ¯15.4 ¯14000 1 .65 0
+      AN
+1 134.23 100000
+0 ¯15.4  ¯14000
+1   0.65      0
+      
+      ⍴AN
+3 3
+      
+      ⍕AN
+1 134.23 100000
+0 ¯15.4  ¯14000
+1   0.65      0
+      
+      ⍴⍕AN
+3 15</pre>
+<p>Of course, if you are only going to display the array, there is no point in applying <strong>format</strong>. However, since the result is a simple character array, you can capture the result and modify it any way you want before displaying it. For example, you may want to replace all the blanks with some non-blank character (as is done for check protection):</p>
+<pre>      FM1←⍕AN
+((,' '=FM1)/,FM1)←'/'
+      
+      FM1
+1/134.23/100000
+0/¯15.4//¯14000
+////0.65//////0</pre>
+<p><strong>Format</strong> also applies to arrays containing characters:</p>
+<pre>      ⍕'ABC',2 3
+ABC 2 3
+      ⍴⍕'ABC',2 3
+7
+      ⍕'SMITH' 'JONES'
+ SMITH JONES
+      ⍴⍕'SMITH' 'JONES'
+13</pre>
+<h4 id="format-by-specification">Format by Specification<a href="#format-by-specification" class="section-link">§</a></h4>
+<p>When <strong>format</strong> (<code>⍕</code>) has a left argument, the function has either of two different names according to whether the left argument is numeric or character.</p>
+<p>If you have a numeric left argument, the function is <strong>format by specification</strong>. If the left argument is two integers, they control the format of every item in the array. The first of the two numbers specifies how many columns in the result <strong>format by specification</strong> produces for each column in the right argument. If the second integer is not negative, it specifies the number of digits to the right of a decimal point:</p>
+<pre>      10 2 ⍕AN
+      1.00    134.23 100000.00
+       .00    ¯15.40 ¯14000.00
+      1.00       .65       .00</pre>
+<p>If you specify the number of digits to the right of the decimal point as zero, then <strong>format by specification</strong> produces no decimal point and displays only integers:</p>
+<pre>      7 0⍕AN
+      1    134 100000
+      0    ¯15 ¯14000
+      1      1      0</pre>
+<p>Notice that, in each case, the numbers are correctly rounded.</p>
+<p>A negative integer as the second item of the left argument requests a result in <em>exponential</em> or <em>scientific</em> notation and the magnitude of the number indicates the number of digits in the mantissa:</p>
+<pre>      10 ¯4⍕AN
+   1.000E0  1.342E2    1.000E5
+   0.000E0 ¯1.540E1   ¯1.400E4
+   1.000E0  6.500E¯1    0.000E0</pre>
+<p>If the first integer in the argument indicates the width is zero, then <strong>format by specification</strong> uses an appropriate width:</p>
+<pre>      0 1⍕AN
+1.0 134.2 100000.0
+ .0 ¯15.4 ¯14000.0
+1.0    .7       .0
+      
+      0 ¯4⍕AN
+1.000E0  1.342E2   1.000E5
+0.000E0 ¯1.540E1  ¯1.400E4
+1.000E0  6.500E¯1  0.000E0</pre>
+<p>If the left argument contains a single number, <strong>format by specification</strong> assumes a width of zero:</p>
+<pre>      1⍕AN
+1.0 134.2 100000.0
+ .0 ¯15.4 ¯14000.0
+1.0    .7       .0</pre>
+<p>You may indicate a different format for each column by specifying a pair of integers for each column:</p>
+<pre>      3 0 10 2 10 ¯4⍕AN
+1      134.23   1.000E5
+0      ¯15.40  ¯1.400E4
+1         .65   0.000E0</pre>
+<h4 id="format-by-example">Format by Example<a href="#format-by-example" class="section-link">§</a></h4>
+<p><strong>Format</strong> (<code>⍕</code>) with a character left argument is called <strong>picture format</strong> or <strong>format by example</strong>. The left argument is a character vector that is an example of how a row of the result should appear, except that the numbers in the vector are controls on formatting instead of data. A <code>5</code> in the left argument is the only digit that doesn’t request any explicit control. Therefore, begin a pattern with all <code>5</code>’s and add controls as they are needed:</p>
+<pre>      PF←'5555.55  555.55  555.555'
+      PF⍕ 8743.25 123.46 145,348
+8743.25   123.46   145.348
+      
+      ⍴PF⍕ 8743.25 123.46 145.348
+24</pre>
+<p>Notice that, in this example the result is a character string as long as the left argument.</p>
+<p>If the left argument contains only one numeric pattern, <strong>format by example</strong> applies it to each of the numbers in the right argument.</p>
+<pre>      ' 5555.55'⍕ 8743.25 123.46 145.348
+8743.25  123.46  145.35</pre>
+<p>Note that when you request two digits to the right of the decimal point, rounding is done.</p>
+<p>By default, neither leading nor trailing zeros are printed. If there are no non-zero digits to the right of the decimal point, then neither the decimal point nor the zeros are produced. If the number is zero (to the requested precision), then nothing is printed:</p>
+<pre>       ' 5555.55'⍕ 8743.25 123  0  145.348
+8743.25  123             145.35</pre>
+<p>A digit <code>0</code> in the pattern is a request to fill in leading or trailing zeros from that point until the decimal point.</p>
+<pre>       ' 5505.50'⍕ 8743.25 123   0  145.348
+8743.25  123.00   00.00  145.35</pre>
+<p>A digit <code>9</code> in the pattern is the same as a digit <code>0</code> unless the value to be formatted is <code>0</code>, in which case there is no padding:</p>
+<pre>       ' 5595.59'⍕ 8743.25 123   0  145.348
+8743.25  123.00          145.35</pre>
+<p>Commas in the pattern are treated as separating symbols as they are in normal U.S. business usage. If a comma would not separate digits in the formatted result, it is not printed:</p>
+<pre>       ' 5,505.50'⍕ 8743.25 123 0  145.348
+8,743.25   123.00    00.00   145.35</pre>
+<p>Other non-digits in the pattern are treated as decorations and are copied into the result:</p>
+<pre>      ' 5,505.50 marks '⍕ 8743.25 123 0
+8,743.25 marks    123.00 marks     00.00 marks</pre>
+<p>If the data represents amounts of money, you may want a currency symbol before each one:</p>
+<pre>      ' $5,505.50'⍕ 8743.25 123 0  145.348
+$8,743.25 $  123.00 $   00.00 $  145.35</pre>
+<p>The dollar sign is just copied into the result in place—it is a decoration. Usually you would want the dollar sign to abut the number without intervening blanks. This is called a floating decoration. There are three digits used to request floating decorations:</p>
+<blockquote>
+<div class="line-block"><code>1</code>— Float decorator if negative.<br>
+<code>2</code>— Float decorator if nonnegative.<br>
+<code>3</code>— Float decorator always.</div>
+</blockquote>
+<p>If your numbers really represent money, you probably want the dollar sign always. Therefore, you can use the digit <code>3</code> anywhere in the pattern (on the left of the decimal point) to request that the dollar sign be floated:</p>
+<pre>      ' $5,503.50'⍕ 8743.25 123 0  145.348
+$8,743.25   $123.00    $00.00   $145.35</pre>
+<p>Picture format rejects any negative numbers unless the pattern provides a place for the negative sign:</p>
+<pre>       ' $5,503.50'⍕ 8743.25 ¯123 0 145.348
+DOMAIN ERROR
+       ' $5,503.50'⍕ 8743.25 ¯123 0 145.348
+       ^           ^</pre>
+<p>You allow for negative numbers by specifying you want a decoration floated against the number if it’s negative (digit <code>1</code>):</p>
+<pre>       ' −1,503.50'⍕ 8743.25 ¯123 0 145.348
+  8,743.25   −123.00     00.00    145.35</pre>
+<p>Note that in this example the mid-minus character is used to signify a negative number. You can choose any group of characters you like as the negative indication. Here’s an example where a dollar sign is attached to every number, but the letters <code>CR</code> are attached only to the negative numbers:</p>
+<pre>      ' $5503.10CR'⍕8743.25 ¯123 0 145.348
+ $8743.25    $123.00CR   $00.00    $145.35</pre>
+<p>A digit <code>4</code> counteracts the action of a <code>1</code>, <code>2</code>, or <code>3</code>, preventing it from affecting the other side of the field, which is then treated as a simple decorator:</p>
+<pre>      ' −5501.40US'⍕8743.25 ¯123 0 145.348
+  8743.25US  −123.00US    00.00US   145.35US</pre>
+<p>In a program, a date might be stored in many different ways. For example the date September 23, 1988 might be stored as a single integer <code>92388</code> (because it takes less space). Here is an expression that turns an integer into a formatted date with the character <code>/</code> as a separator:</p>
+<pre>      '05/05/05'⍕ 92388
+09/23/88</pre>
+<p>Alternatively, a date might be stored as a three-item vector <code>9 23 88</code>. To format a vector as a date, the digit <code>6</code> terminates a field description early. In this example, the placement of <code>6</code>’s in the left argument contains three fields and can format a date stored as a three-item vector:</p>
+<pre>      '06/06/06'⍕ 9 23 88
+09/23/88</pre>
+<p>For the use of digits <code>7</code> and <code>8</code>, see the documentation that comes with your system.</p>
+<h4 id="exercises-for-section-7.5">Exercises for Section 7.5<sup class="answers-note">[<a href="answers.html#section-7.5-controlling-output">Answers</a>]</sup><a href="#exercises-for-section-7.5" class="section-link">§</a></h4>
+<ol>
+<li><p>Write an expression that tests if vector <code>V</code> is a vector of character vectors.</p></li>
+<li><p>Write a function <code>NUMBER</code> that attaches bracketed line numbers onto a matrix as in this example:</p>
+<pre>      NUMBER 2 3⍴⍳6
+[1] 1 2 3
+[2] 4 5 6</pre></li>
+<li><p>Determine the value and shape of the following expressions, where <code>V</code> is defined as:</p>
+<pre>      V← 43.263 9123.468 0 0.739</pre>
+<ol type="a">
+<li><code>'5555.55 '⍕V</code></li>
+<li><code>'5555.55' ⍕V</code></li>
+<li><code>'5555.50 '⍕V</code></li>
+<li><code>'5,555.50 '⍕V</code></li>
+<li><code>'$5,555.50 '⍕V</code></li>
+<li><code>'$0,555.50 '⍕V</code></li>
+<li><code>'5,555.50 DOLLARS '⍕V</code></li>
+<li><code>'$5,535.50 '⍕V</code></li>
+<li><code>'$8,555.50 '⍕V</code></li>
+<li><code>'$_5,535.50 '⍕V</code></li>
+</ol></li>
+<li><p>State the value and the shape of the following expressions, where <code>W</code> is defined as:</p>
+<pre>      W←93.725  ¯27.8  ¯192.83  6754
+a. `'−5,551.55 '⍕W`
+b. `'$5,551.50CR '⍕W`
+c. `'$_5,553.10CR '⍕W`
+d. `'$ −5,551.55 '⍕W`
+e. `'$_−5,551.55 '⍕W`
+f. `'$_5,554.10_CR '⍕W`
+g. `'5,555.55 '⍕W`</pre></li>
+<li><p>Write a function that, given a positive integer, returns the character string containing the representation of that number followed by the appropriate ordinal representation. Here is an example:</p>
+<pre>      ORDINAL 3
+3RD
+      ORDINAL 21
+21ST
+      ORDINAL 11
+11TH</pre></li>
+</ol>
+<h3 id="section-7.6-control-of-execution-iteration">Section 7.6 — Control of Execution: Iteration<a href="#section-7.6-control-of-execution-iteration" class="section-link">§</a></h3>
+<p>Applying some computation repeatedly to different sets of data is called <em>iteration</em>. The most obvious method for implementing an iteration is to write a loop that selects one set of data, applies the computation to that set, then branches back to select another set.</p>
+<p>You have already seen examples where <strong>each</strong> applies a function to every item of a vector. <strong>Each</strong> implements an iteration without looping. Likewise, <strong>reduction</strong> expresses an iteration that reduces a vector to a scalar.</p>
+<p>Writing iterative programs without explicit looping is <em>structured programming</em> and the mechanisms to express the implicit looping are called <em>control structures</em>. In <span class="small-caps">APL2</span>, structured programming is embodied in operators. This section shows how defined operators can be written to provide control structures not available as primitives in <span class="small-caps">APL2</span>. Defined operators defined with explicit branching and looping become the implementation of control structures that are then used without branching and looping.</p>
+<h4 id="a-number-operator">A Number Operator<a href="#a-number-operator" class="section-link">§</a></h4>
+<p><span class="small-caps">APL2</span> permits numbers and characters in the same array. If you ever want to do arithmetic on such arrays, you must isolate the numeric data from the character data. Suppose you want a function that adds its arguments if they are numeric and doesn’t fail if they are character. Here’s how you might want it to work:</p>
+<pre>      2 PLUS 3
+5
+      2 PLUS 'A'
+A</pre>
+<p>Here’s one way to implement such a function:</p>
+<pre>    ∇ Z←L PLUS R
+[1] ⍝ addition on numbers and characters
+[2]   →(0=↑0⍴R)/L1    ⍝ branch if R is numeric
+[3]   Z←R             ⍝ result is R
+[4]   →0
+[5]  L1:→(0=↑0⍴L)/L2  ⍝ branch if L is numeric
+[6]   Z←L             ⍝ result is L
+[7]   →0
+[8]  L2:Z←L+R         ⍝ result is sum
+[9]   ∇</pre>
+<p>This function does, in fact, work as advertised. But what if you also wanted a <strong>subtract</strong>, a <strong>maximum</strong>, and so forth. Instead of writing a large set of very similar functions that differ only in the function applied on line <code>[8]</code>, write an operator to apply an arbitrary function in the prescribed manner:</p>
+<pre>    ∇ Z←L(FN NUMB)R
+[1] ⍝ FN on numbers and characters
+[2]   →(0=↑0⍴R)/L1    ⍝ branch if R is numeric
+[3]   Z←R             ⍝ result is R
+[4]   →0
+[5]  L1:→(0=↑0⍴L)/L2  ⍝ branch if L is numeric
+[6]   Z←L             ⍝ result is L
+[7]   →0
+[8]  L2:Z←L FN R      ⍝ result is computed
+[9] ∇</pre>
+<p>Now, any function can be applied like <code>PLUS</code>:</p>
+<pre>      2 +NUMB 3
+5
+      2 PLUS NUMB 'A'
+A
+      2 −NUMB 3
+¯1
+      'B' +NUMB 5
+B
+      'B' −NUMB 5
+B</pre>
+<p>The expression <code>↑0⍴</code> only checks the type of the first item. Therefore, this operator works only for simple scalars. If you try it on vectors, it may fail:</p>
+<pre>      2 3 'A' +NUMB 10 'B' 4
+DOMAIN ERROR
+NUMB[7]  L2:Z←L FN R
+             ^  ^</pre>
+<p>It is easy, however, to do the desired operation if you limit the arguments of <code>+NUMB</code> to simple scalars. Just apply the function <code>+NUMB</code> to each simple scalar in the vector arguments:</p>
+<pre>      2 3 'A' +NUMB¨ 10 'B' 4
+12 BA</pre>
+<p>Using <strong>each</strong> in the expression makes the operator work on simple arrays but not nested arrays. <a href="#section-7.7-control-of-execution-recursion">Section 7.7</a> shows you how to write a recursive operator that works on nested arrays as well.</p>
+<h4 id="an-each-operator-that-quits-early">An Each Operator That Quits Early<a href="#an-each-operator-that-quits-early" class="section-link">§</a></h4>
+<p>When you apply a function to a set of data using the <strong>each</strong> operator, the function <strong><em>fn</em></strong> applies to each item:</p>
+<pre>      fn¨ data</pre>
+<p>If there are a thousand items, the function will be applied a thousand times. For example, here’s a function that prompts a user for some information and then reads and returns the response:</p>
+<pre>    ∇ Z←READ MSG
+[1]  ⍝ prompt with message then read response
+[2]   MSG
+[3]   Z←⍞
+[4]   ∇</pre>
+<p>If you have an application that wants to prompt for a user’s name, address, and telephone number, you can write this:</p>
+<pre>      RES←READ¨ 'NAME' 'ADDRESS' 'PHONE'
+NAME
+Jim
+ADDRESS
+123 Easy Street
+PHONE
+555-1234
+      
+      ⍴RES
+3
+      
+      RES
+ Jim 123 Easy Street 555-1234</pre>
+<p>Users must enter three responses to three prompts. They cannot quit early nor provide extra data.</p>
+<p>If you want to prompt for a variable amount of information—say name, address, and names of children—you might try this:</p>
+<pre>      RES←READ¨ 'NAME' 'ADDRESS' 'CHILDREN'</pre>
+<p>But this will stop after one child’s name. Here is an operator something like <strong>each</strong> except that it keeps applying the function operand until a certain value is returned:</p>
+<pre>    ∇ Z←(F UNTILV V)R;T
+[1]   Z←⍳0
+[2]  L1:T←F(↑R)      ⍝ apply F to next item
+[3]   →(T≡V)/0       ⍝ quit if V is produced
+[4]   Z←Z,⊂T         ⍝ accumulate result
+[5]   R←1↓R          ⍝ go on to next item
+[6]   →L1
+[7]   ∇</pre>
+<p>The <code>UNTILV</code> operator runs function <code>F</code> using successive items of <code>R</code> as arguments. After each application, it checks to see whether the requested value <code>V</code> has been returned and quits when it is. At some point, the items of <code>R</code> will be exhausted, and <code>R</code> will become an empty vector. <strong>First</strong> still works on an empty vector, so the function <code>F</code> will continue to be called until the value <code>V</code> is produced.</p>
+<p>The <code>UNTILV</code> operator can be used with the <code>READ</code> function by checking for the empty response to the call of <code>READ</code>:</p>
+<pre>      R←(READ UNTILV '') 'NAME' 'ADDRESS' 'CHILDREN'
+NAME
+Jim
+ADDRESS
+123 Easy Street
+CHILDREN
+Margaret
+Matthew
+  &lt;---(empty response)
+      
+      ⍴R
+4
+      R
+ Jim 123 Easy Street Margaret Matthew</pre>
+<h4 id="exercises-for-section-7.6">Exercises for Section 7.6<sup class="answers-note">[<a href="answers.html#section-7.6-control-of-execution-iteration">Answers</a>]</sup><a href="#exercises-for-section-7.6" class="section-link">§</a></h4>
+<ol>
+<li>The operator <code>NUMB</code> shown in the section “A Number Operator” works only for simple scalar arguments. Although <code>NUMB¨</code> will work for other simple argument, it can be awkward. Write a <code>NUMB1</code> operator that applies its operand function to simple arguments of any rank,</li>
+<li>Write a monadic defined function that simulates <strong>interval</strong>.</li>
+</ol>
+<h3 id="section-7.7-control-of-execution-recursion">Section 7.7 — Control of Execution: Recursion<a href="#section-7.7-control-of-execution-recursion" class="section-link">§</a></h3>
+<p>You’ve seen that any defined function can call any other function by using its name in an expression. A defined function that calls itself is a <em>recursive function</em>. Such a function must have a branch that under some condition skips the recursive call, or execution will not stop until some system resource is used up.</p>
+<p>A recursive function generally has the following computations:</p>
+<ol>
+<li>A test to see whether the computation request is simple enough to do without calling the function recursively.</li>
+<li>A computation of the simple case.</li>
+<li>A computation of the <em>n</em>th case, assuming you have the solution for the <em>n</em>-1 case.</li>
+</ol>
+<p>These three parts are not necessarily performed in this order nor so neatly partitioned. In particular, there may be more than one recursive call. That’s all right as long as each is closer to the simple case than the original arguments.</p>
+<p>The first two examples in this section demonstrate the use of recursion to solve computational problems. The first example is a standard mathematical exercise involving a Fibonacci sequence. The second is an entertaining Chinese puzzle called “Tower of Hanoi.” The last example in this section shows the development of a recursive operator.</p>
+<h4 id="fibonacci-numbers">Fibonacci Numbers<a href="#fibonacci-numbers" class="section-link">§</a></h4>
+<p>Writing a recursive function may or may not be the most efficient way to solve problems that require recurring operations. This section discusses a standard example of a recursive program.</p>
+<p>In 1202 A.D., Leonardo Pisano (Fibonacci) published a book, <strong><em>Liber Abaci</em></strong>, which was a major influence on the spread of Hindu-Arabic numerals in Europe (Vilenkin). In this book, he posed the following problem:</p>
+<blockquote>
+<p>Each month the female of a pair of rabbits gives birth to a pair of rabbits one of each sex. Two months later, the female of the new pair gives birth to a pair of rabbits again one of each sex. Find the number of rabbits at the end of the year if there was one pair of rabbits at the beginning of the year.</p>
+</blockquote>
+<p>Of course at the start of the first month there is one pair of rabbits. Assuming that these rabbits are newly born, there is still one pair at the start of the second month. By the start of the third month, there are two pairs—the original pair and their offspring. By the start of the fourth month, the original pair have another pair of offspring bringing the number of pairs to three. One more month and both the original pair and the first offspring have more rabbits. Carrying on this logic leads to the following sequence of numbers:</p>
+<pre>      1 1 2 3 5 8 13 21 ...</pre>
+<p>Notice that each integer is the sum of the two preceding integers in the list. Such a sequence of numbers is a <em>Fibonacci sequence</em> and the numbers are called <em>Fibonacci numbers</em>. The program you are to write must compute the <em>n</em>th Fibonacci number, given <em>n</em>. Thus, if <em>n</em> is 4, the program must compute the fourth Fibonacci number which is 3. Here is the header of the program:</p>
+<pre>      ∇Z←FIB1 N   ⍝ find Nth Fibonacci number</pre>
+<p>There are two keys to writing a recursive function:</p>
+<ol>
+<li>You must know how to do the computation for a simple case.</li>
+<li>You assume that you have already written the function for simple cases and then use it in computing a more complicated case.</li>
+</ol>
+<p>Here’s how you apply these ideas to the computation of the <em>n</em>th Fibonacci number:</p>
+<ol>
+<li><p>If <em>n</em> is 1 or 2, you know that the answer is 1.</p></li>
+<li><p>Assume you have the following function that includes the known case:</p>
+<pre>      ∇Z←FIB1 N   ⍝ find Nth Fibonacci number
+[1]   Z←1         ⍝ assume simple case
+[2]   →(N∊1 2)/0  ⍝ quit if simple case
+[3]</pre>
+<p>Now, write the last lines of the program by making recursive calls. In this case, to get the <em>n</em>th Fibonacci number, you have only to add up the previous two Fibonacci numbers. Here then is the whole function with line <code>[3]</code> making the recursive call:</p>
+<pre>      ∇Z←FIB1 N   ⍝ find Nth Fibonacci number
+[1]   Z←1         ⍝ assume simple case
+[2]   →(N∊1 2)/0  ⍝ quit if simple case
+[3]   Z←(FIB1 N−2) + (FIB1 N−1)
+[4]   ∇</pre></li>
+</ol>
+<p><strong>Beware:</strong> It’s easy to make a mistake and cause your program to go into an infinite recursion. Be prepared to stop execution if no result is produced in a reasonable amount of time.</p>
+<h5 id="iteration-or-recursion">Iteration or Recursion<a href="#iteration-or-recursion" class="section-link">§</a></h5>
+<p>As is often the case with recursive functions, you can write the Fibonacci program in a non-recursive, iterative style, as follows:</p>
+<pre>      ∇Z←FIB2 N;P   ⍝ find Nth Fibonacci number
+[1]  ⍝ P is previous value
+[2]   (P Z)←1
+[3]  L1:→(N∊1 2)/0
+[4]   (P Z)←Z (Z+P) ⍝ compute next number
+[5]   N←N−1
+[6]   →L1
+[7]   ∇</pre>
+<p>It is a matter of personal preference which program you like better. Many people think recursive programs are more elegant than iterative ones. The iterative program is generally easier to debug because every value being used in the computation can be examined if it stops (or if you stop it). In the recursive program, there is localization at each function call with the same names localized.</p>
+<p>For calculating Fibonacci numbers, the iterative program is more efficient because it computes each Fibonacci number up to the <em>n</em>th only once. Iterative programs, however, are not necessarily more efficient than recursive ones.</p>
+<p>Notice that both programs fail to terminate if called with a noninteger. Try each function with an argument of <code>1.5</code> and interrupt execution after a few seconds. Look at the value of local variables and display <code>)SIS</code> after each stop. Don’t forget to clear the state indicator—<code>)RESET</code>—when you have finished.</p>
+<h5 id="closed-formula">Closed Formula<a href="#closed-formula" class="section-link">§</a></h5>
+<p>As is sometimes the case, both the recursive and iterative versions can be replaced by a <em>closed formula</em> that is neither recursive or iterative—it is just an expression. Here is the formula in mathematical notation for the <em>n</em>th Fibonacci number:</p>
+<center>
+    <math>
+        <mrow>
+            <mi>FIB3</mi>
+            <mo stretchy="false">(</mo>
+            <mi>n</mi>
+            <mo stretchy="false">)</mo>
+            <mo>=</mo>
+            <mfrac>
+                <mn>1</mn>
+                <msqrt>
+                    <mn>5</mn>
+                </msqrt>
+            </mfrac>
+            <mo>&InvisibleTimes;</mo>
+            <mo>(</mo>
+            <msup>
+                <mrow>
+                    <mo>(</mo>
+                    <mfrac>
+                        <mrow>
+                            <mn>1</mn>
+                            <mo>+</mo>
+                            <msqrt>
+                                <mn>5</mn>
+                            </msqrt>
+                        </mrow>
+                        <mn>2</mn>
+                    </mfrac>
+                    <mo>)</mo>
+                </mrow>
+                <mrow>
+                    <mi>n</mi>
+                    <mo>+</mo>
+                    <mn>1</mn>
+                </mrow>
+            </msup>
+            <mo>-</mo>
+            <msup>
+                <mrow>
+                    <mo>(</mo>
+                    <mfrac>
+                        <mrow>
+                            <mn>1</mn>
+                            <mo>-</mo>
+                            <msqrt>
+                                <mn>5</mn>
+                            </msqrt>
+                        </mrow>
+                        <mn>2</mn>
+                    </mfrac>
+                    <mo>)</mo>
+                </mrow>
+                <mrow>
+                    <mi>n</mi>
+                    <mo>+</mo>
+                    <mn>1</mn>
+                </mrow>
+            </msup>
+            <mo>)</mo>
+        </mrow>
+    </math>
+</center>
+<p>When you are deciding on your programming approach to a problem, you must consider all alternatives to determine the best one to use in any particular situation.</p>
+<h4 id="tower-of-hanoi">Tower of Hanoi<a href="#tower-of-hanoi" class="section-link">§</a></h4>
+<p>According to legend, when God created the world, he placed sixty-four gold disks on one of three needles, with the disks’ diameters decreasing in size as you look up the needle. A succession of priests has been assigned ever since to move disks from the original needle to one of the other needles. Only one disk at a time may be moved, and at no time may a larger disk be placed upon a smaller one. When all the disks have been transferred to a new needle, the world will come to an end.</p>
+<p>For those of you who are concerned about the possible truth of this story, keep in mind that <code>¯1+2⋆64</code> moves are required to complete the transfer. Performing the moves by hand would take a very long time. Doing it with a very fast high-speed computer is more risky.</p>
+<p>To develop a program to solve this puzzle, first decide on the arguments of the function you will write. Here is the header of the program and the description of the arguments:</p>
+<pre>      ∇N HANOI NEEDLE
+[1]  ⍝ N is the number of disks to be moved
+[2]  ⍝ NEEDLE   is a three-item vector
+[3]  ⍝     [1]  needle containing disks
+[4]  ⍝     [2]  needle to which disks are moved
+[5]  ⍝     [3]  a spare needle
+[6]  ⍝ program moves from [1] to [2] via [3]</pre>
+<p>Suppose there is one disk left to be moved from needle 1 to needle 2. The program would be called like this:</p>
+<pre>      1 HANOI 1 2 3</pre>
+<p>Clearly the solution is to move the one disk from needle 1 to needle 2 and the spare isn’t even used. Therefore, the program will contain the following line:</p>
+<pre>      'MOVE DISK' N 'FROM' NEEDLE[1] 'TO' NEEDLE[2]</pre>
+<p>Knowing the solution to a simple case, you may now express a more complicated case in terms of the simpler case. Suppose you have <em>n</em> disks to move from needle 1 to needle 2. You can move <em>n</em>-1 disks to spare needle 3 (and you assume that the <em>n</em>-1 case is solved), move the last disk to needle 2, then move the <em>n</em>-1 disks from spare needle 3 to needle 2. This process assures that at no time does a disk of larger diameter rest on top of one with smaller diameter.</p>
+<p>The complete program, then, must move n-1 disks from the current needle <code>[1]</code> to a spare <code>[3]</code> by way of <code>[2]</code>. Here’s the expression to do that:</p>
+<pre>      (N−1) HANOI NEEDLE[1 3 2]</pre>
+<p>The remaining disk is moved to its final resting place:</p>
+<pre>      'MOVE DISK' N 'FROM' NEEDLE[1] 'TO' NEEDLE[2]</pre>
+<p>Then the stack of <em>n</em>-1 disks is moved to its final resting place:</p>
+<pre>      (N−1) HANOI NEEDLE[3 2 1]</pre>
+<p>The final requirement is a means to stop the recursion. Clearly when <code>N</code> is zero, there are no disks to move so the program should do nothing. Here, then, is the complete recursive program that solves the Tower of Hanoi problem:</p>
+<pre>      ∇N HANOI NEEDLE
+[1]   →(N=0)/0
+[2]   (N−1) HANOI NEEDLE[1 3 2]
+[3]   'MOVE DISK' N 'FROM' NEEDLE[1] 'TO' NEEDLE[2]
+[4]   (N−1) HANOI NEEDLE[3 2 1]
+[5]   ∇</pre>
+<p>Here’s the execution of this function for <code>N←3</code>,</p>
+<pre>      3 HANOI 1 2 3
+ MOVE DISK 1 FROM  1 TO 2
+ MOVE DISK 2 FROM  1 T0 3
+ MOVE DISK 1 FROM  2 TO 3
+ MOVE DISK 3 FROM  1 TO 2
+ MOVE DISK 1 FROM  3 TO 1
+ MOVE DISK 2 FROM  3 T0 2
+ MOVE DISK 1 FROM  1 T0 2</pre>
+<h4 id="recursive-operators">Recursive Operators<a href="#recursive-operators" class="section-link">§</a></h4>
+<p>In the section “An <strong>Each</strong> Operator That Quits Early,” you saw the defined operator <code>UNTILV</code>, which is used to control iteration of a function. It is also common to write operators that control recursion. For example, suppose you wanted to compute the shape of each simple array (depth 0 or 1) in the following nested array:</p>
+<pre>      G1←2 2⍴(3 4⍴⍳12) 'TWO' (3 3⍴0) (3 4)
+      DISPLAY G1
+.→-------------------.
+↓ .→---------. .→--. |
+| ↓1  2  3  4| |TWO| |
+| |5  6  7  8| '---' |
+| |9 10 11 12|       |
+| '∼---------'       |
+| .→----.      .→--. |
+| ↓0 0 0|      |3 4| |
+| |0 0 0|      '∼--' |
+| |0 0 0|            |
+| '∼----'            |
+'∊-------------------'</pre>
+<p>You certainly know how to do this if the given array is a simple array—just apply the <strong>shape</strong> function (<code>⍴</code>). The beginning of the recursive function, then, is to compute shapes of simple arrays in a nested array:</p>
+<pre>      ∇Z←SIMPLESHAPE R
+[1]  ⍝ compute shape of each simple array in R
+      ...
+[n]   Z←⍴R</pre>
+<p>Now, using the standard method for writing a recursive procedure, assume you can handle up to a depth <em>n</em>-1 argument. If you’re given a depth <em>n</em> argument, you can reduce it to a set of simpler cases by saying:</p>
+<pre>      SIMPLESHAPE¨R</pre>
+<p>Using <strong>each</strong> works because a depth <code>N</code> array contains at least one depth <code>N−1</code> array and no array that is deeper. Thus, the complete recursive function, including the test to stop recursion, is as follows:</p>
+<pre>     ∇Z←SIMPLESHAPE R
+[1]  ⍝ compute shape of each simple array in R
+[2]   →(1&lt;≡R)/L1         ⍝ branch if not simple
+[3]   Z←⍴R               ⍝ shape of simple
+[4]   →0                 ⍝ exit
+[5]  L1:Z←SIMPLESHAPE¨R  ⍝ recur
+[6]   ∇</pre>
+<p>Here is the execution of this function on the given data:</p>
+<pre>      SIMPLESHAPE G1
+3 4  3
+3 3  2
+      
+      DISPLAY SIMPLESHAPE G1
+.→----------.
+↓ .→--. .→. |
+| |3 4| |3| |
+| '∼--' '∼' |
+| .→--. .→. |
+| |3 3| |2| |
+| '∼--' '∼' |
+'∊----------'</pre>
+<p><code>SIMPLESHAPE</code> is an entirely appropriate function, but suppose that you also want a function to <strong>ravel</strong> each simple array and one to apply the <strong>first</strong> function to each simple array. You would have to write a whole set of recursive functions, where each one applied a different monadic function to the simple arrays in a nested array. These functions would all be identical except for the function applied in line <code>[3]</code> (and the comments). Writing such a series of similar functions is a sure sign that it may be more appropriate to write an operator that applies its function operand in the prescribed way.</p>
+<p>Here is a defined operator that applies the recursive procedure to any monadic function:</p>
+<pre>     ∇Z←(F MDEPTH)R
+[1]  ⍝ apply F to each simple array in R
+[2]   →(1&lt;≡R)/L1         ⍝ branch if not simple
+[3]   Z←F R              ⍝ apply F to simple R
+[4]   →0                 ⍝ exit
+[5]  L1:Z←(F MDEPTH)¨R   ⍝ recur
+[6]   ∇</pre>
+<p>Notice that the header gives <code>MDEPTH</code> as the name of the operator and <code>F</code> as the name of the function operand. The rest of the definition is identical to <code>SIMPLESHAPE</code> except that <code>F</code> is applied in line <code>[3]</code> instead of <strong>shape</strong>.</p>
+<p>The next two examples show the operator applied first to <strong>shape</strong> and then to <strong>ravel</strong>:</p>
+<pre>      DISPLAY (⍴MDEPTH) G1
+.→----------.
+↓ .→--. .→. |
+| |3 4| |3| |
+| '∼--' '∼' |
+| .→--. .→. |
+| |3 3| |2| |
+| '∼--' '∼' |
+'∊----------'
+      
+      (, MDEPTH) G1
+ 1 2 3 4 5 6 7 8 9 10 11 12  TWO
+ 0 0 0 0 0 0 0 0 0           3 4
+      DISPLAY (, MDEPTH) G
+.→-----------------------------------.
+↓ .→-------------------------. .→--. |
+| |1 2 3 4 5 6 7 8 9 10 11 12| |TWO| |
+| '∼-------------------------' '---' |
+| .→----------------.          .→--. |
+| |0 0 0 0 0 0 0 0 0|          |3 4| |
+| '∼----------------'          '∼--' |
+'∊-----------------------------------'</pre>
+<p>It is a straightforward extension to write a <code>DDEPTH</code> operator that does an operation on dyadic functions, similar to <code>MDEPTH</code>. Writing this operator is left as an exercise.</p>
+<h4 id="inadvertent-recursion">Inadvertent Recursion<a href="#inadvertent-recursion" class="section-link">§</a></h4>
+<p>You may find during testing of a program that you are in a recursive situation when you didn’t intend to be. Here’s a common way this can happen. Suppose you’re defining a program to take an average:</p>
+<pre>      ∇Z←AVG R
+[1] Z←(+/R)÷⍴R
+[2]</pre>
+<p>Now you want to execute the function to try it out, and you enter this:</p>
+<pre>[2] AVG 1 3 5
+[3]</pre>
+<p>But you forgot to close the definition. Therefore, the test execution line is accepted as line <code>[2]</code> of the function. If you close the function and then execute it, you’ll get an infinite recursion.</p>
+<p>Whenever a program takes an unusually long time to execute, press attention and check the state indicator. In this example, a look at the state indicator will show you that recursion is taking place.</p>
+<h4 id="exercises-for-section-7.7">Exercises for Section 7.7<sup class="answers-note">[<a href="answers.html#section-7.7-control-of-execution-recursion">Answers</a>]</sup><a href="#exercises-for-section-7.7" class="section-link">§</a></h4>
+<ol>
+<li><p>Write a program that, given an amount of money <code>AMT</code> and an integer interest rate, computes and displays the amount after the interest has been added to the amount. The program should then loop (infinitely) listing the amounts for successive years.</p></li>
+<li><p>There are many ways to add up a vector of numbers:</p>
+<ol type="a">
+<li>Write a recursive function to add up a vector of numbers.</li>
+<li>Write an iterative function to add up a vector of numbers.</li>
+<li>Write an expression in closed form to add up a vector of numbers.</li>
+</ol></li>
+<li><p>In <a href="/apl2/chapter6.html">Chapter 6</a> you saw a formula for computing interest after <code>N</code> years at a given interest rate. This formula assumed that no rounding was done each time the interest was added.</p>
+<ol type="a">
+<li>Write a loop to do the same computation with rounding each time.</li>
+<li>If you invested one penny in 1776, how much money would you have in 1987, 211 years later, if interest of 5% is added and rounded every year?</li>
+<li>How much money would you have after 211 years if you invested 50 pennies?</li>
+</ol></li>
+<li><p>Write a recursive function that simulates the monadic primitive <strong>interval</strong>.</p></li>
+<li><p>Write a function that implements the closed formula for the <code>N</code>th Fibonacci number.</p></li>
+<li><p>Write an expression using <code>MDEPTH</code> to compute the rank of each simple array in a nested array.</p></li>
+<li><p>Write a recursive function that applies the function <strong>first</strong> to each simple array in a nested array. Compare the answers produced with those from <code>↑MDEPTH</code> applied to the same argument.</p></li>
+<li><p>Modify <code>MDEPTH</code> so that instead of applying its function operand to simple arrays, it applies the function to arrays of depth N where N is another operand of the operator.</p></li>
+<li><p>Write a defined operator <code>DDEPTHA</code> that applies a dyadic function to each simple array in a pair of nested arrays. If either argument is a nested array, the program should recur. Here is an example:</p>
+<pre>      X←(4 5)(6(7 'B')) (10 11)
+      2 (2 3) 'A' +NUMB DDEPTHA X
+ 6 7   8  10 B A</pre></li>
+<li><p>Write a defined operator <code>DDEPTHB</code> that applies a dyadic function to each simple array in the right argument but uses the entire left argument for each application. For example:</p>
+<pre>      DISPLAY 2 3 pDDEPTHB 'ABC'((5 6)(7 8 9))
+.→--------------------------.
+| .→--. .→----------------. |
+| ↓ABC| | .→----. .→----. | |
+| |ABC| | ↓5 6 5| ↓7 8 9| | |
+| '---' | |6 5 6| |7 8 9| | |
+|       | '∼----' '∼----' | |
+|       '∊----------------' |
+'∊--------------------------'</pre></li>
+<li><p>Write a recursive program to compute the value of the Ackermann Function on two integers <code>J</code> and <code>N</code>, where the function is defined mathematically as follows:</p>
+<pre>      O A N   &lt;--&gt;   N+1
+      J A O   &lt;--&gt;   (J−1) A 1
+      J A N   &lt;--&gt;   (J−1) A (J A(N−1))</pre></li>
+</ol>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="/apl2/chapter6.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="/apl2/contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="/apl2/chapter8.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+</body>
+</html>

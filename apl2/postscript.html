@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"/>
+    <title>Postscript: Expanding Your APL2 Knowledge </title>
+</head>
+<body>
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="/apl2/chapter8.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="/apl2/contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="/apl2/appendixA.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+<div class="chapter-rule postscript">
+    <hr class="chapter-long">
+    <p>Postscript</p>
+    <hr class="chapter-short">
+</div>
+<h2 id="expanding-your-apl2-knowledge">Expanding Your APL2 Knowledge</h2>
+<p>This book has introduced you to most of the important concepts of <span class="small-caps">APL2</span>. You should now be able to write useful programs. A book this size could cover some programming languages in their entirety—but not <span class="small-caps">APL2</span>, which has the richness and power other languages lack. Although you’ve completed this book, you’ve just begun to experience <span class="small-caps">APL2</span>’s potential.</p>
+<p>This postscript summarizes some of the topics not addressed in this book. The bibliography lists other sources for additional information.</p>
+<h4 id="system-functions-and-system-variables">System Functions and System Variables<a href="#system-functions-and-system-variables" class="section-link">§</a></h4>
+<p>System functions often have to do with interfaces to the implementation or the system. For example, <code>⎕DL</code> is a time-delay system function. <code>⎕EX</code> is a function that erases an object much like the command <code>)ERASE</code>.</p>
+<p>System variables provide a way to communicate with the system and often represent user-settable options. For example, <code>⎕PW</code> lets you set the width of output. <code>⎕TS</code> is a time stamp.</p>
+<p>All system functions and system variables are identified by names starting with the character <code>⎕</code>.</p>
+<h4 id="event-handling">Event Handling<a href="#event-handling" class="section-link">§</a></h4>
+<p>Any program you write may contain an error. Even if you are convinced there is no error in the program’s logic, there may be the potential for an error in the way someone uses the program. You may not want to check for all kinds of exceptional conditions. You may not want to check whether a number entered by a user in response to a prompt is correctly formatted. <span class="small-caps">APL2</span> gives the programmer the ability to trap an error under the program’s control. This prevents application users from seeing <span class="small-caps">APL2</span> error messages that they may not understand.</p>
+<p>The primary event-trapping facility in <span class="small-caps">APL2</span> is the monadic system function <code>⎕EC</code>. When given an expression represented as a character string, <code>⎕EC</code> evaluates the expression and returns either the result of the expression or an indication of what error occurred.</p>
+<h4 id="complex-numbers">Complex Numbers<a href="#complex-numbers" class="section-link">§</a></h4>
+<p>Complex numbers are a generalization. of the real numbers used in ordinary computation. They often arise in electrical engineering studies and can be used in generating and manipulating two-dimensional graphics. Implementations of <span class="small-caps">APL2</span> that allow complex numbers extend the domain of the computational functions to complex numbers.</p>
+<h4 id="limiting-cases">Limiting Cases<a href="#limiting-cases" class="section-link">§</a></h4>
+<p>There is an algebra of empty arrays that makes <span class="small-caps">APL2</span> work in limiting cases. It is not usually necessary to make a special case test for empty arguments in <span class="small-caps">APL2</span> programs. Without special planning on the part of the programmer, programs often work as desired in empty cases.</p>
+<h4 id="shared-variables">Shared Variables<a href="#shared-variables" class="section-link">§</a></h4>
+<p>Names in a program can contain data or programs. <span class="small-caps">APL2</span> permits two programs running independently to contain a variable name in common, which is called a <em>shared variable</em>. Use of shared variables permits independently running programs in different active workspaces to communicate because the value given to the variable by one program can be accessed by the other program.</p>
+<h4 id="auxiliary-processors">Auxiliary Processors<a href="#auxiliary-processors" class="section-link">§</a></h4>
+<p>Applications often need access to data not in an <span class="small-caps">APL2</span> workspace. An <span class="small-caps">APL2</span> program may also need to create or modify such data. The <span class="small-caps">APL2</span> system uses programs called <em>auxiliary processors</em> to read and write files. These programs communicate with the <span class="small-caps">APL2</span> program by using shared variables. The auxiliary processors can run asynchronously from the programs in the workspace.</p>
+<h4 id="external-names-and-associated-processors">External Names and Associated Processors<a href="#external-names-and-associated-processors" class="section-link">§</a></h4>
+<p>You can use <span class="small-caps">APL2</span> in combination with programs written in other languages. These programs are represented by external names— names whose definitions are not in the workspace. You can have an application where most of the programs are written in <span class="small-caps">APL2</span>, but some of the programs are written in <span class="small-caps">FORTRAN</span> or some other language. You can access existing libraries of programs written in other languages and use them as though they were <span class="small-caps">APL2</span> programs. You can apply all the <span class="small-caps">APL2</span> operators to these programs.</p>
+<p>You can also establish external names to other collections of <span class="small-caps">APL2</span> programs. This allows use of an <span class="small-caps">APL2</span> application without bringing the application into your active workspace and, possibly, creating name conflicts with objects you have defined.</p>
+<p><em>Associated processors</em> handle the communication between <span class="small-caps">APL2</span> and programs in other languages. Associated processors differ from auxiliary processors in that they are fully synchronous.</p>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="/apl2/chapter8.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="/apl2/contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="/apl2/appendixA.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"/>
+    <title>Chapter 4: Working in the APL2 Environment </title>
+</head>
+<body>
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="/apl2/chapter3.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="/apl2/contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="/apl2/chapter5.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+<div class="chapter-rule">
+    <hr class="chapter-long">
+    <p>Chapter</p>
+    <hr class="chapter-short">
+    <div>
+        <div>
+            4
+        </div>
+    </div>
+</div>
+<h2>Working in the APL2 Environment</h2>
+<p>When you start an <span class="small-caps">APL2</span> session, you’re working within an <span class="small-caps">APL2</span> environment called the <em>active workspace</em>. All <span class="small-caps">APL2</span> primitive functions and operators as well as the <span class="small-caps">APL2</span> editors are available to you. You receive error reports if <span class="small-caps">APL2</span> cannot evaluate something you type. And you can enter system commands like <code>)RESET</code> and <code>)NMS</code>.</p>
+<p>As you worked through the previous chapters, each time you quit <span class="small-caps">APL2</span> by entering <code>)CONTINUE</code>, <span class="small-caps">APL2</span> saved the variables and programs you created. When you started another <span class="small-caps">APL2</span> session, these variables and programs were again available to you. The system command <code>)CONTINUE</code> stored the contents of the active workspace in a storage workspace named <code>CONTINUE</code>. Whenever you enter <span class="small-caps">APL2</span>, <span class="small-caps">APL2</span> automatically brings the contents of the <code>CONTINUE</code> workspace into the active workspace.</p>
+<p>Using <code>)CONTINUE</code> to save and recall your work was sufficient for the early exercises. However, it doesn’t give you the ability to group variables and programs in any way. To control the saving and recalling of your variables and programs, you use the <span class="small-caps">APL2</span> library system and system commands for saving, loading, and copying workspaces, and you use the command <code>)OFF</code> to exit from <span class="small-caps">APL2</span>.</p>
+<h3 id="section-4.1-libraries">Section 4.1 — Libraries<a href="#section-4.1-libraries" class="section-link">§</a></h3>
+<p>Every <span class="small-caps">APL2</span> user has a private library in which to store workspaces. You can list the names of the workspaces in your private library by typing the system command <code>)LIB</code>:</p>
+<pre>       )LIB
+CONTINUE</pre>
+<p>If you have saved any other workspaces, their names are listed as well.</p>
+<h4 id="establishing-a-workspace-from-your-work">Establishing a Workspace from Your Work<a href="#establishing-a-workspace-from-your-work" class="section-link">§</a></h4>
+<p>Exiting <span class="small-caps">APL2</span> with <code>)CONTINUE</code> is one way to put a workspace into your library. A better way to do this is with the <code>)SAVE</code> system command. <code>)SAVE</code> <strong><em>wsname</em></strong> puts a copy of the current active workspace into your user library under the name <strong><em>wsname</em></strong>.</p>
+<pre>       )SAVE LEARN
+SAVED 1988-03-20 5.53.54</pre>
+<p>The response tells you the time and date of the save. Now your library contains at least these two workspaces:</p>
+<pre>      )LIB
+CONTINUE LEARN</pre>
+<p>A later section discusses the <code>)SAVE</code> command in more detail.</p>
+<h4 id="loading-a-workspace-from-the-library-load">Loading a Workspace from the Library: <code>)LOAD</code><a href="#loading-a-workspace-from-the-library-load" class="section-link">§</a></h4>
+<p>Your library’s only use is the storage of workspaces. To use a workspace, you must bring its contents into the active workspace. The <code>)LOAD</code> command brings the contents of a library workspace into the active workspace:</p>
+<pre>      )LOAD LEARN
+SAVED 1988-03-20 5.53.54</pre>
+<p>This response tells you the time and date the workspace was last saved. Specifying <code>)LOAD</code> causes <span class="small-caps">APL2</span> to replace the contents of your active workspace with the contents of the library workspace. Be careful not to load a workspace if the active workspace has something you want to keep. To keep the contents of the active workspace, save it before loading a workspace.</p>
+<p>Loading a workspace does not change the contents of the library workspace, nor does any work you do in the active workspace change the contents of the library workspace. If you update the active workspace and want the changes to be recorded in the library, you must save the updated workspace into your library.</p>
+<h4 id="removing-a-workspace-from-the-library-drop">Removing a Workspace from the Library: <code>)DROP</code><a href="#removing-a-workspace-from-the-library-drop" class="section-link">§</a></h4>
+<p>The system command <code>)DROP</code> removes a workspace from the library:</p>
+<pre>      )DROP CONTINUE
+1988-03-27 10.21.42
+
+      )LIB
+LEARN</pre>
+<p><strong>Caution:</strong> Once you drop a workspace, you cannot retrieve its contents, so, before you drop it, be sure it contains nothing you want.</p>
+<h4 id="more-about-the-workspace-continue">More about the Workspace <code>CONTINUE</code><a href="#more-about-the-workspace-continue" class="section-link">§</a></h4>
+<p>The workspace <code>CONTINUE</code> gets the contents of the active workspace in three situations:</p>
+<ul>
+<li>If you exit <span class="small-caps">APL2</span> using <code>)CONTINUE</code>.</li>
+<li>If you use the command <code>)SAVE CONTINUE</code>.</li>
+<li>If there is a system failure or line drop (if you are attached to a timesharing system that supports this facility).</li>
+</ul>
+<p><span class="small-caps">APL2</span> automatically loads the workspace <code>CONTINUE</code> into your active workspace the next time you enter <span class="small-caps">APL2</span>.</p>
+<p>Now that you know how to save and load workspaces, you should not use <code>)CONTINUE</code> for permanent storage because you cannot control its contents. Before you exit <span class="small-caps">APL2</span>, save your work in library workspace, using the <code>)SAVE</code> command as described in the section “Saving the Active Workspace.”</p>
+<h4 id="public-libraries">Public Libraries<a href="#public-libraries" class="section-link">§</a></h4>
+<p>Only you have access to your private library unless you permit access to other users following the rules established by your installation. Every <span class="small-caps">APL2</span> system has one or more public libraries which anyone can use. Public libraries are identified by integers from 1 to 999. You can list the names of workspaces in a public library with the <code>)LIB</code> command. For example, to see the contents of library 1:</p>
+<pre>      )LIB 1
+DISPLAY  EXAMPLES MATHFNS  MEDIT    UTILITY  WSINFO</pre>
+<p>The actual list you see may be different from that shown here.</p>
+<p>To access a public library workspace, you must include the library number as part of the command:</p>
+<pre>      )LOAD 1 DISPLAY
+SAVED 1985-10-05 9.40.21</pre>
+<p>After loading someone else’s workspace, you can use <code>)NMS</code> to see the names defined in it and you can use an editor to look at the programs. A well-documented workspace contains documentation (typically called <code>DESCRIBE</code>) that tells what the workspace does.</p>
+<p>Looking at the techniques used in other people’s <span class="small-caps">APL2</span> programs can be a good way to learn more about the language. Looking at these programs also points out the value of good documentation.</p>
+<p>Historical note: The very first workspace that was ever saved was <code>1 CLEANSPACE</code>. Some <span class="small-caps">APL2</span> systems still have this workspace. You can try to load it if you are curious about the date when it was saved.</p>
+<h3 id="section-4.2-the-active-workspace">Section 4.2 — The Active Workspace<a href="#section-4.2-the-active-workspace" class="section-link">§</a></h3>
+<p>Assuming you are no longer using <code>)CONTINUE</code>, starting an <span class="small-caps">APL2</span> session gets you an empty workspace indicated by the message <code>CLEAR WS</code>. <code>CLEAR WS</code> means that the active workspace has no library name associated with it and contains no variables or programs. You can also clear the contents of the active workspace by using the <code>)CLEAR</code> command:</p>
+<pre>      )CLEAR
+CLEAR WS</pre>
+<h4 id="name-of-the-active-workspace">Name of the Active Workspace<a href="#name-of-the-active-workspace" class="section-link">§</a></h4>
+<p>The system command <code>)WSID</code> gives you the name currently associated with the active workspace:</p>
+<pre>      )WSID
+CLEAR WS</pre>
+<p>You change the name of the active workspace by using one of these three commands:</p>
+<ul>
+<li><p>Executing a <code>)LOAD</code> command. The active workspace is replaced by the loaded workspace and takes the name of the loaded workspace.</p>
+<pre>       )LOAD LEARN
+ SAVED 1988-12-05 16.42.27
+       )WSID
+ IS LEARN</pre></li>
+<li><p>Executing a <code>)SAVE</code> command with a new workspace name. The active workspace takes the name of the saved workspace. This method works only if the named workspace does not already exist (except for <code>CONTINUE</code> which can be saved at any time).</p>
+<pre>       )SAVE <span class="syntax--storage syntax--type syntax--class syntax--temp">TEMP
+ SAVED 1988-12-05 17.42.27</pre></li>
+<li><p>Executing a <code>)WSID</code> command to specify a new workspace name. The active workspace takes the name you enter following the command.</p>
+<pre>       )WSID NEWNAME
+ WAS <span class="syntax--storage syntax--type syntax--class syntax--temp">TEMP</pre></li>
+</ul>
+<h4 id="saving-the-active-workspace-save">Saving the Active Workspace: <code>)SAVE</code><a href="#saving-the-active-workspace-save" class="section-link">§</a></h4>
+<p>You’ve already used the <code>)SAVE</code> command to make a permanent library workspace for your work. Now that you know about the name of the active workspace, you are ready for a fuller discussion of the <code>)SAVE</code> command.</p>
+<p>The <code>)SAVE</code> command has two forms, with and without a workspace name:</p>
+<pre>      )SAVE
+      )SAVE wsname</pre>
+<p>The first form, <code>)SAVE</code>, saves the active workspace in the library space using the same name as the active workspace name. You use this form most often to save a workspace that you previously loaded.</p>
+<pre>      )WSID
+IS LEARN
+      )SAVE
+SAVED 1988-12-05 16.42.27 LEARN</pre>
+<p>Notice that the <code>SAVED</code> timestamp includes the active workspace name.</p>
+<p>Because <code>CLEAR WS</code> means that the active workspace has no name, you can’t use <code>)SAVE</code> if this is reported as the name of the workspace.</p>
+<pre>      )CLEAR
+CLEAR WS
+      )SAVE
+NOT SAVED, THIS WS IS CLEAR WS</pre>
+<p>The second form, <code>)SAVE</code> <strong><em>wsname</em></strong>, saves the active workspace under these circumstances:</p>
+<ul>
+<li>If <strong><em>wsname</em></strong> is <code>CONTINUE</code>.</li>
+<li>If no workspace in the library has the name <strong><em>wsname</em></strong>. This form of <code>)SAVE</code> establishes a new workspace in the library.</li>
+<li>If <strong><em>wsname</em></strong> names a workspace in the library and the active workspace has the same name.</li>
+</ul>
+<p>The third item restricts your use of <code>)SAVE</code> <strong><em>wsname</em></strong>. This restriction prevents you from inadvertently overriding a workspace library with totally unrelated contents from the active workspace. Using <code>)WSID</code> to name a workspace, usually from <code>)CLEAR WS</code>, and then using <code>)SAVE</code> does not give you this protection.</p>
+<p>Suppose you have a workspace <code>TEACH</code> in your library. These examples illustrate the difference between the two commands. This is the first form of <code>)SAVE</code>:</p>
+<pre>      )WSID TEACH
+WAS CLEAR WS
+      )SAVE
+SAVED 1988-13-05 12.42.27 TEACH</pre>
+<p>Because the active workspace’s name matches one in the library, the <code>)SAVE</code> command saves the contents of the active workspace on top of the library workspace. This means you now have the active workspace’s contents saved in the library but you have lost the previous library workspace’s contents. In contrast, <code>)SAVE</code> <strong><em>wsname</em></strong> only executes if the active workspace’s name is not the same as any in the library or if the active workspace name matches the name given in the command:</p>
+<pre>      )WSID
+CLEAR WS
+      )SAVE TEACH
+NOT SAVED, THIS WS IS CLEAR WS</pre>
+<h4 id="replacing-the-contents-of-the-active-workspace">Replacing the Contents of the Active Workspace<a href="#replacing-the-contents-of-the-active-workspace" class="section-link">§</a></h4>
+<p>You replace the contents of the active workspace in the following ways:</p>
+<ul>
+<li><p>Use the <code>)LOAD</code> command to bring in a different workspace from the library.</p>
+<p>A duplicate of the library workspace replaces the entire contents of the active workspace. The active workspace takes the name of the loaded workspace.</p></li>
+<li><p>Use the <code>)CLEAR</code> command to start over again.</p></li>
+</ul>
+<h4 id="adding-to-the-contents-of-the-active-workspace-copy-and-pcopy">Adding to the Contents of the Active Workspace: <code>)COPY</code> and <code>)PCOPY</code><a href="#adding-to-the-contents-of-the-active-workspace-copy-and-pcopy" class="section-link">§</a></h4>
+<p>When you create variables and write programs, you add these variables and programs to the active workspace. You can also copy variables and programs from library workspaces with the <code>)COPY</code> command. Here is the general form of the <code>)COPY</code> command:</p>
+<pre>      )COPY libnumber wsname objname</pre>
+<p>In the command, <strong><em>libnumber</em></strong> is the number of the library (leave it out if you mean your private library). The workspace name shown here as <strong><em>wsname</em></strong>, and <strong><em>objname</em></strong> is one or more variable or program names. If an object with the name <strong><em>objname</em></strong> already exists in the active workspace, the copied object replaces it. If no objects are listed after the workspace name, all objects from the library workspace are added to the active workspace.</p>
+<p>Here is an example of <code>)COPY</code>:</p>
+<pre>      )COPY 1 DISPLAY DISPLAY
+SAVED 1985-10-05 9.40.21</pre>
+<p>The first <code>DISPLAY</code> in the example is the workspace name, and the second is the name of a function in that workspace. If your system has the workspace <code>1 DISPLAY</code>, and it contains an object named <code>DISPLAY</code>, the object is copied from it and added to the contents of your active workspace, replacing anything else having the same name. If the named workspace or the objects you want copied do not exist, an error message is displayed.</p>
+<p>To protect current objects during copying, you can use the <code>)PCOPY</code> command, which copies objects only if the name does not already exist in the active workspace:</p>
+<pre>      )PCOPY 1 DISPLAY DISPLAY DISPLAYG
+SAVED 1985-10-05 9.40.21</pre>
+<p>If an object name is written in parentheses, then it must be the name of a character matrix in the library workspace that contains one name per row. The group of objects so named are copied into the active workspace. Matrices are discussed in <a href="/apl2/chapter5.html">Chapter 5</a>.</p>
+<p>Copying does not change the contents of the library workspace— only the active workspace.</p>
+<h4 id="moving-apl2-objects-between-computers-in-and-out">Moving APL2 Objects Between Computers: <code>)IN</code> and <code>)OUT</code><a href="#moving-apl2-objects-between-computers-in-and-out" class="section-link">§</a></h4>
+<p>Workspaces are stored in the <span class="small-caps">APL2</span> library using some encoding that is efficient for the computer you are using. If you have a second computer that also has an <span class="small-caps">APL2</span> system, it is unlikely that the second computer can access the library system on the first computer. Therefore, <span class="small-caps">APL2</span> supports a transfer form for <span class="small-caps">APL2</span> objects that is independent of the representation used for objects in the workspace. The command <code>)OUT</code> takes objects from the active workspace and puts their transfer forms in a host operating system file called a <em>transfer file</em>. This file can be transmitted to another computer using standard file transfer facilities supplied with your computer. The receiving computer uses the command <code>)IN</code> to add the objects from the transfer file to the active workspace.</p>
+<p>There are two forms for both of these commands: without a list of objects and with a list of objects:</p>
+<ul>
+<li><code>)OUT</code> <strong><em>filename</em></strong>— Create a transfer file containing all of the objects from the active workspace.</li>
+<li><code>)OUT</code> <strong><em>filename obj1 obj2 …</em></strong>— Create a transfer file containing only the requested objects from the active workspace.</li>
+<li><code>)IN</code> <strong><em>filename</em></strong>— Add all objects in the transfer file to the active workspace</li>
+<li><code>)IN</code> <strong><em>filename obj1 obj2 …</em></strong>— Add the requested objects in the transfer file to the active workspace.</li>
+</ul>
+<p><code>)OUT</code> does not alter the contents of the active workspace.</p>
+<h4 id="removing-objects-from-the-active-workspace-erase">Removing Objects from the Active Workspace: <code>)ERASE</code><a href="#removing-objects-from-the-active-workspace-erase" class="section-link">§</a></h4>
+<p>The <code>)ERASE</code> command removes the listed global objects from the active workspace. You can try this system command by doing the following:</p>
+<pre>      )CLEAR
+CLEAR WS
+      A←B←C←D←E←1
+      )NMS
+ A.2     B.2     C.2     D.2     E.2
+      )ERASE C E
+      )NMS
+ A.2    B.2     D.2</pre>
+<p>If an object name is written in parentheses, then it must be the name of a character matrix which has one name per row. Each object so named is erased. Matrices are discussed in <a href="/apl2/chapter5.html">Chapter 5</a>.</p>
+<p>Erasing doesn’t change the contents of a library workspace, it changes only the active workspace.</p>
+<h4 id="listing-the-contents-of-the-active-workspace-nms-fns-ops-vars">Listing the Contents of the Active Workspace: <code>)NMS</code>, <code>)FNS</code>, <code>)OPS</code>, <code>)VARS</code><a href="#listing-the-contents-of-the-active-workspace-nms-fns-ops-vars" class="section-link">§</a></h4>
+<p>You’ve been using the system command <code>)NMS</code> to list the variables and programs in the active workspace. You can also list just the variables with the command <code>)VARS</code>, just the defined functions and sequences with the command <code>)FNS</code>, and just the defined operators with the command <code>)OPS</code>.</p>
+<h4 id="seeing-the-state-indicator-sis">Seeing the State Indicator: <code>)SIS</code><a href="#seeing-the-state-indicator-sis" class="section-link">§</a></h4>
+<p>The state indicator keeps track of the execution of expressions and defined functions. Whenever the execution of an expression or a defined function is incomplete (perhaps because of an error), the expression or function statement goes into the state indicator. You can see the state indicator by issuing the system command <code>)SIS</code>:</p>
+<pre>      3+
+SYNTAX ERROR
+      3+
+      ^^
+      
+      )SIS
+⋆  3+
+   ^^</pre>
+<p>The asterisk indicates that the expression was entered in immediate execution mode.</p>
+<p>You clear the last error from the state indicator by entering one right arrow:</p>
+<pre>      →</pre>
+<p>Using <code>→</code> removes all entries up to and including the entry with the <code>⋆</code> from the state indicator. In this example, the line with the <code>⋆</code> is the only line in the state indicator. The single right arrow has emptied the state indicator:</p>
+<pre>      )SIS</pre>
+<p>To see the way the state indicator handles a function whose execution is not completed, do this exercise: First save anything that you want to keep. Then clear the active workspace and enter the following definition exactly as shown (assuming that you are using <code>EDITOR 1</code>):</p>
+<pre>      )CLEAR
+CLEAR WS
+
+    ∇ Z←AMT PVALUE NI;RATE
+[1]  RATE←NI[2]×.01
+[2]  Z←AMT÷1+NI[1]×RAT |
+[3] ∇</pre>
+<p>Execution of the function stops on line 2 because the name <code>RAT</code> on line 2 doesn’t have a value and you get this message:</p>
+<pre>      12000 PVALUE 5 10
+VALUE ERROR
+PVALUE[2]   Z←AMT÷1+NI[1]×RAT
+                          ^</pre>
+<p>The state indicator shows the line that contains the error as well as the immediate execution line that called the function:</p>
+<pre>      )SIS
+PVALUE[2] Z←AMT÷1+NI[1]×RAT
+                        ^
+⋆ 12000 PVALUE 5 10
+  ^     ^</pre>
+<p>A single right arrow clears the state indicator down to and including the entry with the <code>⋆</code>, again leaving the state indicator clear.</p>
+<pre>      →
+      )SIS</pre>
+<p>If you neglect to clear the state indicator after each error, you must enter a <code>→</code> for each immediate execution line. Alternatively, you can use the system command <code>)RESET</code> to clear the entire state indicator. (<a href="/apl2/chapter7.html">Chapter 7</a> discusses the use of the state indicator in debugging programs.)</p>
+<h4 id="exercises-for-section-4.2">Exercises for Section 4.2<sup class="answers-note">[<a href="answers.html#section-4.1-libraries">Answers</a>]</sup><a href="#exercises-for-section-4.2" class="section-link">§</a></h4>
+<ol>
+<li>As you gain experience in writing programs in <span class="small-caps">APL2</span>, you will write utility functions in one workspace and then use them in others. As you identify these programs, it is a good idea to gather them together into a <code>TOOLBOX</code> workspace. You can then treat these functions as extensions to the <span class="small-caps">APL2</span> language. When you sit down to write a new application, you don’t need to start from scratch each time. Rather, you use parts of programs you’ve written before.
+<ol type="a">
+<li>Write the commands you need to create a <code>TOOLBOX</code> workspace.</li>
+<li>Write the commands to put the program <code>AVG</code> from your <code>LEARN</code> workspace into the <code>TOOLBOX</code> workspace.</li>
+</ol></li>
+<li>Match the system commands shown the first column with the corresponding statements in the second column:
+<table>
+<colgroup>
+<col style="width: 40%">
+<col style="width: 60%">
+</colgroup>
+<tbody>
+<tr>
+<td><ol>
+<li><code>)OFF</code></li>
+<li><code>)LIB</code></li>
+<li><code>)WSID</code></li>
+<li><code>)ERASE</code></li>
+<li><code>)SAVE</code></li>
+<li><code>)COPY</code></li>
+<li><code>)VARS</code></li>
+<li><code>)NMS</code></li>
+<li><code>)PCOPY</code></li>
+<li><code>)DROP</code></li>
+<li><code>)FNS</code></li>
+<li><code>)RESET</code></li>
+<li><code>)LOAD</code></li>
+<li><code>)CONTINUE</code></li>
+<li><code>)CLEAR</code></li>
+<li><code>)OPS</code></li>
+</ol></td>
+<td><ol type="a">
+<li>List all the named objects in an active workspace.</li>
+<li>Initiate an APL2 session.</li>
+<li>Automatically save the active workspace and terminate the session.</li>
+<li>Delete named objects from the active workspace.</li>
+<li>Delete all objects from the active workspace.</li>
+<li>List all workspace names in a library.</li>
+<li>List all function names in the active workspace.</li>
+<li>List all the variable names in the active workspace.</li>
+<li>Terminate the <span class="small-caps">APL2</span> session without saving objects in the active workspace.</li>
+<li>Fetch named workspace and replace the active workspace.</li>
+<li>List all operator names in the active workspace</li>
+<li>Fetch a named workspace or selected named objects overlaying similarly named ones in the active workspace.</li>
+<li>Fetch a named workspace or selected named objects without overlaying similarly named ones in the active workspace.</li>
+<li>Put a copy of the active workspace into your library.</li>
+<li>Put a copy of a named object into the library.</li>
+<li>Query or change the name of an active workspace.</li>
+<li>Clear all or the first part of the state indicator.</li>
+<li>Delete a workspace from your library.</li>
+</ol></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="/apl2/chapter3.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="/apl2/contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="/apl2/chapter5.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+</body>
+</html>

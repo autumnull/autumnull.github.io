@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"/>
+    <title>Chapter 1: Working with APL2</title>
+</head>
+<body>
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="/apl2/foreword.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="/apl2/contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="/apl2/chapter2.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+<div class="chapter-rule">
+    <hr class="chapter-long">
+    <p>Chapter</p>
+    <hr class="chapter-short">
+    <div>
+        <div>
+            1
+        </div>
+    </div>
+</div>
+<h2>Working with APL2</h2>
+<p>“Working with <span class="small-caps">APL2</span>” introduces some of <span class="small-caps">APL2</span>’s most important concepts. You start with simple computations. You learn how to represent data and how to perform computations on collections of data called <em>arrays</em>. Your <span class="small-caps">APL2</span> work requires an <span class="small-caps">APL</span> or <span class="small-caps">APL2</span> keyboard like the one shown. This keyboard provides the alphabetic characters and the special <span class="small-caps">APL2</span> symbols.</p>
+<center>
+<figure>
+<img src="/apl2/images/apl_keyboard.jpg" alt="Keyboard for APL2">
+<figcaption>Keyboard for APL2</figcaption>
+</figure>
+</center>
+<p>The arithmetic symbols you use in <a href="#section-1.1-doing-ordinary-arithmetic">Section 1.1</a> are all on the keyboard’s top row.</p>
+<h3 id="section-1.1-doing-ordinary-arithmetic">Section 1.1 — Doing Ordinary Arithmetic<a href="#section-1.1-doing-ordinary-arithmetic" class="section-link">§</a></h3>
+<p>In this section, you learn how to enter numbers and how <span class="small-caps">APL2</span> displays numbers. You also learn some simple operations on numbers. With the information in this section, you will be able to use <span class="small-caps">APL2</span> like a calculator.</p>
+<p>If you are at a terminal, try out the examples as they arise.</p>
+<h4 id="simple-arithmetic">Simple Arithmetic<a href="#simple-arithmetic" class="section-link">§</a></h4>
+<p>One of the fundamental operations of <span class="small-caps">APL2</span> is the <em>function</em>. A function applies to some data and produces some new data.</p>
+<p>Here are examples of five basic arithmetic functions supplied with <span class="small-caps">APL2</span>:</p>
+<pre>      10+5        &lt;---addition
+15
+
+      10−5        &lt;---subtraction
+5
+
+      10×5        &lt;---multiplication
+50
+
+      10÷5        &lt;---division
+2
+
+      −2          &lt;---negation
+¯2</pre>
+<p><span class="small-caps">APL2</span> prompts you for input by indenting six spaces. When you type something and press the enter key (or return key or send key or whatever key signals end of input on your terminal), <span class="small-caps">APL2</span> executes the <em>expression</em> you entered and, starting at the left margin, displays the result of the computation. The values written next to the function symbols are the <em>arguments</em> of the function.</p>
+<p><strong>Addition</strong> and <strong>subtraction</strong> give the results you expect. Unlike many other computer languages, <span class="small-caps">APL2</span> uses the traditional mathematical symbols <code>×</code> and <code>÷</code> for <strong>multiplication</strong> and <strong>division</strong>. (Some programming languages use <code>⋆</code> and <code>/</code> for these functions. In <span class="small-caps">APL2</span>, <code>⋆</code> and <code>/</code> have other meanings.)</p>
+<p>Notice that the <strong>subtraction</strong> and <strong>negation</strong> functions share the same symbol. Most <span class="small-caps">APL2</span> functions may be used with either one or two arguments.</p>
+<h4 id="numbers">Numbers<a href="#numbers" class="section-link">§</a></h4>
+<p><span class="small-caps">APL2</span> has some simple rules for entering and displaying numbers.</p>
+<p>You represent <em>integers</em> by a string of decimal digits like this:</p>
+<pre>      1
+      25</pre>
+<p>Numbers with fractional parts are represented with a decimal point separating the integer and fractional portions like this:</p>
+<pre>      .1
+      2.3500
+      95.6372287356</pre>
+<p>How <span class="small-caps">APL2</span> displays these numbers is not necessarily the way you enter them. If the number has no integer part, <span class="small-caps">APL2</span> displays a leading zero. <span class="small-caps">APL2</span> does not display trailing zeros on fractions.</p>
+<p>Here are the above numbers displayed from <span class="small-caps">APL2</span>:</p>
+<pre>      .1
+0.1
+      2.3500
+2.35
+      95.6372287356
+95.63722874</pre>
+<p>Notice that, for display, <span class="small-caps">APL2</span> rounds the last result in the tenth digit.</p>
+<p>Some numbers, when written in decimal notation, require an infinite number of digits (for example, the fraction one-third). If there are more than 10 significant digits in a number, <span class="small-caps">APL2</span> displays only 10 digits.</p>
+<p>You may enter very large or very small numbers in exponential or <code>E</code>-notation. The <code>E</code> stands for “times 10 to the.” You might write the integer 123 followed by 45 zeros in <code>E</code>-notation as:</p>
+<pre>      123E45</pre>
+<p><span class="small-caps">APL2</span> displays such numbers with a single integer digit and an appropriate fractional part:</p>
+<pre>      123E45
+1.23E47</pre>
+<p><em>Negative numbers</em> are represented by prefixing the number with an overbar (¯):</p>
+<pre>      ¯1
+      ¯25
+      ¯95.6372287356</pre>
+<p>Unlike arithmetic notation, <span class="small-caps">APL2</span> does not use the same symbol for the property of negativeness and for the operations <strong>negation</strong> and <strong>subtraction</strong>. When you see an overbar (<code>¯</code>) on a number, it means that the number is negative. If you see a midbar (<code>−</code>) before a number, it means that something is being done to the number (<strong>subtraction</strong> if there is a number on the left, and <strong>negation</strong> if there is not).</p>
+<pre>      ¯25         &lt;---a negative 25
+      −25         &lt;---negation of positive 25
+      100−25      &lt;---difference of 100 and 25
+      −¯25        &lt;---negation of a negative 25</pre>
+<p><span class="small-caps">APL2</span> does not recognize some conventions for writing numbers. For example, the following are incorrect ways to enter the number 123456789.123:</p>
+<ul>
+<li><code>123,456,789.123</code> You cannot use commas to separate groups of digits.</li>
+<li><code>123.456.789,123</code> You cannot use the European convention for separating groups of digits and showing fractional parts.</li>
+<li><code>123 456 789.123</code> You cannot use blanks to separate groups of digits.</li>
+</ul>
+<p>You can, however, make numbers display in these formats by using the <span class="small-caps">APL2</span> format functions, discussed in <a href="/apl2/chapter7.html">Chapter 7</a>.</p>
+<h4 id="exercises-for-section-1.1">Exercises for Section 1.1<sup class="answers-note">[<a href="answers.html#section-1.1-doing-ordinary-arithmetic">Answers</a>]</sup><a href="#exercises-for-section-1.1" class="section-link">§</a></h4>
+<ol>
+<li>Evaluate the following expressions:
+<ol type="a">
+<li><code>100+20</code></li>
+<li><code>1.3+2.7</code></li>
+<li><code>100−90</code></li>
+<li><code>45−145</code></li>
+<li><code>100×1.3</code></li>
+<li><code>.01×314</code></li>
+<li><code>100÷20</code></li>
+<li><code>1÷3</code></li>
+<li><code>—30</code></li>
+<li><code>−¯30</code></li>
+</ol></li>
+<li>Write an equivalent number without using <code>E</code> notation for the following <code>E</code>-notation numbers:
+<ol type="a">
+<li><code>1E2</code></li>
+<li><code>1E1</code></li>
+<li><code>1EO</code></li>
+<li><code>1E¯1</code></li>
+<li><code>1.4E3</code></li>
+<li><code>¯3.14159E5</code></li>
+</ol></li>
+<li>In 1987, a woman slept an average of seven hours per day. Write an expression to determine how many hours she slept last year.</li>
+</ol>
+<h3 id="section-1.2-arithmetic-on-arrays">Section 1.2 — Arithmetic on Arrays<a href="#section-1.2-arithmetic-on-arrays" class="section-link">§</a></h3>
+<p>The best way to learn how <span class="small-caps">APL2</span> solves problems is to see its problem-solving capability in action. This book presents many features of <span class="small-caps">APL2</span> as problems for you to solve. For example, here’s a problem that involves doing the same calculation over and over again on a set of numbers.</p>
+<blockquote>
+<p>A music store sells recorded music in various formats: long-playing records at $6.95, cassette tapes at $7.95, and compact discs at $12.95. This week they have a special sale—10% discount on all items.</p>
+</blockquote>
+<p>How much do you have to pay for each kind of recording?</p>
+<p>A 10% discount means you pay 90% of the price. You could compute the selling prices in three separate computations as follows:</p>
+<pre>      .9×6.95
+6.255
+      .9×7.95
+7.155
+      .9×12.95
+11.655</pre>
+<p>This piecemeal process works. But perhaps the most important feature of <span class="small-caps">APL2</span> is that it can express computations on more than one piece of data at a time. You can do the preceding computations in one expression that produces all three answers at once:</p>
+<pre>      .9×6.95 7.95 12.95
+6.255 7.155 11.655</pre>
+<p>Notice that the single number <code>.9</code> is multiplied by each of the numbers in the right argument.</p>
+<h4 id="thinking-arrays">Thinking Arrays<a href="#thinking-arrays" class="section-link">§</a></h4>
+<p>Applying a function like <strong>multiplication</strong> to whole arrays of data at one time is fundamental to the style of <span class="small-caps">APL2</span>. To be productive with <span class="small-caps">APL2</span>, you must learn to think in terms of arrays.</p>
+<p>As another example of applying a function to a whole array of data, let’s suppose that last week the store sold higher priced items at a higher discount: long-playing records at 90% (still), cassette tapes at 80% of retail, and compact discs at 70% of retail. How much would you have had to pay for one of each kind of recording if you bought them last week?</p>
+<p>If you’re not thinking arrays, you would do the calculations one at a time. Instead, think arrays and use the power of <span class="small-caps">APL2</span> to compute the costs all at once:</p>
+<pre>      .9 .8 .7 × 6.95 7.95 12.95
+6.255 6.36 9.065</pre>
+<p>You enter a list of three numbers on each side of the multiplication, and again this gives three answers. You can view this computation as taking place like this:</p>
+<pre>      (.9×6.95) (.8×7.95) (.7×12.95)
+6.255 6.36 9.065</pre>
+<p>In fact, you can even enter the computation this way if you wish.</p>
+<p>Continuing the music store example, suppose that, in addition to records at 10% off, the store also offers record cleaners (normally $2.50) at the same discount; and, in addition to pre-recorded cassette tapes at 20% off, it offers blank tapes (normally $3.55) and players (normally $295) at the same discount. Nothing other ’than the compact discs is offered at 30% off. You compute all the discounted prices at once as follows:</p>
+<center>
+<img src="images/item_discounts.jpg">
+</center>
+<p>Do you see how <span class="small-caps">APL2</span> calculates this? There are three discounts on one side of the multiplication and three groups of prices on the other side and you get three groups of numbers as the answer. You can view this computation as taking place like this:</p>
+<pre>      (.9×6.95 2.5) (.8×7.95 3.55 295) (.7×12.95)
+6.255 2.25  6.36 2.84 236  9.065</pre>
+<p>Notice that <span class="small-caps">APL2</span> does not use parentheses when displaying the answer. It does use spaces to suggest the grouping of the data. Two blanks separate the three groups of answers, whereas one blank separates the numbers within a particular group.</p>
+<h4 id="adding-up-numbers">Adding up Numbers<a href="#adding-up-numbers" class="section-link">§</a></h4>
+<p>Suppose that this week you decided to buy one record, three cassette tapes, and two compact discs.</p>
+<p>You know the price you have to pay for one of each item—it’s 90% of the list price:</p>
+<pre>      .9×6.95 7.95 12.95
+6.255 7.155 11.655</pre>
+<p>But you don’t want just one of each item. How would you compute what you have to pay for the items you buy? Just multiply each price by the number you want to buy:</p>
+<pre>      1 3 2 × .9 × 6.95 7.95 12.95
+6.255 21.465 23.31</pre>
+<p>If you want to know only the bottom line— “How much money do I have to pay?”— you have to add up the three computed costs:</p>
+<pre>      6.255+21.465+23.31
+51.03</pre>
+<p>Instead of entering the numbers that the machine just gave you, you can use <strong>reduction</strong> (<code>/</code>) together with <strong>addition</strong> (<code>+</code>) to request the sum as follows:</p>
+<pre>      +/1 3 2 × .9 × 6.95 7.95 12.95
+51.03</pre>
+<p>The <strong>summation</strong> (<code>+/</code>) applies after the two multiplications.</p>
+<p><strong>Reduction</strong> (<code>/</code>) is an <span class="small-caps">APL2</span> operator. <strong>Reduction</strong> takes a function like <strong>addition</strong> and applies it between the items of the right argument. For example, these two expressions produce the same result:</p>
+<pre>      +/10 15 20        &lt;---summation
+45
+      10+15+20          &lt;---addition
+45</pre>
+<h4 id="exercises-for-section-1.2">Exercises for Section 1.2<sup class="answers-note">[<a href="answers.html#section-1.2-arithmetic-on-arrays">Answers</a>]</sup><a href="#exercises-for-section-1.2" class="section-link">§</a></h4>
+<ol>
+<li>Evaluate the following expressions:
+<ol type="a">
+<li><code>1 2 3 + 4 5 6</code></li>
+<li><code>10 × 1 2 3</code></li>
+<li><code>8 16 24 ÷ 8</code></li>
+<li><code>− 2 3 ¯4 5</code></li>
+<li><code>1+(2 3) (10 20 30)</code></li>
+<li><code>10 20 × (2 3) (10 20 30)</code></li>
+</ol></li>
+<li>Evaluate the following expressions:
+<ol type="a">
+<li><code>+/ 1 2 3 + 4 5 6</code></li>
+<li><code>+/ 2 3 × (10 20) (30 40)</code></li>
+<li><code>×/1 2 3 + 4 5 6</code></li>
+</ol></li>
+<li>In 1987, one woman slept an average of 7 hours a day, another averaged 7.5 hours a day, and a third 8 hours a day. Write one expression to compute the total number of hours each woman slept in 1987.</li>
+<li>Suppose one object is traveling at velocity <code>X</code> and another is traveling at velocity <code>Y</code>.
+<ol type="a">
+<li>Write an expression that computes the relative velocity of the objects (that is, how fast one is moving away from the other) if they are traveling in opposite directions.</li>
+<li>Suppose <code>X</code> is larger than <code>Y</code>. Write an expression that computes the relative velocity of the objects if they are traveling in the same direction.</li>
+</ol></li>
+<li>Suppose you have a 10-volume set of the publication <strong><em>“APL2 World”</em></strong> on a shelf. Each volume is 4 centimeters thick, including .25 centimeters for each of the front and back covers.
+<ol type="a">
+<li>Write an expression to compute how much linear space the 10 volumes occupy on the shelf.</li>
+<li>Between the front cover and page 1 of volume 1, there is a bookworm. It eats its way through the books until it reaches the last page of the last volume. How long is the hole it leaves in your collection? (Note: trick question.)</li>
+</ol></li>
+</ol>
+<h3 id="section-1.3-remembering-data">Section 1.3 — Remembering Data<a href="#section-1.3-remembering-data" class="section-link">§</a></h3>
+<p>The music store keeps changing its discounts from week to week. You can save some time by remembering the original prices (which apparently nobody pays). Then you need enter only the discounts to determine the costs of the various items. This section explains how <span class="small-caps">APL2</span> uses names to remember data.</p>
+<h4 id="assignment">Assignment<a href="#assignment" class="section-link">§</a></h4>
+<p>Any collection of data can be remembered by giving it a name. For example, the prices may be named <code>PRICE</code>:</p>
+<pre>      PRICE←(6.95 2.5) (7.95 3.55 295) 12.95</pre>
+<p>A name that has been assigned values is a <em>variable</em>.</p>
+<p>The association of a name with a set of values is an <em>assignment</em> of the name, and the left arrow is an <em>assignment arrow</em>. Notice that when you enter the expression, <span class="small-caps">APL2</span> displays no numbers. When you enter the name of the variable, <span class="small-caps">APL2</span> displays the numbers assigned to the name:</p>
+<pre>      PRICE
+ 6.95 2.5  7.95 3.55 295  12.95</pre>
+<p>Once you have assigned the name <code>PRICE</code>, you can compute last week’s consumer prices as follows:</p>
+<pre>      .9 .8 .7 × PRICE
+ 6.255 2.25  6.36 2.84 236  9.065</pre>
+<p>and this week’s prices can also be computed:</p>
+<pre>      .9×PRICE
+ 6.255 2.25  7.155 3.195 265.5  11.655</pre>
+<p>These computations do not affect the value of the variable <code>PRICE</code>. Only an assignment can give a value to a variable or change it.</p>
+<p>Any place where you use a set of values, you can instead use a name assigned those values. Using the name instead of the values reduces the chance that a typing error will introduce incorrect data.</p>
+<p>You can associate different sets of data with different names and use them independently or in combinations. Here is an example:</p>
+<pre>      DISCOUNT←.9 .8 .7
+      DISCOUNT × PRICE
+ 6.255 2.25  6.36 2.84 236  9.065</pre>
+<p>A name like <code>DISCOUNT</code> or <code>PRICE</code> is called a variable not because its value is continually changing but because, at different times, it can have different constant values. At any time, you can give a new value to a variable:</p>
+<pre>      DISCOUNT←.7 .5 .7
+      DISCOUNT × PRICE
+ 4.865 1.75  3.975 1.775 147.5  9.065</pre>
+<h4 id="names">Names<a href="#names" class="section-link">§</a></h4>
+<p>As you saw in the previous section, you can assign values to a name and use the name in a computation. This section contains the rules for forming names.</p>
+<p>In ordinary usage, people’s names are constructed as a list of characters chosen from the alphabet of their language. For example, “Caesar” is a name constructed from an alphabet consisting of uppercase and lowercase roman characters.</p>
+<p><span class="small-caps">APL2</span> has rules that specify how to form valid names. In particular, no name may contain an imbedded blank. Blanks separate names. Thus, in <span class="small-caps">APL2</span>, the Roman leader’s more complete name is viewed as two names separated by a blank:</p>
+<pre>      Julius Caesar</pre>
+<p>Construction of names in <span class="small-caps">APL2</span> follows these rules:</p>
+<ol>
+<li>The first or only character is from this set:</li>
+</ol>
+<pre>      ABCDEFGHIJKLMNOPQRSTUVWXYZ
+      abcdefghijklmnopqrstuvwxyz
+      ∆⍙</pre>
+<ol start="2">
+<li>The remaining characters, if any, are from the above set together with these:</li>
+</ol>
+<pre>      0123456789¯_</pre>
+<ol start="3">
+<li><span class="small-caps">APL2</span> distinguishes between uppercase and lowercase letters. The following are different names. Case is not ignored:</li>
+</ol>
+<pre>      Caesar
+      CAESAR
+      caesar</pre>
+<p>With some versions of <span class="small-caps">APL2</span>, underscored uppercase letters substitute for the lowercase alphabet. In this book, except for this section, neither the lowercase nor the underscored alphabetics are used for names.</p>
+<p>Here are some examples of valid names:</p>
+<pre>      A
+      ABC
+      Julius
+      L1011
+      This¯is¯a¯long¯name</pre>
+<p>Here are examples containing more than one name:</p>
+<pre>      A+B               &lt;---Two names separated by a function symbol
+      GENGHIS KHAN      &lt;---Two names separated by a blank</pre>
+<p>Here is an example of an illegal name:</p>
+<pre>      3ABC              &lt;---Inappropriate first character</pre>
+<p>Names may be associated with different objects at different times or associated with no object at all.</p>
+<p>To see the names that have values, enter the following command:</p>
+<pre>      )NMS
+PRICE.2 DISCOUNT.2</pre>
+<p>The <code>.2</code> following each name indicates that the name represents a variable. Later, you’ll see that the names of programs have the suffix <code>.3</code> or <code>.4</code>.</p>
+<h4 id="exercises-for-section-1.3">Exercises for Section 1.3<sup class="answers-note">[<a href="answers.html#section-1.3-remembering-data">Answers</a>]</sup><a href="#exercises-for-section-1.3" class="section-link">§</a></h4>
+<ol>
+<li>Which of the following combinations of characters represent a single valid <span class="small-caps">APL2</span> name? (For any combination that is not a single valid name, state why it is not.)
+<ol type="a">
+<li><code>PART3</code></li>
+<li><code>3RD</code></li>
+<li><code>ROW_3</code></li>
+<li><code>COLN 4</code></li>
+<li><code>_DEPT</code></li>
+<li><code>R2D2</code></li>
+<li><code>A_B</code></li>
+<li><code>A B</code></li>
+</ol>
+<ol>
+<li><code>A−B</code></li>
+</ol>
+<ol start="10" type="a">
+<li><code>DEPT,NUMBER</code></li>
+<li><code>A¯B</code></li>
+</ol></li>
+<li>In the following expressions, does the variable (or variables) change? If a variable changes, what is its new value?
+<ol type="a">
+<li><code>X←3</code></li>
+<li><code>X+3</code></li>
+<li><code>J←y</code></li>
+<li><code>X+Y</code></li>
+<li><code>Y←X</code></li>
+</ol></li>
+</ol>
+<h3 id="section-1.4-evaluation-of-expressions">Section 1.4 — Evaluation of Expressions<a href="#section-1.4-evaluation-of-expressions" class="section-link">§</a></h3>
+<p>To understand the intent of an expression, you must know how <span class="small-caps">APL2</span> evaluates that expression.</p>
+<p>The following expression gives the same result no matter which <strong>multiplication</strong> is applied first.</p>
+<pre>      3×10×4
+120</pre>
+<p><code>3×10</code> multiplied by <code>4</code> is the same as <code>3</code> multiplied by <code>10×4</code>.</p>
+<p>But the value of the following expression depends on whether you apply <strong>addition</strong> or <strong>multiplication</strong> first:</p>
+<pre>      3+4×5</pre>
+<p>If <code>3</code> and <code>4</code> are added first, the result is <code>35</code>. If <code>4</code> and <code>5</code> are multiplied first, the result is <code>23</code>. The result in <span class="small-caps">APL2</span> is <code>23</code>. This section explains how <span class="small-caps">APL2</span> evaluates this and other expressions.</p>
+<h4 id="order-of-evaluation">Order of Evaluation<a href="#order-of-evaluation" class="section-link">§</a></h4>
+<p>The order of evaluation does not matter if the functions in an expression are all <strong>multiplication</strong> or <strong>addition</strong> because these functions are associative. Most often, the order of evaluation does matter and affects the way you construct the expression. Look at the expression needed to solve this problem:</p>
+<blockquote>
+<p>You want to buy a shirt for $10.00 and a jacket for $20.00. There is a 5% sales tax on the purchase. How much do you have to pay?</p>
+</blockquote>
+<p>The clothing costs $10 plus $20 (which is $30). Including the tax, that’s 1.05 times $30. The following expression computes the cost of the shirt and jacket:</p>
+<pre>      1.05×10+20
+31.5</pre>
+<p>Do you see how <span class="small-caps">APL2</span> computes this? In expressions with numbers and functions like the preceding one, <span class="small-caps">APL2</span> evaluates the rightmost function first no matter what the function is.</p>
+<p>This evaluation may be pictured as follows:</p>
+<center>
+<img src="images/expression_evaluation0.jpg">
+</center>
+<p>This evaluation is different from normal arithmetic where you multiply before you add regardless of the order of the functions in an expression. <span class="small-caps">APL2</span> has over 80 functions and remembering which function is executed before another would be nearly impossible. Therefore, <span class="small-caps">APL2</span> follows an easy rule: <em>Execute functions from right to left</em>. Thus, the right argument of <code>×</code> is the result of the entire computation to its right.</p>
+<p>You will find the <em>right-to-left</em> rule useful and easy to apply because it does not depend on what functions you are using. To see how the right-to-left rule works, consider this variation of the previous example:</p>
+<blockquote>
+<p>Suppose that the $20 item you bought was not taxable. How would you prevent the multiplication by 1.05?</p>
+</blockquote>
+<p>You can rearrange the computation as follows:</p>
+<pre>      20+1.05×10
+30.5</pre>
+<p>This evaluation proceeds right to left as follows:</p>
+<center>
+<img src="images/expression_evaluation1.jpg">
+</center>
+<h4 id="use-of-parentheses">Use of Parentheses<a href="#use-of-parentheses" class="section-link">§</a></h4>
+<p><span class="small-caps">APL2</span> uses a familiar way to control the order of execution: parentheses. You’ve already seen parentheses used to group data. You use parentheses to group a computation as follows:</p>
+<pre>      (2×5) + (3×6)
+28</pre>
+<p>The evaluation of this expression is illustrated here:</p>
+<center>
+<img src="images/expression_evaluation2.jpg">
+</center>
+<p>If you want to change the order of evaluation, use parentheses for grouping.</p>
+<p>To make an expression clearer, you can use parentheses even when they are not necessary. Parentheses that can be removed from an expression without affecting evaluation are <em>redundant parentheses</em>. The rightmost pair of parentheses in the expression <code>(2×5)+(3×6)</code> is redundant since the right-to-left rule would have caused the rightmost multiplication to be done first in any case. The computation can be written more compactly by removing the redundant parentheses as follows:</p>
+<pre>      (2×5)+3×6
+28</pre>
+<p>Redundant parentheses have no effect on the order of execution or the result of the computation. If parentheses help you understand what you write, use them.</p>
+<h4 id="use-of-blanks">Use of Blanks<a href="#use-of-blanks" class="section-link">§</a></h4>
+<p>You have already seen blanks used to separate one number from another number. Blanks are not needed to separate a number from a symbol but may be used if you wish. Thus, the following expressions produce identical values:</p>
+<pre>      2−3
+¯1
+      2   −   3
+¯1</pre>
+<p>Whenever you use one blank to separate one name, constant, or symbol from another, you can use multiple blanks as well. Thus, the following expressions produce identical values:</p>
+<pre>      2 3
+2 3
+      2        3
+2 3</pre>
+<p>While you can use extra blanks on entry, <span class="small-caps">APL2</span> discards them.</p>
+<h4 id="vector-notation">Vector Notation<a href="#vector-notation" class="section-link">§</a></h4>
+<p>A list of data is called a <em>vector</em>. You’ve already seen several examples of vectors.</p>
+<p>You denote vectors of length two or longer by writing the values of the items next to each other. This is called <em>vector notation</em>. Here is a two-item vector:</p>
+<pre>      3 5
+3 5</pre>
+<p>To form this vector, you write the constant <code>3</code> next to the constant <code>5</code> separating them by a blank to avoid confusion with the number <code>35</code>.</p>
+<p>You can also compute <code>5</code> by placing in parentheses an expression that yields <code>5</code>, such as:</p>
+<pre>      3 (1+4)
+3 5</pre>
+<p>These parentheses are not redundant. Removing them changes the meaning of the expression:</p>
+<pre>      3 1+4
+7 5</pre>
+<p>At first glance, this expression might look as if it contains two things: <code>3</code> and <code>1+4</code>. But <span class="small-caps">APL2</span> is an array processing language and operates on whole collections of data in one gulp. Therefore, it is more important to form collections of data (like <code>3 1</code>) than it is to apply functions. Thus, <span class="small-caps">APL2</span> groups <code>3</code> and <code>1</code> before addition is evaluated. So <span class="small-caps">APL2</span> evaluates this expression (using redundant parentheses) like this:</p>
+<pre>      (3 1)+4
+7 5</pre>
+<p>The two-item vector resulting from <code>3 (1+4)</code> has the same value as <code>3 5</code> and may be used in an expression anywhere <code>3 5</code> is used.</p>
+<pre>      3 5 × 10
+30 50
+      3 (1+4) × 10
+30 50</pre>
+<p>You can also produce the same vector by using a name that has been assigned the value 5:</p>
+<pre>      AS←5
+      3 AS
+3 5
+      3 (AS+2)
+3 7</pre>
+<p>An assignment may be imbedded in an expression:</p>
+<pre>      3 AS←5
+3 5</pre>
+<p>The assignment <code>AS&lt;5</code> produces its right argument <code>5</code> as its value.</p>
+<p>When the assignment is leftmost in an expression, the resulting value does not print.</p>
+<pre>      AS←5</pre>
+<p>When the assignment is not leftmost in an expression, the value may be used for further computation:</p>
+<pre>      2+AS←5
+7</pre>
+<p>The assignment only applies to the name immediately on its left:</p>
+<pre>      AT←3
+      AT AS←5
+3 5</pre>
+<p>More than one name may be assigned in one operation by using parentheses:</p>
+<pre>      (AT AS)←3 5
+      AT
+3
+      AS
+5</pre>
+<p>One value may be assigned to several names:</p>
+<pre>      (AT AU)←10
+      AT
+10
+      AU
+10</pre>
+<p>Again, the result of the assignment is the value to the right of the left arrow, and it does not print if the assignment is leftmost in the expression.</p>
+<p>If the assignment is <em>not</em> leftmost in the expression, its value may be used for further computation as though the assignment were not present:</p>
+<pre>      3+(AT AU)←10
+13</pre>
+<p>You can write vectors containing vectors, surrounding each vector item by parentheses:</p>
+<pre>      (1 2 3) (4 5)
+ 1 2 3  4 5</pre>
+<p>This is a two-item vector each of whose items is also a vector. The parentheses group the items. Notice how the spacing of the displayed result gives you a hint that this result is something other than a five-item vector. Although <span class="small-caps">APL2</span> uses spacing on output to suggest grouping, you cannot use spaces to indicate grouping on input. You must use parentheses.</p>
+<p>Items of a vector of vectors may be assigned to different names:</p>
+<pre>      (AA BB)←(1 2 3) (4 5)
+      AA
+1 2 3
+      10+BB
+14 15</pre>
+<p>These are the important points about vector notation:</p>
+<ul>
+<li>You can write only a vector of length two or longer using vector notation.</li>
+<li>You represent each item in vector notation as a constant, a name, or an expression in parentheses.</li>
+<li>You use parentheses only for grouping. They do not indicate multiplication or have any other significance.</li>
+<li>Vectors are more important than functions. If, when looking at an expression, you have a choice between forming a vector or applying a function, form the vector.</li>
+</ul>
+<h4 id="display-function"><code>DISPLAY</code> Function<a href="#display-function" class="section-link">§</a></h4>
+<p><span class="small-caps">APL2</span> uses spaces to suggest the structure of a vector. If you are studying a result and want to know its structure for sure, you use the <code>DISPLAY</code> function.</p>
+<p>The <code>DISPLAY</code> function is available with many <span class="small-caps">APL2</span> systems. <a href="/apl2/appendixA.html">Appendix A</a> shows the definition of the function and tells you how to locate it on your <span class="small-caps">APL2</span> system.</p>
+<p>To use <code>DISPLAY</code>, simply enter its name and, as its right argument, the expression whose value you want to examine:</p>
+<pre>      DISPLAY 2 4 6
+.→----.
+|2 4 6|
+'∼----'</pre>
+<p><code>DISPLAY</code> shows a numeric vector within a box with a right pointing arrow on the top edge, indicating data organized along one direction (a vector). The <code>∼</code> on the bottom edge indicates numeric data.</p>
+<p>If some of the items of a vector are vectors themselves, <code>DISPLAY</code> boxes these items as well:</p>
+<pre>      DISPLAY (3 4 6) 5 (9 7)
+.→----------------.
+| .→----.   .→--. |
+| |3 4 6| 5 |9 7| |
+| '∼----'   '∼--' |
+'∊----------------'</pre>
+<p>The symbol <code>∊</code> appears on the bottom edge of any box that contains an item that is not a single number or character.</p>
+<p><a href="/apl2/chapter5.html">Chapter 5</a> tells you more about the <code>DISPLAY</code> function.</p>
+<h4 id="exercises-for-section-1.4">Exercises for Section 1.4<sup class="answers-note">[<a href="answers.html#section-1.4-evaluation-of-expressions">Answers</a>]</sup><a href="#exercises-for-section-1.4" class="section-link">§</a></h4>
+<ol>
+<li><p>In the following expressions, indicate the order of execution of the functions by writing a number on the line below each function (1 under the first function evaluated, and so on):</p>
+<ol type="a">
+<li><pre>54 − 17 × 10 — 12 + 3
+  ___  ___  ___  ___</pre></li>
+<li><pre>(54 − 17 × 10) — 12 + 3
+   ___  ___   ___  ___</pre></li>
+<li><pre>(54 − 17) × 10 — 12 + 3
+   ___   ___  ___  ___</pre></li>
+<li><pre>(54 − 17) × (10 — 12) + 3
+   ___   ___   ___   ___</pre></li>
+</ol></li>
+<li><p>Evaluate the following expressions. Indicate which, if any, parentheses are redundant:</p>
+<ol type="a">
+<li><code>5 × 3 × 2</code></li>
+<li><code>5 × 3 − 2</code></li>
+<li><code>5 − 3 × 2</code></li>
+<li><code>5 × (3 − 2)</code></li>
+<li><code>(5 × 3) − 2</code></li>
+<li><code>10 + 5 × 4 − 2</code></li>
+<li><code>(10 + 5) × 4 − 2</code></li>
+<li><code>(10 + 5) × (4 − 2)</code></li>
+<li><code>10 + (5 × 4) − 2</code></li>
+<li><code>(10 + 5 × 4) − 2</code></li>
+<li><code>(((10 + 5) × 4) − 2)</code></li>
+</ol></li>
+<li><p>Evaluate the following expressions:</p>
+<ol type="a">
+<li><code>10 20 30 + 5 8 4</code></li>
+<li><code>10 20 30 + 5</code></li>
+<li><code>30 + 5 8 4</code></li>
+<li><code>2 + 3 4 + 5</code></li>
+<li><code>2 + 3 − 4 + 5</code></li>
+<li><code>2 + 3    4 + 5</code></li>
+<li><code>2 + 3 4 − 5 6</code></li>
+<li><code>2 + 3  4 − 5</code></li>
+</ol>
+<ol>
+<li><code>( 2 + 3  ¯4)− 5</code></li>
+</ol>
+<ol start="10" type="a">
+<li><code>4 10 + 5  5 + 2 6</code></li>
+<li><code>4 10 + 5 5 + 2</code></li>
+<li><code>4 10 + 5 + 2 6</code></li>
+<li><code>10 + 5 5 + 2</code></li>
+<li><code>10 + 5 ¯5 + 2 6</code></li>
+</ol></li>
+<li><p>Evaluate the following expressions. Write your answers with parentheses to show grouping:</p>
+<ol type="a">
+<li><code>.1 .2 .5 + 10</code></li>
+<li><code>.1 .2 .5 + 10 20 30</code></li>
+<li><code>.1 .2 .5 + (10 20) 30 (40 50 60)</code></li>
+<li><code>(.1 .2) .5 + (10 20) 30</code></li>
+<li><code>.1 (.2 .5) + 10 (20 30)</code></li>
+<li><code>.1 (.2 .5) + (10 20) 30</code></li>
+</ol></li>
+<li><p>State the value of the following expressions and indicate whether the value prints. Assume that assignments remain in effect through the end of the exercise:</p>
+<ol type="a">
+<li><code>X←3</code></li>
+<li><code>1+X←3</code></li>
+<li><code>X+X</code></li>
+<li><code>X+X←4</code></li>
+<li><code>X−1</code></li>
+<li><code>X+X</code></li>
+<li><code>(X←5)−3</code></li>
+</ol></li>
+<li><p>Given five variables:</p>
+<pre>      A←2 3
+      B←4
+      C←(1 5)(6 7)
+      D←A B C
+      E←A B</pre>
+<p>Evaluate the following expressions:</p>
+<ol type="a">
+<li><code>D</code></li>
+<li><code>(A+1) A</code></li>
+<li><code>A 10</code></li>
+<li><code>A 10−1</code></li>
+<li><code>A(10−1)</code></li>
+<li><code>B+0 1 2</code></li>
+<li><code>B(B+1)(B+2)</code></li>
+<li><code>C 2 C</code></li>
+<li><code>E+10</code></li>
+<li><code>E+E</code></li>
+</ol></li>
+<li><p>A polyhedron is a solid three-dimensional figure bounded by flat surfaces. Where two flat surfaces meet, a straight line is formed. Where three or more lines meet, a point called a vertex is formed. Write an expression that computes the sum of the vertices and surfaces, and then subtracts the number of edges, for the following figures:</p>
+<ol type="a">
+<li>Tetrahedron (pyramid) with 4 vertices, 6 edges, and 4 surfaces.</li>
+<li>Octahedron with 6 vertices, 12 edges, and 8 surfaces.</li>
+<li>Icosahedron with 12 vertices, 30 edges, and 20 surfaces.</li>
+</ol></li>
+<li><p>A light-year is the distance that light travels in a year.</p>
+<ol type="a">
+<li>Write an expression to determine the number of miles light can travel in one, two, and three years if light travels 186,281 miles in one second.</li>
+<li>Write an expression to determine the number of kilometers light can travel in one, two, and three years if one mile is 1.6 kilometers.</li>
+</ol></li>
+<li><p>Given that temperature in Fahrenheit is 32 plus nine-fifths of a degree in Celsius, write expressions to reflect the following computations:</p>
+<ol type="a">
+<li>Convert Fahrenheit temperature <code>FEH</code> to Celsius.</li>
+<li>Convert Celsius temperature <code>CEL</code> to Fahrenheit.</li>
+</ol></li>
+<li><p>In 1984, three women slept 7, 7.5, and 8.2 hours per day, respectively. Write an expression to determine the percentage of the year each woman slept.</p></li>
+<li><p>Suppose you kept a weekly record of the length of time in minutes you slept each day. Here’s an example:</p>
+<pre>      WEEK1←480 400 360 380 400 350 500</pre>
+<p>Write an expression to determine the percentage of the week spent sleeping.</p></li>
+<li><p>Write an expression to find the total cost <code>TCOST</code> of some items, given the following variables:</p>
+<ul>
+<li><code>PRICES</code> — a vector of the individual item prices.</li>
+<li><code>QTY</code> — the quantity of each item purchased.</li>
+<li><code>STAX</code> — the sales tax as a percentage.</li>
+</ul></li>
+<li><p>At a recent family visit to the dentist, your dentist provided the following services:</p>
+<ul>
+<li>Examined and X-raved your two children’s teeth.</li>
+<li>Filled two teeth for your spouse.</li>
+<li>X-rayed and checked your teeth and filled one tooth.</li>
+</ul>
+<p>An examination and X-ray cost $45 and each filling costs $15. Write an expression to determine your charges, assuming that your dental insurance pays 80% of the dental expense above $25 for each individual.</p></li>
+<li><p>Write an expression to interchange the values of the two variables <code>A</code> and <code>B</code>.</p></li>
+</ol>
+<h3 id="section-1.5-saving-your-work">Section 1.5 — Saving Your Work<a href="#section-1.5-saving-your-work" class="section-link">§</a></h3>
+<p>When you begin an <span class="small-caps">APL2</span> session, no name has a value. As you work, you may assign values to some names. You do not want to lose them when you have finished using <span class="small-caps">APL2</span>. <a href="/apl2/chapter4.html">Chapter 4</a> shows you the best way to save work when you have finished and get it restored when you want to use <span class="small-caps">APL2</span> later. For now, it is sufficient to know that entering the following command stops <span class="small-caps">APL2</span> and saves your work:</p>
+<pre>      )CONTINUE
+1988-05-01 18.22.43 CONTINUE      </pre>
+<p>This command saves your work and terminates the <span class="small-caps">APL2</span> session. You may also see some termination messages depending on the particular <span class="small-caps">APL2</span> implementation you are using. Next time you start up <span class="small-caps">APL2</span>, you should see the following message:</p>
+<pre>SAVED 1988-05-01 18.22.43</pre>
+<p>All the names you defined In your previous session are again available to you.</p>
+<p>Using <code>)CONTINUE</code> is not the recommended way to save your work once you become familiar with the <span class="small-caps">APL2</span> library system, but it will do the job until you reach <a href="/apl2/chapter4.html">Chapter 4</a>.</p>
+<h3 id="section-1.6-errors">Section 1.6 — Errors<a href="#section-1.6-errors" class="section-link">§</a></h3>
+<p>Trying out the examples in this chapter may have led to any number of mistakes, Perhaps you spelled a name wrong, wrote an incorrect number, tried to add two numbers to three numbers, used a name before assigning it a value, and so forth.</p>
+<p>Here’s an example in which enter was pressed before the right argument was given for a function:</p>
+<pre>      2+
+SYNTAX ERROR
+      2+
+      ^^</pre>
+<p>After each error, entering a <code>→</code> clears out <span class="small-caps">APL2</span>’s memory of the error:</p>
+<pre>      →</pre>
+<h4 id="types-of-errors">Types of Errors<a href="#types-of-errors" class="section-link">§</a></h4>
+<p>The following are some errors you may make. Each one contains a brief description of the type of error. Note that after each error occurs, the example shows a <code>→</code> being used to clear the error from <span class="small-caps">APL2</span>’s memory:</p>
+<ul>
+<li><p>Entering a name that has no value:</p>
+<pre>      PRICF
+VALUE ERROR
+      PRICF
+      ^
+      →</pre></li>
+<li><p>Entering a function with no right argument:</p>
+<pre>      2+
+SYNTAX ERROR
+      2+
+      ^^
+      →</pre></li>
+<li><p>Trying to add vectors of different lengths:</p>
+<pre>      1 2 3 + 4 5
+LENGTH ERROR
+      1 2 3+4 5
+      ^    ^
+      →</pre></li>
+<li><p>Using an argument not in the domain of a function:</p>
+<pre>      (X&lt;5)÷0
+DOMAIN ERROR
+      (X←5)÷0
+      ^    ^
+      →</pre></li>
+</ul>
+<p>The error messages may seem rather terse at first, but you will quickly learn to spot the error they indicate. Whenever <span class="small-caps">APL2</span> displays two carets (<code>^</code>) in an error report, the rightmost one points to the function in which <span class="small-caps">APL2</span> detected the error. The left caret shows how far to the left <span class="small-caps">APL2</span> has looked at the expression in its application of the right-to-left rule. Thus, in the illustration of <code>DOMAIN ERROR</code>, the rightmost caret shows that the error occurred in <strong>division</strong>. The leftmost caret shows that the assignment to X has already been done.</p>
+<p>When <span class="small-caps">APL2</span> displays one caret in an error report, it is both leftmost and rightmost.</p>
+<h4 id="clearing-errors">Clearing Errors<a href="#clearing-errors" class="section-link">§</a></h4>
+<p>Suppose you make these errors and don’t clear them with <code>→</code>:</p>
+<pre>      1 2 3 + 4 5
+LENGTH ERROR
+      1 2 3+4 5
+      ^    ^
+      
+      2÷0
+DOMAIN ERROR
+      2÷0
+      ^^</pre>
+<p>You can determine the errors that you have not cleared by entering the following system command:</p>
+<pre>      )SIS
+⋆   2÷0
+    ^^
+
+⋆   1 2 3+4 5
+    ^    ^</pre>
+<p>This list of uncleared errors is a display of the <em>state indicator</em>. The state indicator keeps track of expressions and programs that have started execution but have not completed. <code>SIS</code> stands for State Indicator with Statements.</p>
+<p>In <a href="/apl2/chapter7.html">Chapter 7</a>, you’ll find that you can make use of the information in the state indicator. For now, you should just clear it. To clear the state indicator of uncompleted expressions, enter a right arrow for each <code>⋆</code> that you see in the <code>SIS</code> display.</p>
+<pre>      →
+      →</pre>
+<p>Then reenter <code>)SIS</code> to verify that you have cleared the state indicator completely:</p>
+<pre>      )SIS</pre>
+<p>As an alternative to using <code>→</code> repeatedly to clear the errors, you can enter the following command to clear them all:</p>
+<pre>      )RESET</pre>
+<p>Although <code>)RESET</code> is convenient, particularly if you neglected to clear many errors, it is best to clear out each error immediately after you make it.</p>
+<p>If you ever want to clear out less than everything in the state indicator, you can use <code>)RESET</code> with a number to remove that many expressions from the top of the state indicator:</p>
+<pre>      )RESET 3</pre>
+<p>This command removes the top three expressions from the <code>)SIS</code> display.</p>
+<h4 id="exercises-for-section-1.6">Exercises for Section 1.6<sup class="answers-note">[<a href="answers.html#section-1.6-errors">Answers</a>]</sup><a href="#exercises-for-section-1.6" class="section-link">§</a></h4>
+<ol>
+<li><p>What error message (if any) would <span class="small-caps">APL2</span> produce if the following expressions were entered in order? For each that results in an error message, explain what is wrong. Possible answers are:</p>
+<ul>
+<li>no error — expression will execute</li>
+<li><code>SYNTAX ERROR</code> — expression doesn’t make sense</li>
+<li><code>VALUE ERROR</code> — name has no value</li>
+<li><code>LENGTH ERROR</code> — lengths don’t match</li>
+<li><code>DOMAIN ERROR</code> — cannot compute a function</li>
+</ul>
+<ol type="a">
+<li><code>2+3 4</code></li>
+<li><code>1 2 3 + 3 4</code></li>
+<li><code>2</code></li>
+<li><code>10÷0</code></li>
+<li><code>10÷0+2</code></li>
+<li><code>ZZZZ−2</code></li>
+<li><pre>A←10
+B←20
+C←AB</pre></li>
+<li><code>123+(4 5)(6 7 8)</code></li>
+<li><code>1 2 3+(4 5)(6 7 8)</code></li>
+</ol></li>
+<li><p>Suppose the state indicator looks like this:</p>
+<pre>      )SIS
+⋆  2+
+   ^^
+⋆  10+0
+   ^ ^
+⋆  2 3+4 5 6
+   ^  ^
+⋆  PRICF
+   ^</pre>
+<p>What will the state indicator look like after each of the following (assume the same state indicator contents before each question):</p>
+<ol type="a">
+<li><code>→</code></li>
+<li><pre>→
+→</pre></li>
+<li><code>)RESET 4</code></li>
+<li><code>)RESET</code></li>
+</ol></li>
+</ol>
+<h3 id="section-1.7-terminology">Section 1.7 — Terminology<a href="#section-1.7-terminology" class="section-link">§</a></h3>
+<p>This chapter has introduced many new ideas—some named, some shown only in examples. You learn faster if the key ideas all have names. You probably already know the concepts; you’ve seen examples of them in use. In this section, the concepts get names.</p>
+<p>The terms for describing data are the most important. Be sure you understand them. Terms used for describing functions and operators are important especially if you plan to read other <span class="small-caps">APL</span> or <span class="small-caps">APL2</span> books or manuals.</p>
+<h4 id="terms-for-data">Terms for Data<a href="#terms-for-data" class="section-link">§</a></h4>
+<p>In <span class="small-caps">APL2</span>, any collection of data is an <em>array</em>. An array can be a single number or a single character or it can be a collection of thousands of numbers and characters. A single number or a single character is a <em>simple scalar</em>. Here are some simple scalars:</p>
+<pre>      5
+5
+      37
+37</pre>
+<p>Note that 37 is a single number, and so it is a simple scalar, even though it contains more than one digit.</p>
+<p>A list of data arranged in a line is a <em>vector</em> and the pieces of data in any arrangement are <em>items</em>.</p>
+<p>If every item of a vector is a simple scalar, the vector is a <em>simple vector</em>. Here are some simple vectors:</p>
+<pre>      2 3 4
+2 3 4
+      2 (2+1) 4
+2 3 4</pre>
+<p>If any item of a vector is not a simple scalar, the vector is a <em>nested vector</em>. Here is a nested vector:</p>
+<pre>      (6.95 2.5) (7.95 3.55 2.95) 12.95
+ 6.95 2.5  7.95 3.55 2.95  12.95</pre>
+<p>The first two items of this vector are simple vectors, and the third item is a simple scalar.</p>
+<h4 id="terms-for-operations">Terms for Operations<a href="#terms-for-operations" class="section-link">§</a></h4>
+<p>An <em>operation</em> takes inputs and produces an output. An operation can be a function or an operator.</p>
+<h5 id="functions">Functions<a href="#functions" class="section-link">§</a></h5>
+<p>A <em>function</em> is an operation that, when given data, produces new data. You’ve seen several functions in this chapter, and you’ll see many more before you’ve finished with this book.</p>
+<p>Functions supplied with your <span class="small-caps">APL2</span> system are called <em>primitive functions</em>. Primitive functions are normally denoted by symbols. <a href="/apl2/appendixE.html">Appendix E</a> lists the symbols and their names. They are always available for your use. Later when you begin to program in <span class="small-caps">APL2</span>, you will write <em>defined functions</em> which behave like the primitive functions except you provide their definition and you denote them by giving each a name.</p>
+<p>The arrays to which a function applies are the <em>arguments</em> of the function (this word does not imply any difference of opinion). The array produced by the function is called the <em>explicit result</em> (or, loosely, the <em>result</em>).</p>
+<p>Here is how these terms apply to the function <strong>subtraction</strong>:</p>
+<pre>      17−5
+12</pre>
+<p><strong>Subtraction</strong> (<code>−</code>) is a primitive function. <code>17</code> and <code>5</code> are its arguments. The difference (<code>12</code>) is the explicit result. This explicit result can be used as an argument to another function:</p>
+<pre>      1+17−5
+13</pre>
+<p><em>Subtraction</em> requires two arguments, one on the left and one on the right. A function that applies between two arrays is a <em>dyadic function</em>.</p>
+<p>On the other hand, <em>negation</em> (<code>−</code>) is a function that applies to one array (its argument) and produces an array (its explicit result):</p>
+<pre>      − 2 3 ¯5
+¯2 ¯3 5</pre>
+<p>A function that applies to one argument, written on the right, is a <em>monadic function</em>.</p>
+<p>A dyadic function is one with both left and right arguments and a monadic function is one with only a right argument.</p>
+<p>You have seen the mid-minus symbol (<code>−</code>) used as both the dyadic <strong>subtraction</strong> function and the monadic <strong>negate</strong> function. In general, any <span class="small-caps">APL2</span> function symbol represents two functions—one monadic and one dyadic.</p>
+<p>For a function in a given expression, if a left argument is present, the dyadic function is always the one applied.</p>
+<h5 id="operators">Operators<a href="#operators" class="section-link">§</a></h5>
+<p>An <em>operator</em> is an operation that produces a new function. You’ve only seen one operator so far: <strong>reduction</strong>. Operators supplied with the <span class="small-caps">APL2</span> system are <em>primitive operators</em> and are denoted by symbols. Operators you write are <em>defined operators</em>. The functions or arrays to which an operator applies are the <em>operands</em> of the operator and the function which results is the <em>derived function</em>.</p>
+<p>Operators may be <em>monadic</em> or <em>dyadic</em> according to whether they are defined to take one or two operands. The operand of a monadic operator is written to the left of the operation. An <span class="small-caps">APL2</span> operator symbol always represents a single operator and is monadic or dyadic by definition, not by context.</p>
+<p>Here is how these terms apply to the operator <strong>reduction</strong>:</p>
+<pre>      +/ 10 20 30
+60</pre>
+<p><strong>Reduction</strong> (<code>/</code>) is a monadic primitive operator that produces a monadic function. Its operand is the function <strong>addition</strong> (<code>+</code>). Applied to <strong>addition</strong>, <strong>reduction</strong> produces the derived function <strong>summation</strong> (<code>+/</code>). This derived function is then applied to its argument as with any other monadic function.</p>
+<h4 id="commands">Commands<a href="#commands" class="section-link">§</a></h4>
+<p>A line that begins with a right parenthesis is called a <em>system command</em>. So far you’ve seen four system commands: <code>)NMS</code>, <code>)CONTINUE</code>, <code>)SIS</code>, and <code>)RESET</code>. A system command is not an <span class="small-caps">APL2</span> expression or an operation. You cannot execute a system command from within a program. It is a means of requesting some information or some action from the <span class="small-caps">APL2</span> system. <code>)NMS</code> asks for a display of the names currently defined. <code>)CONTINUE</code> requests an end to the current <span class="small-caps">APL2</span> session with retention of the definitions of any names for the next session.</p>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="/apl2/foreword.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="/apl2/contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="/apl2/chapter2.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+</body>
+</html>
