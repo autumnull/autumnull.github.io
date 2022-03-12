@@ -1,10 +1,182 @@
-/**
- * Canvas
-**/
-#artbox {
-  border: 1px solid #c3c3c3;
-  width: 600px;
-  height: 800px;
+html {
+  padding: 0;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  background-image: url("/img/pin blue.gif");
+}
+
+.background {
+  height: 100%;
+  width: 100%;
+  background: rgb(0, 20, 19) url("/img/pink violet.gif");
+  background-blend-mode: difference;
+}
+
+.silhouette {
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  mask-image: url("/img/silhouette woman wearing heels.png");
+  mask-size: 150px;
+}
+
+.edge {
+  padding: 0px;
+}
+
+header {
+  clear: both;
+  height: min-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 4px ridge white;
+}
+
+header a {
+  flex-grow: 1;
+  max-width: 64rem;
+}
+
+h1, h2 {
+  font-family: cursive;
+  background: linear-gradient(to bottom, fuchsia, black);
+  color: transparent;
+  background-clip: text;
+}
+
+h1 {
+  font-size: 250%;
+}
+
+h2 {
+  font-size: 200%;
+}
+
+header img {
+  margin: 1em;
+  height: 100px;
+  width: auto;
+}
+
+header marquee {
+  border-left: 4px dotted white;
+  border-right: 4px dotted white;
+  background-image: url("/img/thankyoubabe.gif");
+  background-repeat: no-repeat;
+  background-position: center;
+  max-width: 64rem;
+  height: 128px;
+}
+
+span.ding {
+  font-family: fantasy;
+}
+
+div.body-content {
+  display: flex;
+  max-width: 64rem;
+  margin: auto;
+}
+
+div.left {
+  margin: 1em;
+  width: max-content;
+}
+
+div.sidebar {
+  border: 30px dotted #DB3FAB;
+  border-image: url("/img/heart jewel border.png") 68 round;
+}
+
+div.sidebar > ul {
+  padding: 0;
+}
+
+li::marker {
+  content: none;
+}
+
+div.sidebar > ul img {
+  width: 30px;
+  height: auto;
+}
+
+div.sidebar marquee {
+  border-bottom: 4px dotted white;
+}
+
+div.button {
+  padding: 0.5em;
+  border: 4px outset white;
+  background-image: url("/img/cloud glitter in pink.gif");
+}
+
+div.main-container {
+  flex-grow: 1;
+  position: relative;
+  margin: 1em;
+}
+
+div.content-border {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: -1;
+}
+
+div.content-border > img {
+  z-index: -1;
+  position: absolute;
+  height: 300px;
+}
+
+img.corner-bl {
+  left: -40px;
+  bottom: -10px;
+}
+
+img.corner-tr {
+  top: -4px;
+  right: -10px;
+}
+
+div.main-content {
+  position: relative;
+  padding: 30px 60px;
+}
+
+div.welcome {
+  background-image: url("/img/glitter in black.gif");
+  border: 4px ridge turquoise;
+  width: min-content;
+  margin: auto;
+  display: flex;
+}
+
+div.welcome > img {
+  height: 100px;
+  width: auto;
+}
+
+ul.main-list {
+  padding: 0;
+  column-width: 200px;
+}
+
+ul.main-list > li {
+  break-inside: avoid;
+  border: 4px ridge white;
+  background-image: url("/img/pink sand glitter.gif");
+  margin-bottom: 14px;
+}
+
+ul.main-list > li img {
+  max-width: 100%;
 }
 
 /**
@@ -36,4 +208,13 @@
   100% {
     cursor: url("/img/flame_cursor/cursor0.png") 2 11, auto;
   }
+}
+
+/**
+* Canvas
+**/
+#artbox {
+  border: 1px solid #c3c3c3;
+  width: 300px;
+  height: 400px;
 }
