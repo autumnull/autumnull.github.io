@@ -47,6 +47,10 @@ h1, h2 {
   background: linear-gradient(to bottom, fuchsia, black);
   color: transparent;
   background-clip: text;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 h1 {
@@ -74,7 +78,7 @@ header marquee {
 }
 
 span.ding {
-  font-family: fantasy;
+  font-family: "Dingbat", fantasy;
 }
 
 div.body-content {
@@ -217,4 +221,9 @@ ul.main-list > li img {
   border: 1px solid #c3c3c3;
   width: 300px;
   height: 400px;
+}
+
+@font-face {
+  font-family: "Dingbat";
+  src: url("/Dingbat.otf");
 }
