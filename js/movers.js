@@ -6,10 +6,13 @@ var ctx = canvas.getContext("2d");
 canvas.width  = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
+scaleX = canvas.width / 600;
+scaleY = canvas.height/ 800;
+
 const TAU = Math.PI * 2;
 
-const moverRadius = 100;
-const moverSpeed = 3;
+const moverRadius = 100 * Math.min(scaleX, scaleY);
+const moverSpeed = 3 * Math.min(scaleX, scaleY);
 const turnRange = 0.5;
 
 movers = []

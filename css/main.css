@@ -218,9 +218,10 @@ ul.main-list > li img {
 * Canvas
 **/
 #artbox {
+  position: absolute;
   border: 1px solid #c3c3c3;
-  width: 300px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
 }
 
 @font-face {
