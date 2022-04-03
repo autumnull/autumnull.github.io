@@ -148,7 +148,7 @@
 [1]   Z←1000⍴2 '
 [2]   Z←PROGB X
 [3]   ∇
-      
+
       ∇Z←PROGB X
 [1]   BCNT←BCNT+1
 [2]   BCNT
@@ -415,7 +415,7 @@ VALUE ERROR
 VALUE ERROR
       2+QQ×⍳10
          ^
-      
+
       QQ←10
 12 22 32 42 52 62 72 82 92 102</pre>
 <p>Execution stopped because a value for <code>QQ</code> could not be located. After <code>QQ</code> had a value, <code>→⍳0</code> resumed execution from where it left off without repeating the computation of <code>⍳10</code>. Not having to recompute <strong>interval</strong> is a minimal savings. On the other hand, if instead of <strong>interval</strong>, the function that did not need to be reevaluated was a program that runs for an hour, the savings would be more significant.</p>
@@ -480,7 +480,7 @@ SQRT[3] 2.236067977
       1 0 9 1 2 3 6 9 3 10 4 7 9 12 5 3 9 0 1,⎕
 ⎕:
       7 3 2
-      
+
       MAT
 6  8  2   5  9  1  2  5  3  7  5  12
 4  6  1   0  9  1  2  3  6  9  3  10
@@ -501,14 +501,14 @@ Enter your age
       31
 Thanks
 31
-      
+
       AGE
 Enter your age
 ⎕:
       300
 Wishful thinking
 300
-      
+
       AGE
 Enter your age
 ⎕:
@@ -522,7 +522,7 @@ You're not born yet
 [1]   'Enter your name'
 [2]   Z←⎕
 [3]   ∇
-      
+
       GETNAME
 Enter your name
 ⎕:
@@ -540,7 +540,7 @@ VALUE ERROR
 [1]   'Enter your name'
 [2]   Z←⍞
 [3]   ∇
-      
+
       GETNAME1
 Enter your name
 JIM      &lt;---(user typed this)
@@ -631,7 +631,7 @@ No.  One more try
 <pre>      CN1←'23.5 1.76 ¯127'
       ⍴CN1
 14
-      
+
       ⍎CN1
 23.5 1.76 ¯127
       ⍴⍎CN1
@@ -643,7 +643,7 @@ No.  One more try
 1.56 128.5 2400</pre>
 <p>Suppose you have a matrix of characters that represents a set of expressions:</p>
 <pre>      CN3←2 4⍴'6×⍳3⌽−⍳3"
-      
+
       CN3
 6×⍳3
 ⌽−⍳3</pre>
@@ -651,7 +651,7 @@ No.  One more try
 <pre>      ⊃⍎¨⊂[2]CN3
  6 12 18
 ¯3 ¯2 ¯1
-      
+
       ⍴⊃⍎¨⊂[2]CN3
 2 3</pre>
 <p>A somewhat different use of <strong>execute</strong> is to extract the value from a variable, given its name. Here is a function that prints information about a variable:</p>
@@ -750,7 +750,7 @@ No.  One more try
 [1]   ⍞←1 2 3
 [2]   'ABC'
 [3]   ∇
-      
+
 1 2 3ABC</pre>
 <p>Programs primarily use <strong>quote-quad</strong> output for output of vectors. You may want to experiment to see what your system does with quote-quad output of higher-rank arrays.</p>
 <h4 id="character-input-following-character-output">Character Input Following Character Output<a href="#character-input-following-character-output" class="section-link">§</a></h4>
@@ -759,10 +759,10 @@ No.  One more try
 [1]   ⍞←'Enter your name '
 [2]   Z←⍞
 [3]   ∇
-      
+
       N←GETNAME2
 Enter your name JIM
-      
+
       N
                 JIM
       ⍴N
@@ -782,21 +782,21 @@ Enter your name JIM
 1 134.23 100000
 0 ¯15.4  ¯14000
 1   0.65      0
-      
+
       ⍴AN
 3 3
-      
+
       ⍕AN
 1 134.23 100000
 0 ¯15.4  ¯14000
 1   0.65      0
-      
+
       ⍴⍕AN
 3 15</pre>
 <p>Of course, if you are only going to display the array, there is no point in applying <strong>format</strong>. However, since the result is a simple character array, you can capture the result and modify it any way you want before displaying it. For example, you may want to replace all the blanks with some non-blank character (as is done for check protection):</p>
 <pre>      FM1←⍕AN
 ((,' '=FM1)/,FM1)←'/'
-      
+
       FM1
 1/134.23/100000
 0/¯15.4//¯14000
@@ -833,7 +833,7 @@ ABC 2 3
 1.0 134.2 100000.0
  .0 ¯15.4 ¯14000.0
 1.0    .7       .0
-      
+
       0 ¯4⍕AN
 1.000E0  1.342E2   1.000E5
 0.000E0 ¯1.540E1  ¯1.400E4
@@ -853,7 +853,7 @@ ABC 2 3
 <pre>      PF←'5555.55  555.55  555.555'
       PF⍕ 8743.25 123.46 145,348
 8743.25   123.46   145.348
-      
+
       ⍴PF⍕ 8743.25 123.46 145.348
 24</pre>
 <p>Notice that, in this example the result is a character string as long as the left argument.</p>
@@ -1016,10 +1016,10 @@ ADDRESS
 123 Easy Street
 PHONE
 555-1234
-      
+
       ⍴RES
 3
-      
+
       RES
  Jim 123 Easy Street 555-1234</pre>
 <p>Users must enter three responses to three prompts. They cannot quit early nor provide extra data.</p>
@@ -1045,7 +1045,7 @@ CHILDREN
 Margaret
 Matthew
   &lt;---(empty response)
-      
+
       ⍴R
 4
       R
@@ -1248,7 +1248,7 @@ Matthew
 <pre>      SIMPLESHAPE G1
 3 4  3
 3 3  2
-      
+
       DISPLAY SIMPLESHAPE G1
 .→----------.
 ↓ .→--. .→. |
@@ -1278,7 +1278,7 @@ Matthew
 | |3 3| |2| |
 | '∼--' '∼' |
 '∊----------'
-      
+
       (, MDEPTH) G1
  1 2 3 4 5 6 7 8 9 10 11 12  TWO
  0 0 0 0 0 0 0 0 0           3 4
@@ -1327,7 +1327,7 @@ Matthew
       2 (2 3) 'A' +NUMB DDEPTHA X
  6 7   8  10 B A</pre></li>
 <li><p>Write a defined operator <code>DDEPTHB</code> that applies a dyadic function to each simple array in the right argument but uses the entire left argument for each application. For example:</p>
-<pre>      DISPLAY 2 3 pDDEPTHB 'ABC'((5 6)(7 8 9))
+<pre>      DISPLAY 2 3 ⍴DDEPTHB 'ABC'((5 6)(7 8 9))
 .→--------------------------.
 | .→--. .→----------------. |
 | ↓ABC| | .→----. .→----. | |
@@ -1337,8 +1337,8 @@ Matthew
 |       '∊----------------' |
 '∊--------------------------'</pre></li>
 <li><p>Write a recursive program to compute the value of the Ackermann Function on two integers <code>J</code> and <code>N</code>, where the function is defined mathematically as follows:</p>
-<pre>      O A N   &lt;--&gt;   N+1
-      J A O   &lt;--&gt;   (J−1) A 1
+<pre>      0 A N   &lt;--&gt;   N+1
+      J A 0   &lt;--&gt;   (J−1) A 1
       J A N   &lt;--&gt;   (J−1) A (J A(N−1))</pre></li>
 </ol>
 <footer>
