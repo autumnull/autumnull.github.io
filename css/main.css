@@ -1,4 +1,6 @@
 html {
+  width: 100%;
+  height: 100%;
   padding: 0;
 }
 
@@ -90,6 +92,7 @@ div.body-content {
 div.left {
   margin: 1em;
   width: max-content;
+  min-width: max-content;
 }
 
 div.sidebar {
@@ -105,7 +108,7 @@ li::marker {
   content: none;
 }
 
-div.sidebar > ul img {
+div.sidebar > ul img:first-of-type {
   width: 30px;
   height: auto;
 }
@@ -167,6 +170,28 @@ div.welcome > img {
   width: auto;
 }
 
+div.js-warning {
+  font-size: 120%;
+  font-family: "OCR-A";
+  text-align: center;
+  background-image: repeating-linear-gradient(135deg, black, black 0.5em, gold 0.5em, gold 1em);
+  padding: 0.3em;
+  max-width: 100%;
+}
+
+div.js-warning > div {
+  background-color: yellow;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.js-warning img {
+  margin: 1em;
+  width: 2em;
+  height: 100%;
+}
+
 ul.main-list {
   padding: 0;
   column-width: 200px;
@@ -186,12 +211,11 @@ ul.main-list > li img {
 /**
  * Cursor (extremely important)
 **/
-#cool-cursor-zone {
-  width: 100%;
-  height: 100%;
+:not(a *) {
+  cursor: url("/img/flame_cursor/wood.png") 2 11, auto;
 }
- 
-* {
+
+a {
   animation: cursorAnimation 0.5s infinite;
   animation-timing-function: steps(4, jump-start);
 }
@@ -224,7 +248,16 @@ ul.main-list > li img {
   height: 100%;
 }
 
+/**
+* Fonts
+**/
+
 @font-face {
   font-family: "Dingbat";
   src: url("/Dingbat.otf");
+}
+
+@font-face {
+  font-family: "OCR-A";
+  src: url("/apl2/assets/OCRA.ttf");
 }
