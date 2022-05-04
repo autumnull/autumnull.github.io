@@ -44,7 +44,7 @@ header a {
   max-width: 64rem;
 }
 
-h1, h2 {
+h1, h2, h3 {
   font-family: cursive;
   background: linear-gradient(to bottom, fuchsia, black);
   color: transparent;
@@ -61,6 +61,12 @@ h1 {
 
 h2 {
   font-size: 200%;
+}
+
+h3 {
+  text-align: center;
+  font-size: 250%;
+  text-decoration: underline;
 }
 
 header img {
@@ -254,7 +260,7 @@ a {
 
 @font-face {
   font-family: "Dingbat";
-  src: url("/Dingbat.otf");
+  src: url("/fonts/Dingbat.otf");
 }
 
 @font-face {
