@@ -7,13 +7,13 @@ html {
 body {
   position: relative;
   margin: 0;
-  background-image: url("/img/pin blue.gif");
+  background-image: url("/img/pin_blue.gif");
 }
 
 .background {
   height: 100%;
   width: 100%;
-  background: rgb(0, 20, 19) url("/img/pink violet.gif");
+  background: rgb(0, 20, 19) url("/img/pink_violet.gif");
   background-blend-mode: difference;
 }
 
@@ -22,7 +22,8 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  mask-image: url("/img/silhouette woman wearing heels.png");
+  min-height: 100vh;
+  mask-image: url("/img/silhouette_woman_wearing_heels.png");
   mask-size: 150px;
 }
 
@@ -44,7 +45,7 @@ header a {
   max-width: 64rem;
 }
 
-h1, h2, h3 {
+h1, h2 {
   font-family: cursive;
   background: linear-gradient(to bottom, fuchsia, black);
   color: transparent;
@@ -61,12 +62,7 @@ h1 {
 
 h2 {
   font-size: 200%;
-}
-
-h3 {
   text-align: center;
-  font-size: 250%;
-  text-decoration: underline;
 }
 
 header img {
@@ -103,7 +99,7 @@ div.left {
 
 div.sidebar {
   border: 30px dotted #DB3FAB;
-  border-image: url("/img/heart jewel border.png") 68 round;
+  border-image: url("/img/heart_jewel_border.png") 68 round;
 }
 
 div.sidebar > ul {
@@ -126,7 +122,7 @@ div.sidebar marquee {
 div.button {
   padding: 0.5em;
   border: 4px outset white;
-  background-image: url("/img/cloud glitter in pink.gif");
+  background-image: url("/img/cloud_glitter_in_pink.gif");
 }
 
 div.main-container {
@@ -164,7 +160,7 @@ div.main-content {
 }
 
 div.welcome {
-  background-image: url("/img/glitter in black.gif");
+  background-image: url("/img/glitter_in_black.gif");
   border: 4px ridge turquoise;
   width: min-content;
   margin: auto;
@@ -206,7 +202,7 @@ ul.main-list {
 ul.main-list > li {
   break-inside: avoid;
   border: 4px ridge white;
-  background-image: url("/img/pink sand glitter.gif");
+  background-image: url("/img/pink_sand_glitter.gif");
   margin-bottom: 14px;
 }
 
