@@ -1,0 +1,52 @@
+body {
+	font-family: serif;
+	background: var(--bg);
+	color: var(--fg);
+}
+
+main {
+	max-width: 54rem;
+	margin: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: var(--head);
+	font-weight: 400;
+}
+
+header a, main a {
+	color: var(--link);
+	border: 1px dashed var(--link);
+	text-decoration: none;
+}
+
+img {
+	image-rendering: pixelated;
+}
+
+img.hangout {
+	width: 176px;
+	max-width: 100%;
+}
+
+ul.pages + p::after {
+	content: url("/~autumn/img/lips.png");
+	margin: 0.2em;
+	image-rendering: pixelated;
+}
+
+ul li::marker {
+	content: "❥ ";
+}
+
+blockquote {
+	font-style: italic;
+}
+
+blockquote, code, pre {
+	color: var(--special);
+}
+
+pre, code {
+	background: var(--code-bg);
+}

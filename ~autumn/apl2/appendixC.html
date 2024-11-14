@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <title>Appendix C: APL Blossom Time</title>
+    <link rel="icon" type="image/png" href="/~autumn/img/lips.png"/>
+    
+    <link rel="stylesheet" href="/~autumn/style/colors.css" />
+    
+    <link rel="stylesheet" href="/~autumn/style/main.css" />
+    
+    <link rel="stylesheet" href="/~autumn/apl2/style.css" />
+    
+  </head>
+  <body>
+    <header>
+      
+        <a href="/~autumn/apl2/">^ back to APL2 at a Glance</a>
+      
+    </header>
+
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="appendixB.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="appendixD.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+  <main>
+    <div class="chapter-rule">
+    <hr class="chapter-long">
+    <p>Appendix</p>
+    <hr class="chapter-short">
+    <div>
+        <div>
+            C
+        </div>
+    </div>
+</div>
+<h2>APL Blossom Time</h2>
+<p><span class="small-caps">APL2</span> continues the rich tradition of the <span class="small-caps">APL</span> programming language, first defined and implemented by Kenneth Iverson and Adin Falkoff and their team which included Larry Breed and Dick Lathwell. <span class="small-caps">APL</span> and <span class="small-caps">APL2</span> advocates have an esprit all their own as evidenced by the following song written by Michele Montalbano. This song encapsulates the early history of <span class="small-caps">APL</span>.</p>
+<center>
+<div class="line-block">Dedicated to the pioneers of <span class="small-caps">APL</span><br>
+with respect and affection<br>
+<br>
+by<br>
+<br>
+J.C.L. Guest<br>
+<br>
+To the tune of “The Battle of New Orleans”<br>
+<br>
+Copyright 1981 Michele Montalbano.<br>
+Reprinted with permission.</div>
+</center>
+<div class="line-block">Back in the old days, in 1962,<br>
+A feller named Ken Iverson decided what to do.<br>
+He gathered all the papers he’d been writing for a spell<br>
+and he put them in a little book and called it <span class="small-caps">APL</span>.<br>
+<br>
+<em>Well!…</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;He got him a jot and he got him a ravel<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and he revved his compression up as high as she could go<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And he did some reduction and he did some expansion<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And he sheltered all his numbers with a ceiling and a flo’.<br>
+<br>
+Now Sussenguth and Falkoff, they thought it would be fine<br>
+To use the new notation to describe the product line.<br>
+They got with Dr.&nbsp;Iverson and went behind the scenes<br>
+And wrote a clear description of a batch of new machines.<br>
+<br>
+<em>Well!…</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;They wrote down dots and they wrote down squiggles<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And they wrote down symbols that they didn’t even know.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And they wrote down questions when they didn’t know the answers<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And they made the Systems Journal in nineteen sixty-fo’.<br>
+<br>
+Now writing dots and squiggles is a mighty pleasant task<br>
+But it doesn’t answer questions that a lot of people ask.<br>
+Ken needed an interpreter for folks who couldn’t read<br>
+So he hiked to Californ-i-a to talk to Larry Breed.<br>
+<br>
+<em>Oh!…</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;He got Larry Breed and he got Phil Abrams ’<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And they started coding <span class="small-caps">FORTRAN</span> just as fast as they could go<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And they punched up cards and ran them through the reader<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In Stanford, Palo Alto, on the seventy-ninety-oh.<br>
+<br>
+Well, a <span class="small-caps">FORTRAN</span> batch interpreter’s a mighty awesome thing<br>
+But while it hums a pretty tune, it doesn’t really sing.<br>
+The thing that we all had to have to make our lives sublime<br>
+Was an interactive program that would let us share the time.<br>
+<br>
+<em>Oh!…</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;They got Roger Moore and they got Dick Lathwell,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And they got Gene McDonnell with his carets and his sticks,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And you should’ve heard the uproar in the Hudson River valley<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When they saved the first <code>CLEANSPACE</code> in 1966.<br>
+<br>
+Well, when Al Rose saw this he took a little ride<br>
+In a big station wagon with a typeball by his side.<br>
+He did a lot of teaching and he had a lot of fun<br>
+With an old, bent, beat-up 2741.<br>
+<br>
+<em>Oh!…</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It typed out starts and it typed out circles<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An it twisted and it wiggled just like a living thing.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Al fed it a tape when he couldn’t get a phone line<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And it purred like a tiger with its trainer in the ring.<br>
+<br>
+Now there’s much more to the story, but I just don’t have the time<br>
+(And I doubt you have the patience) for an even longer rhyme.<br>
+So I’m ending this first chapter of the tale I hope to tell<br>
+Of how Iverson’s notation blossomed into <span class="small-caps">APL</span>.<br>
+<br>
+<em>So!…</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Keep writing nands when you’re not writing neithers,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And point with an arrow to the place you want to be,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;But don’t forget to bless those early <span class="small-caps">APL</span> sources<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Who preserved the little seedling that became an <span class="small-caps">APL</span> tree.</div>
+<hr class="bullet">
+<p>Live performance at the <span class="small-caps">APL81</span> Conference in San Francisco by L. Breed, J. Brown, J. Bunda, D. Dloughy, A. O’Hara, R. Skinner, and 900 attendees.</p>
+<p>45-<span class="small-caps">RPM</span> recording by J. Brown, M. Wheatley, J. Bunda, and B. Duff.<a href="#fn1" id="fnref1" role="doc-noteref"><sup>[1]</sup></a></p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1" role="doc-endnote"><p>[Webmaster’s note:] Original recordings and more information available at <a href="https://web.archive.org/web/20040625131438/http://smartarrays.com/downloads/aplblossomtime/aplblossomtime.html" class="uri">https://web.archive.org/web/20040625131438/http://smartarrays.com/downloads/aplblossomtime/aplblossomtime.html</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+
+  </main>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="appendixB.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="appendixD.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+    <footer>
+    
+  <a href="gemini://tranarchy.fish/~autumn/apl2/appendixC.gmi" title="View this page on gemini web"><img class="banner" src="/images/gemini.png" alt="best viewed in gemini://"/></a>
+
+
+<a href="https://en.wikipedia.org/wiki/Queer_Nation#Queer_Nation_in_other_locales"><img class="banner" alt="COCK SUCKING FAGGOT - QUEER NATION" src="/~autumn/img/cocksuckingfaggot.gif" /></a>
+<a href="https://social.tranarchy.fish/@autumnull"><img class="banner" alt="Follow me on GoToSocial" src="/~autumn/img/sloth_follow_me.gif"/></a>
+<a href="https://git.sr.ht/~autumnull/website/tree/main/item/pages/apl2/appendixC.html" title="View the source code for this page on sourcehut"><img class="banner" alt="view page source" src="/images/view_source.gif"/></a>
+<a href="https://anybrowser.org/campaign/"><img class="banner" alt="Best Viewed with Any Browser" src="/~autumn/img/anybrowser.gif" /></a>
+<a class="banner" href="/"><img class="banner" src="/images/tranarchy.gif" alt="Tranarchy" /></a>
+
+
+      <p>contact me: <code>curl cards.tranarchy.fish/~autumn/</code></p>
+    </footer>
+  </body>
+</html>
+

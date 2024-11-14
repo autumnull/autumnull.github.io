@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <title>Appendix B: Editing with the Del Editor</title>
+    <link rel="icon" type="image/png" href="/~autumn/img/lips.png"/>
+    
+    <link rel="stylesheet" href="/~autumn/style/colors.css" />
+    
+    <link rel="stylesheet" href="/~autumn/style/main.css" />
+    
+    <link rel="stylesheet" href="/~autumn/apl2/style.css" />
+    
+  </head>
+  <body>
+    <header>
+      
+        <a href="/~autumn/apl2/">^ back to APL2 at a Glance</a>
+      
+    </header>
+
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="appendixA.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="appendixC.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+  <main>
+    <div class="chapter-rule">
+    <hr class="chapter-long">
+    <p>Appendix</p>
+    <hr class="chapter-short">
+    <div>
+        <div>
+            B
+        </div>
+    </div>
+</div>
+<h2 id="editing-with-the-del-editor">Editing with the Del Editor</h2>
+<p>This appendix describes how to enter and alter <span class="small-caps">APL2</span> programs. The following descriptions refer to defined functions but they hold equally for defined operators and defined sequences. Some editors will also permit editing of arrays.</p>
+<h4 id="selecting-an-editor">Selecting an Editor<a href="#selecting-an-editor" class="section-link">§</a></h4>
+<p><span class="small-caps">APL2</span> provides two editors called the <em>del editors</em> and also provides access to a variety of other editors. If you already know how to use one of the editors supplied with your computing system, you can use it and not bother to learn a new editor.</p>
+<p>To identify the editor you want to use within <span class="small-caps">APL2</span>, you use the system command <code>)EDITOR</code>. For example, if the name of the system editor is XEDIT, enter the system command:</p>
+<pre>      )EDITOR XEDIT</pre>
+<p>From now on, when you request entry to definition mode via the del (<code>∇</code>) in this <span class="small-caps">APL2</span> session, XEDIT will be used as the editor.</p>
+<p>A disadvantage of using a general system-provided editor is that it probably differs on each system you encounter. The <span class="small-caps">APL2</span> del editors are the same on all supported computers. The del editors are similar except that editor 1 is a line editor that operates on one line at a time and editor 2 is a full-screen editor, operating on a set of lines at a time.</p>
+<p>The command <code>)EDITOR 1</code> selects the line editor, and the command <code>)EDITOR 2</code> selects the full-screen editor.</p>
+<p>The current editor is the one selected by the most recent <code>)EDITOR</code> command. If you don’t select an editor, your system chooses some default editor, normally editor 1. You can determine which editor is currently in use as follows:</p>
+<pre>      )EDITOR
+IS 1</pre>
+<h4 id="displaying-an-existing-definition">Displaying an Existing Definition<a href="#displaying-an-existing-definition" class="section-link">§</a></h4>
+<p>No matter what editor you select, you often want to see the definition of an existing function. You request the display of an existing definition the same way with any editor:</p>
+<pre>      ∇MYCOST[⎕]∇</pre>
+<h4 id="entering-definition-mode-using-the-current-editor">Entering Definition Mode Using the Current Editor<a href="#entering-definition-mode-using-the-current-editor" class="section-link">§</a></h4>
+<p>All editors are entered the same way. You edit an existing program by entering del (<code>∇</code>) and the function name:</p>
+<pre>      ∇MYCOST</pre>
+<p>The response depends on the editor selected.</p>
+<p>To begin editing of a new function, enter del (<code>∇</code>) and the header of the function:</p>
+<pre>      ∇Z←NEWFN X;Y</pre>
+<p>Again the response to this request depends on the editor selected.</p>
+<h4 id="the-apl2-full-screen-editor-editor-2">The APL2 Full-Screen Editor: <code>)EDITOR 2</code><a href="#the-apl2-full-screen-editor-editor-2" class="section-link">§</a></h4>
+<p>After entering the full-screen editor, you will see displayed as many lines of the definition as will fit on the screen (the whole program, if it is short). If you’re defining a new program, you see only an information line preceded by the three characters <code>[⍝]</code> and the header preceded by the three characters <code>[0]</code>.</p>
+<p>Here’s an example of the screen after you have entered editing of an existing program:</p>
+<pre>[⍝]
+[0]  Z←EXISTINGFN X
+[1]  ⍝ a simple function
+[2]  existing line 2
+[3]  existing line 3
+[4]  existing line 4</pre>
+<p>If you want to change an existing line, enter the change on top of the existing line, without changing the line number, and press enter.</p>
+<pre>[⍝]
+[0]  Z←EXISTINGFN X
+[1]  ⍝ a simple function
+[2]  modified line 2
+[3]  existing line 3
+[4]  existing line 4</pre>
+<p>To delete an entire line, type <code>[∆number]</code> at the left edge of the screen. Anywhere on the left edge is OK, but doing it on the line to be deleted is convenient. (The editor has no “un-delete” command.) The first example coming up shows the screen with the delete command on it, and the second example shows the screen after you press enter and the deletion has been processed:</p>
+<p>Delete command typed following line <code>[2]</code>:</p>
+<pre>[⍝]
+[0]  Z←EXISTINGFN X
+[1]  ⍝ a simple function
+[2]  modified line 2
+[∆3] existing line 3
+[4]  existing line 4</pre>
+<p>After pressing enter:</p>
+<pre>[⍝]
+[0]  Z←EXISTINGFN X
+[1]  ⍝ a simple function
+[2]  modified line 2
+[4]  existing line 4</pre>
+<p>To add lines at the end of the function, type them in after the end of the function. Line numbers are not necessary. After you press enter, <span class="small-caps">APL2</span> numbers the lines. The first example coming up shows the screen with the lines entered, and the second example shows the screen after you press enter:</p>
+<p>New lines typed:</p>
+<pre>[⍝]
+[0]  Z←EXISTINGFN X
+[1]  ⍝ a simple function
+[2]  modified line 2
+[4]  existing line 4
+new line 5
+new line 6</pre>
+<p>After pressing enter:</p>
+<pre>[⍝]
+[0]  Z←EXISTINGFN X
+[1]  ⍝ a simple function
+[2]  modified line 2
+[4]  existing line 4
+[5]  new line 5
+[6]  new line 6</pre>
+<p>To add lines in the middle of the function (say between lines 4 and 5), just type over line <code>[5]</code> (on top of the line number) and the following lines (again no line number is necessary). The existing lines are unaffected.</p>
+<p>Insert lines typed:</p>
+<pre>[⍝]
+[0]  Z←EXISTINGFN X
+[1]  ⍝ a simple function
+[2]  modified line 2
+[4]  existing line 4
+inserted line 1
+inserted line 2</pre>
+<p>After pressing enter:</p>
+<pre>[⍝]
+[0]    Z←EXISTINGFN X
+[1]    ⍝ a simple function
+[2]    modified line 2
+[4]    existing line 4
+[4.1]  inserted line 1
+[4.2]  inserted line 2
+[5]    new Line 5
+[6]    new line 6</pre>
+<p>To exit from editing and record the changes to the function in the workspace, enter a del (<code>∇</code>) on a line by itself. (Some systems define a program function key that you can use to exit from editing.) To exit from the editor and discard any changes made to the function, enter the three characters <code>[→]</code> at the left edge of the screen.</p>
+<p>You can learn other features of editor 2 that this book does not discuss by reviewing the <span class="small-caps">APL2</span> reference manual included with your system. Some features you might want to look up are summarized here. You enter each at the left edge of the screen:</p>
+<ul>
+<li><code>[⎕3-5]</code> — Display a set of lines.</li>
+<li><code>[/ABC/]</code> — Display all lines containing the string <code>ABC</code>.</li>
+<li><code>[/ABC/DEF/]</code> — Change first occurrence of <code>ABC</code> to <code>DEF</code> on all lines.</li>
+<li><code>[/ABC/DEF/¨]</code> — Change <code>ABC</code> to <code>DEF</code> everywhere.</li>
+<li><code>[/ABC/DEF/3−]</code> — Change <code>ABC</code> to <code>DEF</code> con line 3 and on all succeeding lines.</li>
+<li><code>[∇]</code> — Record changes to program in workspace but stay in definition mode.</li>
+<li><code>∇</code> — Begin defining another program. Screen is split at this point and you are editing two functions at the same time.</li>
+<li><code>[⍎]</code> — Execute an expression and display its result.</li>
+</ul>
+<h4 id="the-apl2-line-editor-editor-1">The APL2 Line Editor: <code>)EDITOR 1</code><a href="#the-apl2-line-editor-editor-1" class="section-link">§</a></h4>
+<p>The line editor is similar to the full-screen editor except that it operates on one line at a time. After entering the line editor, you are prompted with a line number. Let <code>EXISTINGFN</code> be as it was before the editing done in the previous section. The editor will prompt you for line <code>[5]</code>. The following examples show the progression of an editing session. The only changes occur at the bottom of each example.</p>
+<pre>      ∇EXISTINGFN
+[5]</pre>
+<p>If you want to add a line at the end of the function, enter it after the prompt:</p>
+<pre>      ∇EXISTINGFN
+[5]  new line 5
+[6]  new Line 6
+[7]</pre>
+<p>To add a line in the middle of the function, enter a fractional line number in square brackets. In this example, <code>[4.1]</code> indicates that the line should be inserted between lines <code>[4]</code> and <code>[5]</code>:</p>
+<pre>      ∇EXISTINGFN
+[5]  new line 5
+[6]  new line 6
+[7]  [4.1] inserted line 1
+[4.2]</pre>
+<p>The next prompt number continues the fractional sequence.</p>
+<p>To delete a line, enter a delta (<code>∆</code>) and the line number in square brackets:</p>
+<pre>      ∇EXISTINGFN
+[5]  new line 5
+[6]  new line 6
+[7]  [4.1] inserted line 1
+[4.2] [∆3]
+[3]</pre>
+<p>You will always be prompted for a new line. You can always follow this with another line number in brackets and that line will be the one added, deleted, or inserted.</p>
+<p>To see the whole function as currently defined, enter a <code>⎕</code> inside square brackets:</p>
+<pre>      ∇EXISTINGFN
+[5]  new line 5
+[6]  new line 6
+[7]  [4.1] inserted line 1
+[4.2] [∆3]
+[3] [⎕]
+[0]  Z←EXISTINGFN X
+[1]  ⍝ a simple function
+[2]  existing line 2
+[4]  existing line u
+[4.1] inserted line
+[5]  new Line 5
+[6]  new line 6
+[7]</pre>
+<p>To exit from the editor and record the changes to the program in the workspace, enter del (<code>∇</code>) in response to the prompt. To exit from the editor and discard the changes to the program, enter the three characters <code>[→]</code> in response to the prompt.</p>
+
+  </main>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="appendixA.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="appendixC.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+    <footer>
+    
+  <a href="gemini://tranarchy.fish/~autumn/apl2/appendixB.gmi" title="View this page on gemini web"><img class="banner" src="/images/gemini.png" alt="best viewed in gemini://"/></a>
+
+
+<a href="https://en.wikipedia.org/wiki/Queer_Nation#Queer_Nation_in_other_locales"><img class="banner" alt="COCK SUCKING FAGGOT - QUEER NATION" src="/~autumn/img/cocksuckingfaggot.gif" /></a>
+<a href="https://social.tranarchy.fish/@autumnull"><img class="banner" alt="Follow me on GoToSocial" src="/~autumn/img/sloth_follow_me.gif"/></a>
+<a href="https://git.sr.ht/~autumnull/website/tree/main/item/pages/apl2/appendixB.html" title="View the source code for this page on sourcehut"><img class="banner" alt="view page source" src="/images/view_source.gif"/></a>
+<a href="https://anybrowser.org/campaign/"><img class="banner" alt="Best Viewed with Any Browser" src="/~autumn/img/anybrowser.gif" /></a>
+<a class="banner" href="/"><img class="banner" src="/images/tranarchy.gif" alt="Tranarchy" /></a>
+
+
+      <p>contact me: <code>curl cards.tranarchy.fish/~autumn/</code></p>
+    </footer>
+  </body>
+</html>
+

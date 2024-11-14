@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <title>Chapter 8: Working with Applications</title>
+    <link rel="icon" type="image/png" href="/~autumn/img/lips.png"/>
+    
+    <link rel="stylesheet" href="/~autumn/style/colors.css" />
+    
+    <link rel="stylesheet" href="/~autumn/style/main.css" />
+    
+    <link rel="stylesheet" href="/~autumn/apl2/style.css" />
+    
+  </head>
+  <body>
+    <header>
+      
+        <a href="/~autumn/apl2/">^ back to APL2 at a Glance</a>
+      
+    </header>
+
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="chapter7.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="postscript.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+  <main>
+    <div class="chapter-rule">
+    <hr class="chapter-long">
+    <p>Chapter</p>
+    <hr class="chapter-short">
+    <div>
+        <div>
+            8
+        </div>
+    </div>
+</div>
+<h2 id="working-with-applications">Working with Applications</h2>
+<p>You’ve seen many of the pieces of <span class="small-caps">APL2</span>: arrays, functions, and operators. You’ve learned the fundamentals of programming. In this chapter, you will see the development of three applications. Each shows a different way of using <span class="small-caps">APL2</span>.</p>
+<p>The first application is a magazine collector’s application. It can be used to keep track of the magazines the collectors own, those they need, the value of their collections, and so on. It is a practical illustration of how easily you can produce a simple working application.</p>
+<p>The second application is the simulation of a computer. It shows the suitability of <span class="small-caps">APL2</span> for simulation and modeling.</p>
+<p>The last application makes sophisticated use of nested arrays and defined operators for playing games. It demonstrates <span class="small-caps">APL2</span>’s use as a tool in Artificial Intelligence.</p>
+<p>Each section illustrates the three development tasks for producing the application:</p>
+<ul>
+<li>Describing the application.</li>
+<li>Designing the application.</li>
+<li>Implementing the application.</li>
+</ul>
+<h3 id="section-8.1-a-magazine-collection">Section 8.1 — A Magazine Collection<a href="#section-8.1-a-magazine-collection" class="section-link">§</a></h3>
+<p>The magazine collection application allows collectors of magazines to keep track of their collections and make simple inquiries for various kinds of information about their collections. The techniques are the same for a collection of records, stamps, baseball cards, or antiques. For this application, you want to keep track of the popular monthly magazine <strong><em>APL2 World</em></strong>.</p>
+<p>There are many ways to write a given application. This section contains the programs that illustrate only one way to write the magazine collection application. It is designed for running with simple immediate execution statements. It has no main program that controls the whole application. Most of the programs do little or no validity checking of their arguments. If you call one of these functions with the wrong kind of argument, it will usually just give an error message and suspend.</p>
+<p>The programs only use functions and features discussed in this book. Facilities not discussed in this book could make the input and editing phases of the application easier to use. Error-trapping facilities could make the application more foolproof. As you learn more about <span class="small-caps">APL2</span>, you can incorporate these more advanced features into the implementation.</p>
+<h4 id="describing-the-application">Describing the Application<a href="#describing-the-application" class="section-link">§</a></h4>
+<p>This application is fairly straightforward. You want to keep track of every issue of the magazine. You want to know the number of copies of each issue you own, the original cost, and the current value. You need a way to enter new data every time a new issue is available, and you need a way to extract subsets of the data for display and computation. You need a way to update information that changes (such as current market value) or that is incorrect.</p>
+<h4 id="designing-the-application">Designing the Application<a href="#designing-the-application" class="section-link">§</a></h4>
+<p>For this application, the most important decision is the nature of the data structure for storing the information about the magazine, because virtually every function you write will access the magazine data. A common method for storing this kind of data is a <em>relational structure</em>. A relational structure is a matrix. Each row of the matrix contains all the information related to one issue of the magazine—its cost, number of issues owned, date, and so on. Each column of the matrix contains one of the types of information for every magazine—one column contains the cost of each magazine, another contains the publication date of each magazine, and so on.</p>
+<p>Without worrying about the exact arrangement of data in the data structure, you must decide what information to store in columns. The first important piece of information is the whole issue number. Most magazines are numbered serially—the first issue being issue 1, the second being issue 2, and so on. In addition, periodicals are organized into volumes. Maybe every six or twelve issues, the volume number is incremented. Issues within a volume are numbered from one. For example, here is the masthead of the first issue of <strong><em>APL2 World</em></strong>, which was called The <strong><em>APL Gazette</em></strong> when it first appeared:</p>
+<center>
+<img src="images/newspaper.png">
+</center>
+<p>The January 1987 issue was whole issue number 618. Therefore, to store the information about all the issues up to the this issue, you need a matrix with 618 rows. You might be tempted to let the row index represent the issue number—let the information about whole issue number 200 be in row 200. This organization is not a good idea because later you will be taking various subsets of the matrix. You may also want to order the matrix to put the most valuable issue first. So that each row retains its identity regardless of its position in the matrix, one of the columns should be the issue number. Other columns will contain volume number, number in volume, year of publication, month of publication, cover price, current value, and, most important, the number of copies you own, where a count of zero means you don’t have a copy of that issue.</p>
+<p>The matrix has the name <code>MAG</code>. Here’s a portion of the <code>MAG</code> matrix representing recent issues:</p>
+<pre>Issue Vol No Year Mon Price Value Own
+  603  57  1 1985 0CT  1.95  1.95   1
+  604  57  2 1985 NOV  1.95  1.95   1
+  605  57  3 1985 DEC  1.95  1.95   1
+  606  57  4 1986 JAN  1.95  1.95   1
+  607  57  5 1986 FEB  1.95  1.95   1
+  608  57  6 1986 MAR  1.95  1.95   1
+  609  57  7 1986 APR  1.95  1.95   1
+  610  57  8 1986 APR  1.95  1.95   1
+  611  57  9 1986 JUN  1.95  1.95   1
+  612  57 10 1986 JUL  1.95  1.95   1
+  613  57 11 1986 AUG  1.95  1.95   1
+  614  57 12 1986 SEP  1.95  1.95   1</pre>
+<p>The design of the entry and edit functions is very important if you want your program to be easy to use. Because this is an application for your own use, simple entry and edit functions are good enough.</p>
+<p>Given functions to allow entry of the magazine information, you can build the <code>MAG</code> matrix in the format just described. Next you want to be able to do various computations, rearrangements, and selections of the data.</p>
+<p>As mentioned before, this application is designed for use in simple immediate execution statements. The various functions are, therefore, constructed to be used together in an expression. Here’s a summary of the functions to be provided to the application user:</p>
+<ol>
+<li><p>Rearranging function.</p>
+<p>This function takes a matrix of magazines and a column identification and returns that matrix with the rows rearranged with the selected column sorted in decreasing order. The function provided is this:</p>
+<ul>
+<li><code>SORTDNBY</code>. Sorts the matrix in decreasing order on the requested column.</li>
+</ul></li>
+<li><p>Subsetting functions.</p>
+<p>These functions take a matrix of magazines and, if appropriate, a selection number, and return a subset of the matrix:</p>
+<ul>
+<li><code>NEED</code>. Given a matrix of magazines, returns the matrix subset that contains the rows in which the number of copies owned is zero.</li>
+<li><code>VOLUME</code>. Given a volume number and a matrix of magazines, returns the subset matrix that is in the requested volume.</li>
+</ul></li>
+<li><p>Computation functions.</p>
+<p>These functions take a matrix of magazines and perform some computation:</p>
+<ul>
+<li><code>COST</code>. Given a matrix of magazines, returns the amount of money spent to purchase them.</li>
+<li><code>WORTH</code>. Given a matrix of magazines, returns the current value of the set of magazines.</li>
+</ul></li>
+<li><p>Editing functions.</p>
+<p>These functions add, delete, and modify the magazine database:</p>
+<ul>
+<li><code>ADD</code>. Appends new rows to the magazine matrix.</li>
+<li><code>EDIT</code>. Modifies rows in the magazine matrix.</li>
+</ul></li>
+</ol>
+<p>In addition, the function <code>LISTMAG</code> prints out a matrix of magazines with column headings.</p>
+<p>These functions can then be used in combinations in immediate execution statements to do whatever you like. Assume that <code>MAG</code> really has information about all the issues of <strong><em>APL2 World</em></strong> from the first issue to issue number 618. Here are some expressions you could enter:</p>
+<ul>
+<li><p>List the contents of volume 41.</p>
+<pre>      LISTMAG VOLUME 41 MAG
+ Issue Vol No Year Mon Price Value Own
+   400  41  1 1972 OCT  0.95  5.25   2
+   401  41  2 1972 NOV  0.95  5.25   0
+   402  41  3 1972 DEC  0.95  5.25   0
+   403  41  4 1973 JAN  0.95  5      0
+   404  41  5 1973 FEB  0.95  §      1
+   405  41  6 1973 MAR  0.95  5      0
+   406  41  7 1973 APR  0.95  5      0
+   407  41  8 1973 APR  0.95  5      1
+   408  41  9 1973 JUN  0.95  5      1
+   409  41 10 1973 JUL  0.95  5      2
+   410  41 11 1973 AUG  0.95  5      0
+   411  41 12 1973 SEP  0.95  5      0</pre></li>
+<li><p>How much money did I spend on volume 417</p>
+<pre>      COST VOLUME 41 MAG
+6.65</pre></li>
+<li><p>What are my issues from volume 41 worth today?</p>
+<pre>      WORTH VOLUME 41 MAG
+35.5</pre></li>
+<li><p>What issues from volume 41 do I lack?</p>
+<pre>      LISTMAG NEED VOLUME 41 MAG
+ Issue Vol No Year Mon Price Value Own
+   401  41  2 1972  11  0.95  5.25   0
+   402  41  3 1972  12  0.95  5.25   0
+   403  41  4 1973   1  0.95  5      0
+   405  41  6 1973   3  0.95  5      0
+   406  41  7 1973   4  0.95  5      0
+   410  41 11 1973   8  0.95  5      0
+   411  41 12 1973   9  0.95  5      0</pre></li>
+<li><p>What are the top five most valuable issues?</p>
+<pre>      LISTMAG 5↑[1] SORTDNBY VALUE MAG
+ Issue Vol No Year Mon Price Value Own
+     1   1  1 1928 JUN 0.05    625   1
+     2   1  2 1928 AUG 0.05    600   1
+     3   1  3 1928 0CT 0.05    550   1
+     4   1  4 1928 DEC 0.05    500   1
+     5   1  5 1929 JAN 0.05    500   1</pre>
+<p>You should have a good idea of how your functions are to work together, before you start writing them. In this case, the design of the arguments is heavily influenced by the objective that the functions be used together as shown in the examples.</p></li>
+</ul>
+<h4 id="implementing-the-application">Implementing the Application<a href="#implementing-the-application" class="section-link">§</a></h4>
+<p>Now you have a pretty good idea of what the application should do. You have listed the main functions to be written and shown examples of the results you expect. Now it is time to start writing programs.</p>
+<h5 id="building-and-maintaining-the-magazine-matrix">Building and Maintaining the Magazine Matrix<a href="#building-and-maintaining-the-magazine-matrix" class="section-link">§</a></h5>
+<p>Because the <code>MAG</code> matrix has a relational structure, almost every function will refer to the columns of the matrix. Because you have decided that the issue number is column 1 and the volume number is column 2, and so on, you could just use the column numbers in the programs. There are, however, two problems with doing this. First, if you ever want to rearrange the columns of the matrix—maybe because you want to insert a column in the middle that you didn’t think about before—you’d have to modify all the functions. Second, even if you don’t ever change the column definitions, numbers are not mnemonic. Instead of calling the volume column by the number 2, for example, you should call it <code>VOL</code> or some other easy-to-remember name that reminds you of the column’s purpose. Therefore, the first function to write is one that is executed only when the column definitions change. Also, because there will be a need to enter months as part of the data, it is also convenient to define global abbreviations for the months. Therefore, the function contains definitions of the columns of the matrix and abbreviations for the months:</p>
+<pre>      ∇DEFINECOLUMNS
+[1]   ISSUE←1
+[2]   VOL←2
+[3]   NO←3
+[4]   YEAR←4
+[5]   MON←5
+[6]   PRICE←6
+[7]   VALUE←7
+[8]   OWN←8
+[9]  ⍝
+[10]  JAN←'JAN'
+[11]  FEB←'FEB'
+[12]  MAR←'MAR'
+[13]  APR←'APR'
+[14]  MAY←'MAY'
+[15]  JUN←'JUN'
+[16]  JUL←'JUL'
+[17]  AUG←'AUG'
+[18]  SEP←'SEP'
+[19]  OCT←'OCT'
+[20]  NOV←'NOV'
+[21]  DEC←'DEC'
+[22] ⍝
+[23]  END←'END'
+[24] ∇</pre>
+<p>This function defines eight global variables that assign names to columns of the matrix, twelve globals that can be used when entering months, and a value used to stop editing. If you ever want to add a new column in the middle, you simply edit this function and add a new global column name, adjust the column numbers, and re-execute the function. Most of the other functions will continue to work on the new matrix with little change.</p>
+<p>The “Good Programming Practices” section of <a href="chapter3.html">Chapter 3</a> advised you to avoid using global variables. This advice still holds. Don’t use global variables to pass extra arguments to or extra results from a program. The variables defined in <code>DEFINECOLUMNS</code> aye really declarations. They are more like global constants. They will never change during the application’s execution. You could ensure that no program alters the values of these names by making them defined sequences instead. Here’s an example:</p>
+<pre>      ∇Z←ISSUE
+[1]  ⍝ Defines issue column number
+[2]   Z←1
+[3]   ∇</pre>
+<p>By using a defined sequence to hold the global constant, you ensure that an attempt to alter the value of <code>ISSUE</code> by assignment leads to an error:</p>
+<pre>      ISSUE←2
+SYNTAX ERROR
+      ISSUE←2
+      ^    ^
+      →</pre>
+<p>The next step is to build an initial <code>MAG</code> matrix which, of course, has no rows:</p>
+<pre>      MAG←0 8⍴0</pre>
+<p>Then you can write a function to list a magazine matrix with headings:</p>
+<pre>     ∇Z←LISTMAG R
+[1]  ⍝ R is rows from the MAG matrix
+[2]  ⍝ return a labeled display of the issue
+[3]   R←(¯2↑1,⍴R)⍴R     ⍝ make R a matrix if it's not
+[4]   Z←'Issue' 'Vol' 'No' 'Year' 'Mon' 'Price' 'Value' 'Own'
+[5]   Z←Z,[1]R[;ISSUE VOL NO YEAR MON PRICE VALUE OWN]
+[6]  ∇</pre>
+<p>The <code>LISTMAG</code> function makes displays of subsets of the magazine matrix look like a report.</p>
+<p>Next, you need a function to add new data to the matrix and a function to modify an existing row in the matrix. You could simply write two functions: <code>ADD</code> to add new entries and <code>EDIT</code> to edit existing entries. In the <code>ADD</code> function, you would have to check that an issue is not a duplicate, and in the <code>EDIT</code> function you would have to check that the issue exists. Instead of checking issues in each function, you can write a function that prompts for the issue number and calls <code>EDIT</code> or <code>ADD</code> according to whether the issue exists in the <code>MAG</code> matrix. Here’s such a function:</p>
+<pre>     ∇MAGAZINE;DIS
+[1]  L1:'enter issue number or END'
+[2]   DIS←⎕                   ⍝ read issue number
+[3]   →(DIS≡END)/0            ⍝ end request?
+(4]   →((⍴DIS)≡(⍳0))/OK       ⍝ must be a scalar
+[5]   'issue number must be a single integer'
+[6]   →L1
+[7]  OK:→(DIS∊MAG[;ISSUE])/L2 ⍝ branch if issue exists
+[8]   ADD DIS                 ⍝ add new issue
+[9]   →L1
+[10] L2:EDIT DIS              ⍝ edit existing issue
+[11]  →L1
+[12] ∇</pre>
+<p>You haven’t written the <code>ADD</code> and <code>EDIT</code> functions yet. But that won’t stop you from testing the logic of <code>MAGAZINE</code>. You can write dummy <code>ADD</code> and <code>EDIT</code> functions:</p>
+<pre>     ∇ADD R
+[1]  'ADD ROUTINE'
+[2]  ∇
+     
+     ∇EDIT R
+[1]  'EDIT ROUTINE'
+[2]  ∇</pre>
+<p>When either of these functions is called during the test executions of <code>MAGAZINE</code>, the identifying message is displayed.</p>
+<p>This kind of programming —where you write the top programs in the structure first—is <em>top-down programming</em>. It contrasts with <em>bottom-up programming</em>, in which you write the lowest-level programs first. The advantages of top-down programming are threefold: it enables you to test the logic of the application before you invest a lot of time writing pieces of code; it enables you to test code repeatedly as you develop additional programs within the structure; and it allows you to demonstrate the running of the application to users when it is still easy to incorporate operational changes.</p>
+<p>Once you’ve tested the logic of <code>MAGAZINE</code>, you can write <code>ADD</code> and <code>EDIT</code> functions. These are straightforward functions:</p>
+<pre>     ∇ADD R;IN
+[1]  ⍝ R is the new issue number
+[2]  L1:'enter values for issue number ' R
+[3]   '    ' 'Vol' 'No' 'Year' 'Mon' 'Price' 'Value' 'Own'
+[4]   IN←⎕                  ⍝ read input
+[5]   →((,7)≡⍴IN)/OK        ⍝ must be 7 items
+[6]   'error - enter 7 items'
+[7]   →L1
+[8]  OK:MAG←MAG,[1]R,IN     ⍝ add new row
+[9]  ∇</pre>
+<p>Notice that even though the month is a character string, it does not need to be entered in quotes because of the global month names.</p>
+<pre>     ∇EDIT DIS;RIDX;CIDX;VAL
+[1]  ⍝ edit existing data
+[2]   RIDX←MAG[;ISSUE]⍳DIS ⍝ get row number
+[3]   'existing data'
+[4]   LISTMAG MAG[RIDX;]   ⍝ list current row
+[5]   'What do you want to change?'
+[6]   CIDX←⎕               ⍝ get col# to change
+[7]   'enter new value'
+[8]   VAL←⎕                ⍝ get new value
+[9]   MAG[RIDX;CIDX]←VAL   ⍝ replace value
+[10]  'new row'
+[11]  LISTMAG MAG[RIDX;]   ⍝ list new row
+[12] ∇</pre>
+<h5 id="taking-subsets-of-the-magazine-matrix">Taking Subsets of the Magazine Matrix<a href="#taking-subsets-of-the-magazine-matrix" class="section-link">§</a></h5>
+<p>The functions that select subsets all look alike. You select some column of the data and do some relational operations on the selected data to compute a mask, where a 1 means keep the corresponding row. Then use <strong>replicate</strong> to select those rows.</p>
+<p>The first function selects rows for issues you don’t own by checking the matrix for zeros in the <code>OWN</code> column.</p>
+<pre>     ∇Z←NEED R
+[1]  ⍝ R is magazine matrix
+[2]   Z←(R[;0WN]=0)≠R
+[3]  ∇</pre>
+<p>The second function selects all rows that match the requested volume number:</p>
+<pre>     ∇Z←VOLUME R;N
+[1]  ⍝ R is volume number, matrix
+[2]   (N Z)←R
+[3]   Z←(Z[;VOL]=N)⌿Z
+[4]  ∇</pre>
+<h5 id="rearranging-the-magazine-matrix">Rearranging the Magazine Matrix<a href="#rearranging-the-magazine-matrix" class="section-link">§</a></h5>
+<p>To rearrange the matrix, you select the column requested and apply <strong>grade down</strong> to get the row indexes of the sorted matrix:</p>
+<pre>     ∇Z←SORTDNBY R;N
+[1]  ⍝ R is field to sort on, matrix
+[2]   (N Z)←R
+[3]   Z←Z[⍒Z[;N];]
+[4]  ∇</pre>
+<h5 id="computations-on-the-magazine-matrix">Computations on the Magazine Matrix<a href="#computations-on-the-magazine-matrix" class="section-link">§</a></h5>
+<p>The computations necessary for this application require only that you select the necessary data and perform the desired computation. Here is a defined function that adds up the cost of all the magazines in its matrix argument:</p>
+<pre>      ∇Z←COST M
+[1]  ⍝ compute cost of magazines
+[2]   Z←+/×/M[;PRICE OWN]
+[3]  ∇</pre>
+<p>This function yields the total value of the magazines in the matrix argument:</p>
+<pre>     ∇Z←WORTH M
+[1]  ⍝ compute total value of magazines
+[2]   Z←+/×/M[;VALUE OWN]
+[3]  ∇</pre>
+<p>You can embellish this application with all kinds of features. Try plotting the total value per volume. Prepare nicely formatted reports.</p>
+<h4 id="exercises-for-section-8.1">Exercises for Section 8.1<sup class="answers-note">[<a href="answers.html#section-8.1-a-magazine-collection">Answers</a>]</sup><a href="#exercises-for-section-8.1" class="section-link">§</a></h4>
+<ol>
+<li><p>Define the variable <code>DESCRIBE</code> that explains how to use the magazine application.</p></li>
+<li><p>Write a function to sort a requested field in increasing order.</p></li>
+<li><p>Write a function <code>GAIN</code> that, given a subset of the matrix, computes the percentage increase in the value of the magazines. Here’s an example:</p>
+<pre>      GAIN VOLUME 41 MAG
+4.32</pre></li>
+<li><p>Modify the <code>ADD</code> function to use <code>quote-quad</code> input for input and <code>execute</code> to convert the numeric responses into numbers.</p></li>
+<li><p>Modify <code>EDIT</code> so that after the new data is supplied, it displays the changed row and asks for verification before making changes in the <code>MAG</code> matrix.</p></li>
+<li><p>Modify the application to add another column in which you can put your own comments like “This issue never published” or “This is the 25th anniversary issue” or “This is the last issue with the original name.” Modify <code>DEFINECOLUMNS</code>, <code>ADD</code>, <code>EDIT</code>, <code>LISTMAG</code>. Don’t forget to update the documentation in <code>DESCRIBE</code>. Write a function to migrate the existing magazine matrix to the new format.</p></li>
+<li><p>The magazine’s name changed with the printing of whole issue number 300. Modify <code>LISTMAG</code> so it lists the characters <code>GAZ</code> before issues with numbers from 1 to 299, and the characters <code>WORLD</code> on other issues.</p></li>
+</ol>
+<h3 id="section-8.2-simulation-of-a-vector-computer">Section 8.2 — Simulation of a Vector Computer<a href="#section-8.2-simulation-of-a-vector-computer" class="section-link">§</a></h3>
+<p>You can use <span class="small-caps">APL2</span> to simulate computers. This section discusses a way to write such a simulation.</p>
+<p>There are many ways to view a computer’s design. Ignoring questions of input and output, here are four ways to look a computer:</p>
+<ol>
+<li><p>An application architecture.</p>
+<p>You may view a computer as a special-purpose device that provides some particular application. Point-of-sale computers and banking terminals are examples of special-purpose devices. Users who have no further interest in how the device works take this view.</p></li>
+<li><p>A high-level language architecture.</p>
+<p>You may view a computer as a device that stores arrays and programs and evaluates some high-level language (like <span class="small-caps">APL2</span>). This is the view taken by this book. Very little knowledge of the particular computer you are using is needed to make use of the <span class="small-caps">APL2</span> language on the computer.</p></li>
+<li><p>A machine-language architecture.</p>
+<p>You may view a computer as a device that has a way of remembering numbers and combining numbers to form new numbers. This machine-language view of a computer is the lowest level of machine architecture that a computer’s owner can normally use.</p></li>
+<li><p>An electronic-circuit architecture.</p>
+<p>You may view a computer as a set of electronic switching devices that contains bi-stable relays and electronic paths between logic devices. Electronic engineers who are responsible for constructing a computer look at its design this way.</p></li>
+</ol>
+<p>You can write programs that simulate a computer at any of these levels. In fact, the magazine application takes an application architecture view. It is a simulation of a computer that stores and manipulates a magazine matrix. Since <span class="small-caps">APL2</span> programs behave like the primitive functions and operators, your programming is, in some sense, designing a computer at the second level—you are extending the <span class="small-caps">APL2</span> language by providing some facility the designers of the language did not provide.</p>
+<p>This section develops a simulation of a computer from a machine language view. The computer architecture simulated is similar to <span class="small-caps">APL2</span> in that its fundamental arithmetic is vectors. Although the vector computer of this example is a fictitious machine, it is in the style of the <span class="small-caps">IBM</span> 3090 vector facility, which is the first major computer architecture that looks as though it was made for <span class="small-caps">APL2</span>.</p>
+<h4 id="describing-the-vector-architecture">Describing the Vector Architecture<a href="#describing-the-vector-architecture" class="section-link">§</a></h4>
+<p>You can think of the computer’s memory as an ordered list of individual memory cells, each of which can hold one number. This ordered list is often called <em>main memory</em> or <em>main storage</em>. You can design a computer that does computations on the numbers in the main memory and puts the results back in main memory. In fact, most computers have some specialized high-speed storage areas called <em>registers</em> where most computations are performed, because high-speed storage is too expensive to use for main memory. Thus, in a large-scale computer, there may be many millions of memory locations for main memory but only a few for registers (16 on the <span class="small-caps">IBM</span> 370).</p>
+<p>With so little memory to hold arguments and results of computational instructions, programs for these computers load one set of scalar values, perform some computations on them, store the result back in main memory, and loop to iteratively process collections of data. Given this architecture for computers, it is not surprising that computer languages are designed to do computations on scalars with various control structures to express looping. <span class="small-caps">APL2</span>, as you have seen, is an array language that expresses computations on collections of data without explicit looping controls.</p>
+<p>Vector architectures, which can apply computations to collections of data, now exist. These architectures have a set of vector registers, instructions to move values from main memory into vector registers, perform computations on vector registers, and move results back into main memory. In addition, some control registers record the number of items in the vector registers and other related information.</p>
+<p><span class="small-caps">APL2</span> programs easily model the structure of these vector architectures.</p>
+<h4 id="designing-the-vector-architecture">Designing the Vector Architecture<a href="#designing-the-vector-architecture" class="section-link">§</a></h4>
+<p>The first consideration in designing a machine is to come up with a good name for it. The <span class="small-caps">IBM</span> 360 is so called because there are 360 degrees in a circle and that line of machines “covered the full circle of computing needs.” Just to have a name, the machine designed here will be called the <span class="small-caps">APL</span> 181. The significance of 181 is that it is a palindrome both horizontally and vertically. (A palindrome is a word, phrase or number that doesn’t change when reversed.) A two-dimensional palindrome is an appropriate number for an array-processing machine.</p>
+<p>The machine modeled here processes only vectors. You write programs in the machine language to process higher-rank arrays. It would be an interesting exercise to design a machine that processed arrays of any rank.</p>
+<p>In preparing to model a computer architecture, the first task—just as it is in developing other applications—is is to define the data structures. In the fictitious machine to be modeled, the objects to be represented are:</p>
+<ul>
+<li>Main memory</li>
+<li>Scalar registers</li>
+<li>Vector registers</li>
+<li>Control registers</li>
+</ul>
+<p>You can represent main memory in <span class="small-caps">APL2</span> as a long vector. You address memory by indexing.</p>
+<p>You can represent the scalar registers as a shorter vector. The simple model presented in this section does not use the scalar registers, but a more complete model would.</p>
+<p>You can represent the vector registers as a simple matrix, with one row per register and one column per register item. Alternatively, you can represent them as a nested vector with one item per register. It does not make much difference here which representation you choose, but a rule of thumb for choice of data structure is this: If the data can be represented by a rectangular array, do it. Despite this rule, you might still want to use a vector of vectors in the model because you imagine each vector register as an entity. In this model, a simple matrix, not a vector of vectors, represents the vector registers. If you designed a machine where different registers had different lengths, you could not choose a simple matrix and would use a vector of vectors.</p>
+<p>Two control registers are needed. The first defines the length of each vector register and is called the <em>section size</em> (in the spirit of the <span class="small-caps">IBM</span> 3090). For a given computer, this number is a constant. On a different model, the section size could be a different constant. The second control register records the number of items actually residing in the vector registers. This number can range from zero up to the section size and is called the <em>vector count</em>.</p>
+<p>Programs for the <span class="small-caps">APL</span> 181 would really be stored in main memory, but that aspect of the computer is not of interest for this model. Only the effect of the programs on the data in main memory and the registers is of interest.</p>
+<p>Suppose you have two vectors in main memory and you want to form their sum. How would you program the <span class="small-caps">APL</span> 181 to perform this computation? Suppose the vectors will fit in a vector register (that is, the length of the vectors is not greater than the section size). Here is the outline of the program:</p>
+<ul>
+<li>Set the vector count to the length of the vectors.</li>
+<li>Load each vector into a vector register.</li>
+<li>Add the vector registers.</li>
+<li>Store the sum back in main memory.</li>
+</ul>
+<p>Suppose main memory contains the following:</p>
+<ul>
+<li>Address 2 — Length of the vectors.</li>
+<li>Address 3 — Address of the left argument.</li>
+<li>Address 4 — Address of the right argument.</li>
+<li>Address 5 — Place to store the result.</li>
+</ul>
+<p>Here is the program that will perform the vector addition:</p>
+<pre>     ∇EXAMPLE1
+[1]   LOADVCT 2     ⍝ load vector count
+[2]   LOADV 2 3 1   ⍝ load left argument
+[3]   LOADV 3 4 1   ⍝ load right argument
+[4]   ADDV 1 2 3    ⍝ add the vectors
+[5]   STOREV 1 5 1  ⍝ store result in main memory
+[6]  ∇</pre>
+<p>Each line represents one <span class="small-caps">APL</span> 181 machine instruction implemented as a monadic <span class="small-caps">APL2</span> function. <code>EXAMPLE1</code> contains calls to these functions as follows:</p>
+<p>Line <code>[1]</code> is the machine instruction that loads the vector count register with the number stored in main memory at location 2. The vector count controls the number of items that take part in each of the instructions that follow.</p>
+<p>Line <code>[2]</code> loads vector register 2 by using the address at location 3. The third number in the <code>LOADV</code> argument gives the distance between items in main memory. <code>1</code> means that the items to be loaded are in adjacent memory locations. (This is sometimes called the <em>stride</em>.)</p>
+<p>Line <code>[3]</code> loads the right argument for the addition into vector register 3.</p>
+<p>Line <code>[4]</code> adds vector register 2 to vector register 3 and puts the sum in vector register 1.</p>
+<p>Line <code>[5]</code> puts the sum into storage by taking the sum in vector register 1 and putting it into storage as addressed by location 5 with a stride of 1.</p>
+<p>If the vectors are longer than the section size, you need to write a loop as follows:</p>
+<ol>
+<li>Set the vector count to the minimum of the section size and the number of items left to process in the vectors.</li>
+<li>Exit from the loop if the count is zero.</li>
+<li>Load the next section of each vector into the vector registers.</li>
+<li>Add the vector registers.</li>
+<li>Store the next section of the sum back in main memory.</li>
+<li>Loop.</li>
+</ol>
+<pre>     ∇EXAMPLE2
+[1]  LOOP:LOADVCT 2   ⍝ load vector count
+[2]   →(0=VCT)/0      ⍝ exit if count is zero
+[3]   LOADV 2 3 1       ⍝ load segment of left
+[4]   LOADV 3 4 1       ⍝ load segment of right
+[5]   ADDV 1 2 3        ⍝ add segment
+[6]   STOREV 1 5 1      ⍝ store segment of result
+[7]   →LOOP            ⍝ and repeat until done
+[8]  ∇</pre>
+<p>This program is essentially the same as <code>EXAMPLE1</code> but illustrates additional effects that some of the instructions must have. <code>LOADVCT</code> must set the vector count to the smaller of the number at address 2 and the section size. It must reduce the number at address 2 by the number assigned to the vector count. Suppose that the length of the vector is 8 and the section size is 5. The first time the <code>LOADVCT</code> instruction is executed, the vector count is set to 5 and address 2 is set to 3. The second time it is executed, the vector count is set to 3 and address 2 is set to 0.</p>
+<p>The two <code>LOADV</code> instructions must do more than move data from main memory to vector registers. They must also update the address of the data in storage so the next time they are executed, the next section of the vector is loaded. Suppose the left argument is at machine address 26. The first time the <code>LOADV</code> is evaluated, five numbers are loaded into the vector register. The storage address is updated to 31. The next time <code>LOADV</code> is evaluated, three numbers are loaded into the vector register and the address is updates to 34. <code>STOREV</code> must likewise update the machine’s storage address.</p>
+<p>With the layout of the machine’s memory and registers and the desired properties of the machine instructions identified, you can now implement the model.</p>
+<h4 id="implementing-the-vector-architecture">Implementing the Vector Architecture<a href="#implementing-the-vector-architecture" class="section-link">§</a></h4>
+<p>Although the machine could have enormous main memory, lots of registers, and long vector registers, the essentials of the model can be realized with a more modest machine. Here, then, is an <span class="small-caps">APL2</span> program that defines a machine with a main memory of length 100, six scalar registers. and four vector registers with a section size of five:</p>
+<pre>    ∇ DEFINEMACHINE
+[1]  ⍝ define vector machine globals
+[2]   MM←100⍴'.'    ⍝ main memory
+[3]   SR←6⍴'.'      ⍝ 6 scalar registers
+[4]   SS←5          ⍝ section size
+[5]   VR←(4 SS)⍴'.' ⍝ 4 vector registers
+[6]   VCT←0         ⍝ vector count register
+[7] ∇</pre>
+<p>The memory and registers are initialized to <code>'.'</code> so it is easy to distinguish items that have been used from items that have not been used. In a real machine, the initial values would probably be zero.</p>
+<p>A 100-item vector is used to represent main memory (<code>MM</code>), a six-item vector represents the scalar registers, and a matrix with four rows and and a column dimension of the section represents the vector registers. Executing this program defines the machine:</p>
+<pre>      DEFINEMACHINE</pre>
+<p>The program is a defined sequence; it produces no explicit result.</p>
+<p>As you develop programs for loading, storing, and doing arithmetic, you need an easy way to look at the machine’s contents. The following program depicts the machine’s contents:</p>
+<pre>    ∇ SHOWMACHINE;R;N
+[1]   N←'MAIN MEMORY' 'VCT'
+[2]   R←↑(⍴MM)÷25
+[3]   N,[.5]((R 1⍴2+25×¯1+⍳R),':',R 25⍴MM)VCT
+[4]   ''
+[5]   N←'SCALAR REGS' 'VECTOR REGS'
+[6]   N,[.5](('S',⍕6 1⍴⍳6),SR)(('V',⍕4 1⍴⍳4),VR)
+[7] ∇</pre>
+<p>Here is the execution of this program:</p>
+<pre>      SHOWMACHINE
+ MAIN MEMORY                     VCT
+
+  1 :.........................     0
+ 26 :.........................
+ 51 :.........................
+ 76 :.........................
+
+ SCALAR REGS  VECTOR REGS
+
+ S1.          V1.....
+ S2.          V2.....
+ S3.          V3.....
+ S4.          V4.....
+ S5.
+ S6.</pre>
+<p>This model is not concerned with methods of getting information into and out of the main memory. The <span class="small-caps">APL</span> 181 programs that are presented assume memory has been initialized to the proper values. Here is a function that puts values into memory starting at a specified location:</p>
+<pre>    ∇ A SETMEMORY R
+[1]  ⍝ put R into main memory at address A
+[2]   R←,R                ⍝ ignore shape of data
+[3]   ((⍴R)↑(A−1)↓MM)←R   ⍝ move data to memory
+[4] ∇</pre>
+<p>Suppose you want to add two vectors like this:</p>
+<pre>      10 9 8+1 2 3
+11 11 11</pre>
+<p>You need to initialize the machine’s memory. First put the values of the two vectors into memory starting at locations 26 and 51 respectively:</p>
+<pre>      26 SETMEMORY 10 9 8
+      51 SETMEMORY 1 2 3</pre>
+<p>In addition, the length of these vectors must be stored somewhere. Put it at location 2:</p>
+<pre>2 SETMEMORY 3</pre>
+<p>Finally, the addresses of the arguments and the result area must be defined. Put the argument addresses at location 3 and 4 and the result address at location 5:</p>
+<pre>      3 SETMEMORY 26
+      4 SETMEMORY 51
+      5 SETMEMORY 76</pre>
+<p>Here is what memory looks like now:</p>
+<pre>      SHOWMACHINE
+ MAIN MEMORY                               VCT
+
+  1 :  . 3 26 51 76 ....................     0
+ 26 : 10 9  8  .  . ....................
+ 51 :  1 2  3  .  . ....................
+ 76 :  . .  .  .  . ....................
+
+ SCALAR REGS  VECTOR REGS
+
+ S1.          V1.....
+ S2.          V2.....
+ S3.          V3.....
+ S4.          V4.....
+ S5.
+ S6.</pre>
+<p>Before the example programs can be run, you must define a program for each of the desired machine instructions <code>LOADVCT</code>, <code>LOADV</code>, <code>ADDV</code> and <code>STOREV</code>.</p>
+<p><code>LOADVCT</code> must set the vector count (<code>VCT</code>) to the minimum of the section size (<code>SS</code>) and the length of the vector. The length is decremented by this amount:</p>
+<pre>    ∇ LOADVCT A
+[1]  ⍝ load vector count from memory address A
+[2]   VCT←SS⌊MM[A]     ⍝ count is min
+[3]   MM[A]←MM[A]−VCT    ⍝ reduce storage count
+[4] ∇</pre>
+<p><code>LOADV</code> and <code>STOREV</code> take a three-item vector as argument. The first item is the number of the vector register to load or store: the second item is the location in storage that contains the address from which data is fetched or to which data is stored. The third item is the stride. It specifies the distance between items in storage. A stride of 1 causes contiguous storage to be addressed. A stride of 2 causes every other location in storage to be addressed. You can use strides other than 1 to load or store a column of a matrix which is stored in row-major order. For example, a column from a 4-by-3 matrix could be loaded using a stride of 3. Here are the <code>LOADV</code> and <code>STOREV</code> programs:</p>
+<pre>    ∇ LOADV R;V;A;S
+[1]   (V A S)←R
+[2]  ⍝ load vector register V
+[3]  ⍝ from address in A with stride S
+[4]   VR[V;⍳VCT]←MM[MM[A]+S×¯1+⍳VCT]
+[5]   MM[A]←MM[A]+VCT
+[6] ∇
+    
+    ∇ STOREV R;V;A;S
+[1]   (V A S)←R
+[2]  ⍝ store vector register V
+[3]  ⍝  in address in A with stride S
+[4]   MM[MM[A]+S×¯1+⍳VCT]←VR[V;⍳VCT]
+[5]   MM[A]←MM[A]+VCT
+[6] ∇</pre>
+<p>The arithmetic functions need only access the vector registers. Here are programs for addition and multiplication. Each takes a three-item vector as argument: the number of the register for the result, the number of the register for the left argument, and the number of the register for the right argument:</p>
+<pre>[0]   ADDV R;V1;V2;V3
+[1]   (V1 V2 V3)←R
+[2]  ⍝ add vector in V2 to vector in V3
+[3]  ⍝ put result in vector V1
+[4]   VR[V1;⍳VCT]←VR[V2;⍳VCT]+VR[V3;⍳VCT]
+[5] ∇
+    
+    ∇ MULTV R;V1;V2;V3
+[1]   (V1 V2 V3)←R
+[2]  ⍝ multply vector in V2 by vector in V3
+[3]  ⍝ put result in vector V1
+[4]   VR[V1;⍳VCT]←×⌿VR[V2 V3;⍳VCT]
+[5] ∇</pre>
+<p>Now all the pieces are in place for execution of the first sample program:</p>
+<pre>     ∇EXAMPLE1
+[1]   LOADVCT 2     ⍝ load vector count
+[2]   LOADV 2 3 1   ⍝ load left argument
+[3]   LOADV 3 4 1   ⍝ load right argument
+[4]   ADDV 1 2 3    ⍝ add the vectors
+[5]   STOREV 1 5 1  ⍝ store result in main memory
+[6]  ∇</pre>
+<p>The program has no output but does change the registers and memory of the machine. Rather than just execute the program and look at the final state of the machine, you can set stops on the program and examine the machine after the execution of each instruction:</p>
+<pre>      S∆EXAMPLE1←2 3 4 5
+      EXAMPLE1
+EXAMPLE1[2]</pre>
+<p>The vector count is loaded from address 2 and the contents of address 2 are decremented to zero:</p>
+<pre>      SHOWMACHINE
+ MAIN MEMORY                               VCT
+
+  1 :  . 0 26 51 76 ....................     3
+ 26 : 10 9  8  .  . ....................
+ 51 :  1 2  3  .  . ....................
+ 76 :  . .  .  .  . ....................
+
+ SCALAR REGS  VECTOR REGS
+
+ S1.          V1.....
+ S2.          V2.....
+ S3.          V3.....
+ S4.          V4.....
+ S5.
+ S6.
+
+      →2
+EXAMPLE1[3]</pre>
+<p>Resuming execution causes <code>EXAMPLE1</code> to stop after execution of the load for the left argument. Vector register 2 contains the left argument, and the address of the left argument is updated:</p>
+<pre>      SHOWMACHINE
+ MAIN MEMORY                               VCT
+
+  1 :  . 0 29 51 76 ....................     3
+ 26 : 10 9  8  .  . ....................
+ 51 :  1 2  3  .  . ....................
+ 76 :  . .  .  .  . ....................
+
+ SCALAR REGS  VECTOR REGS
+
+ S1.          V1  . . . ..
+ S2.          V2 10 9 8 ..
+ S3.          V3  . . . ..
+ S4.          V4  . . . ..
+ S5.
+ S6.
+
+      →3
+EXAMPLE1[4]</pre>
+<p>Resuming execution causes a stop after the load of the right argument. Vector register 3 contains the right argument, and the address of the right argument is updated:</p>
+<pre>      SHOWMACHINE
+ MAIN MEMORY                               VCT
+
+  1 :  . 0 29 54 76 ....................     3
+ 26 : 10 9  8  .  . ....................
+ 51 :  1 2  3  .  . ....................
+ 76 :  . .  .  .  . ....................
+
+ SCALAR REGS  VECTOR REGS
+
+ S1.          V1  . . . ..
+ S2.          V2 10 9 8 ..
+ S3.          V3  1 2 3 ..
+ S4.          V4  . . . ..
+ S5.
+ S6.
+
+      →4
+EXAMPLE1[5]</pre>
+<p>Resuming execution causes a stop after the vector add. The sum is in vector register 1:</p>
+<pre>      SHOWMACHINE
+ MAIN MEMORY                               VCT
+
+  1 :  . 0 29 54 76 ....................     3
+ 26 : 10 9  8  .  . ....................
+ 51 :  1 2  3  .  . ....................
+ 76 :  . .  .  .  . ....................
+
+ SCALAR REGS  VECTOR REGS
+
+ S1.          V1 11 11 11 ..
+ S2.          V2 10  9  8 ..
+ S3.          V3  1  2  3 ..
+ S4.          V4  .  .  . ..
+ S5.
+ S6.
+
+      →5</pre>
+<p>Resuming execution causes execution of the store instruction and termination of the example. Now the sum is in memory and the result address is updated:</p>
+<pre>      SHOWMACHINE
+ MAIN MEMORY                               VCT
+
+  1 :  .  0 29 54 79 ....................    3
+ 26 : 10  9  8  .  . ....................
+ 51 :  1  2  3  .  . ....................
+ 76 : 11 11 11  .  . ....................
+
+ SCALAR REGS  VECTOR REGS
+
+ S1.          V1 11 11 11 ..
+ S2.          V2 10  9  8 ..
+ S3.          V3  1  2  3 ..
+ S4.          V4  .  .  . ..
+ S5.
+ S6.</pre>
+<p>Notice that each vector operation is controlled by the vector count register. This is why only three numbers were manipulated by each instruction even though a vector register could hold five numbers.</p>
+<p>The program <code>EXAMPLE2</code> shows how the machine processes vectors that are longer than the section size. Here is the definition of the program again:</p>
+<pre>     ∇EXAMPLE2
+[1]  LOOP:LOADVCT 2   ⍝ load vector count
+[2]   →(0=VCT)/0      ⍝ exit if count is zero
+[3]   LOADV 2 3 1     ⍝ load segment of left
+[4]   LOADV 3 4 1     ⍝ load segment of right
+[5]   ADDV 1 2 3      ⍝ add segment
+[6]   STOREV 1 5 1    ⍝ store segment of result
+[7]   →LOOP           ⍝ and repeat until done
+[8]  ∇</pre>
+<p>Run <code>DEFINEMACHINE</code> again so that the memory of <code>EXAMPLE1</code> is lost:</p>
+<pre>      DEFINEMACHINE</pre>
+<p>Suppose you want to add two vectors that are longer than section size, like this:</p>
+<pre>      10 9 8 7 6 5 4 + 1 2 3 4 5 6 7
+11 11 11 11 11 11 11</pre>
+<p>Again, you need to initialize the machine’s memory. First, put the values of the two vectors into memory starting at locations 26 and 51, respectively:</p>
+<pre>      26 SETMEMORY 10 9 8 7 6 5 4
+      51 SETMEMORY 1 2 3 4 5 6 7</pre>
+<p>Put the vector length at location 2:</p>
+<pre>      2 SETMEMORY 7</pre>
+<p>Finally, put the argument and result addresses at locations 3, 4, and 5:</p>
+<pre>      3 SETMEMORY 26
+      4 SETMEMORY 51
+      5 SETMEMORY 76</pre>
+<p>Put a stop on line 2 of <code>EXAMPLE2</code>, so you can look at the state of the machine after each loop:</p>
+<pre>      S∆EXAMPLE2←2</pre>
+<p>Now run <code>EXAMPLE2</code>:</p>
+<pre>      EXAMPLE2
+EXAMPLE2[2]</pre>
+<p>Only the load vector count register has been loaded. The count location in memory has been reduced by the section size:</p>
+<pre>      SHOWMACHINE
+ MAIN MEMORY                                 VCT
+
+  1 :  .  2 26 51 76 . . ..................    5
+ 26 : 10  9  8  7  6 5 4 ..................
+ 51 :  1  2  3  4  5 6 7 ..................
+ 76 :  .  .  .  .  . . . ..................
+
+ SCALAR REGS  VECTOR REGS
+
+ S1.          V1.....
+ S2.          V2.....
+ S3.          V3.....
+ S4.          V4.....
+ S5.
+ S6.</pre>
+<p>One iteration of the loop is completed. The vector count is set to the number of items left to process. Storage address for the arguments and result have been updated:</p>
+<pre>      SHOWMACHINE
+ MAIN MEMORY                                 VCT
+
+  1 :  .  0 31 56 81 . . ..................    2
+ 26 : 10  9  8  7  6 5 4 ..................
+ 51 :  1  2  3  4  5 6 7 ..................
+ 76 : 11 11 11 11 11 . . ..................
+
+ SCALAR REGS  VECTOR REGS
+
+ S1.          V1 11 11 11 11 11
+ S2.          V2 10  9  8  7  6
+ S3.          V3  1  2  3  4  5
+ S4.          V4  .  .  .  .  .
+ S5.
+ S6.
+      →2
+EXAMPLE2[2]</pre>
+<p>The full result is in memory, the vector count is zero so the program is ready to terminate:</p>
+<pre>      SHOWMACHINE
+ MAIN MEMORY                                   VCT
+
+  1 :  .  0 34 59 84  .  . ..................    0
+ 26 : 10  9  8  7  6  5  4 ..................
+ 51 :  1  2  3  4  5  6  7 ..................
+ 76 : 11 11 11 11 11 11 11 ..................
+
+ SCALAR REGS  VECTOR REGS
+
+ S1.          V1 11 11 11 11 11
+ S2.          V2  5  4  8  7  6
+ S3.          V3  6  7  3  4  5
+ S4.          V4  .  .  .  .  .
+ S5.
+ S6.
+      →2</pre>
+<p>This section introduced enough of a subset so the examples could be executed on the simulated vector machine. A real vector machine would have many more instructions.</p>
+<h4 id="exercises-for-section-8.2">Exercises for Section 8.2<sup class="answers-note">[<a href="answers.html#section-8.2-simulation-of-a-vector-computer">Answers</a>]</sup><a href="#exercises-for-section-8.2" class="section-link">§</a></h4>
+<ol>
+<li>Write a program to simulate a vector multiply instruction.</li>
+<li>Write programs to simulate loading and storing a scalar register.</li>
+<li>Write a program that simulates an <strong>addition-reduction</strong> instruction that adds up the contents of a vector register and then adds the sum to a scalar register.</li>
+<li>Using your new scalar instructions and the reduction instruction, write a loop to compute the <strong>addition-reduction</strong> of a long vector in main storage.</li>
+<li>Add another register to the machine that is the same length as a vector register that can be used as a mask register. Write a vector comparison instruction that sets the mask register to 1 if the corresponding number in one vector register is less than the corresponding number in another vector register.</li>
+</ol>
+<h3 id="section-8.3-a-puzzle-solving-program">Section 8.3 — A Puzzle-Solving Program<a href="#section-8.3-a-puzzle-solving-program" class="section-link">§</a></h3>
+<p>The field of Artificial Intelligence (AI) attempts to emulate with computer programs the behavior of humans. Areas of study include recognition of written and spoken natural language, computer vision, robotics, and expert systems. Because human behavior is complicated and not completely understood, the programs are complicated.</p>
+<p>AI technologies are also applied in the writing of game-playing programs and puzzle-solving. There are even chess competitions between competing chess-playing programs. Games and puzzles are a good place to begin the study of intelligence because at least the rules are completely understood.</p>
+<p>In this section, programs for playing single-person games are developed. In theory, these programs could just try all possible moves from a given position and eventually find a solution. For the simple games considered here, this would even work. For more realistic games, however, no computer is fast enough to carry out all the computations required in a reasonable time. Instead, strategies must be used to reduce the amount of computation. Because strategies are often not completely understood, the programs can become complicated.</p>
+<p><span class="small-caps">APL2</span> is well suited to writing programs for playing games and for solving puzzles. This section discusses some simple puzzle-solving programs that are general enough to work with most puzzles. One version tries all possible moves and another makes use of some strategies.</p>
+<h4 id="describing-the-puzzle-solving-program">Describing the Puzzle-Solving Program<a href="#describing-the-puzzle-solving-program" class="section-link">§</a></h4>
+<p>The puzzle to be solved is a simple game consisting of a five-position board containing two white and two black marbles in some initial position:</p>
+<pre>.→----.
+|WW_BB|
+'-----'</pre>
+<p>The goal of the game is to move a marble into the blank spot, making a different blank spot until some given new arrangement such as the following is achieved:</p>
+<pre>.→----.
+|BBWW_|
+'-----'</pre>
+<p>There are 30 different possible arrangements of marbles <code>((!5)÷(!2)×!2)</code> each of which can be a starting or ending position. This leads to the possibility of 900 different games.</p>
+<p>From the starting position, there are four possible first moves. From each of those positions, there are again four possible next moves, and so on. At each step, there are four times as many positions as at the previous step. This set of positions can be represented in an inverted tree structure as follows:</p>
+<center>
+<img src="images/tree.png">
+</center>
+<p>Eventually, at the bottom of the tree, you will find some paths that lead to the desired ending position.</p>
+<p>Here are two sequences of moves that each begin with the beginning arrangement on the left and arrive at the final position at the right end by moving one marble at each intermediate step:</p>
+<pre>.→----. .→----. .→----. .→----. .→----.
+|WW_BB| |_WWBB| |BWW_B| |B_WWB| |BBWW_|
+'-----' '-----' '-----' '-----' '-----'
+.→----. .→----. .→----. .→----. .→----. .→----.
+|WW_BB| |_WWBB| |BWWB_| |B_WBW| |BBW_W| |BBWW_|
+'-----' '-----' '-----' '-----' '-----' '-----'</pre>
+<p>The challenge is to write a program which, when given an initial position, computes the path to the final position. You could probably work out an effective strategy to implement this program, but such a program would work only for this game. Instead, a more general scheme will be implemented which, while perhaps not as efficient as a special-purpose program, will work for any game of this type even if you can’t figure out a good strategy.</p>
+<h4 id="designing-the-puzzle-solving-program">Designing the Puzzle-Solving Program<a href="#designing-the-puzzle-solving-program" class="section-link">§</a></h4>
+<p>The parameters of the program are the starting position, the desired ending position, and a function which, given one position, computes all the possible next positions. Because one of the parameters is a function, the program must be a defined operator.</p>
+<p>The operator keeps track of a set of paths that have been taken so far. The path at the top of the list is examined to see if it reaches the goal. I it does not, the move function is called to extend the path in its four possible directions, and these new paths are put at the end of the list of paths. Eventually, a path will be identified that reaches the goal, and this path becomes the explicit result of the program. This path will, in fact, be a path of shortest length (perhaps one of many shortest paths).</p>
+<p>The operator is perfectly general because it contains no information about the geometry of the puzzle, the way moves are made, or strategies for playing. Anything specific to the problem is given to the operator as a parameter.</p>
+<p>The data structure for the puzzle is a simple five-item character vector:</p>
+<pre>      BEGIN←'WW_BB'
+      END←'BBWW_'</pre>
+<p>The blank position is represented by an underscore character, so it is easily distinguished from other blanks not part of the data.</p>
+<p>The program that computes the next moves must take as argument some position (a five-item character vector), generate all possible next positions, and return them as the result:</p>
+<pre>.→----. .→----. .→----. .→----.    move    .→----.
+|_WWBB| |W_WBB| |WWB_B| |WWBB_|    &lt;---    |WW_BB|
+'-----' '-----' '-----' '-----'            '-----' </pre>
+<p>A more complicated data structure is required inside the program so that it can keep track of multiple partially-completed paths. These may be stored in a vector each of whose items is the set of positions that lead from the initial position to the current position. Here is what that internal table would look like after one set of moves from the initial position:</p>
+<pre>      ⍴MAT
+4
+      DISPLAY¨4 1⍴MAT
+ .→----------------.
+ | .→----. .→----. |
+ | |_WWBB| |WW_BB| |
+ | '-----' '-----' |
+ '∊----------------'
+ 
+ .→----------------.
+ | .→----. .→----. |
+ | |W_WBB| |WW_BB| |
+ | '-----' '-----' |
+ '∊----------------'
+ 
+ .→----------------.
+ | .→----. .→----. |
+ | |WWB_B| |WW_BB| |
+ | '-----' '-----' |
+ '∊----------------'
+ 
+ .→----------------.
+ | .→----. .→----. |
+ | |WWBB_| |WW_BB| |
+ | '-----' '-----' |
+ '∊----------------'</pre>
+<p>Notice that the paths are stored in reverse order, with the starting path as the second item and each possible next position as the first item. This is so the operator can select the current end of the path using <strong>first</strong> (<code>↑</code>). Each item shown is a two-item vector because one move from the starting position has been taken. In general, the items will be of different lengths.</p>
+<h4 id="implementing-the-puzzle-solving-program">Implementing the Puzzle-Solving Program<a href="#implementing-the-puzzle-solving-program" class="section-link">§</a></h4>
+<p>For each puzzle you want the computer to solve, you must write a program that, given some arrangement of the puzzle, computes the set of possible next arrangements. In the case of the marble puzzle, the function will always produce the four possible next arrangements achieved by moving each of the marbles into the blank position. There are many ways to implement this program. The following way is reasonably straightforward:</p>
+<pre>    ∇ Z←MOVECOLOR M;BLI
+[1]  ⍝ move generator for color game
+[2]   BLI←('_'=M)/1⍴M ⍝ get index of blank
+[3]   Z←(2⍴⍴M)⍴M
+[4]   (1 1⍉Z)←M[BLI]  ⍝ find all permutations
+[5]   Z[;BLI]←M       ⍝ of BLI item
+[6]   Z←(⊂[2]Z)∼⊂M    ⍝ delete start position
+[7] ∇</pre>
+<p>Line <code>[2]</code> gets the index position for the blank.</p>
+<p>Line <code>[3]</code> builds a square matrix containing five replications of the input position:</p>
+<pre>      Z←(2⍴⍴M)⍴M
+      Z
+WW_BB
+WW_BB
+WW_BB
+WW_BB
+WW_BB</pre>
+<p>Line <code>[4]</code> moves the blank to each possible next position, one per row of the square matrix:</p>
+<pre>      (1 1⍉Z)←M[BLI]
+      Z
+_W_BB
+W__BB
+WW_BB
+WW__B
+WW_B_</pre>
+<p>Line <code>[5]</code> puts the character replaced by the blank where the blank came from. This effectively swaps the blank position with each other position:</p>
+<pre>      Z[;BLI]←M
+      Z
+_WWBB
+W_WBB
+WW_BB
+WWB_B
+WWBB_</pre>
+<p>Finally, line <code>[6]</code> builds a five-item list of these positions, deletes the one that is the same as the input position, and returns the remaining four as the explicit result.</p>
+<p><code>MOVECOLOR</code> works on any size board. You could have 11 positions and 10 marbles. Because the number of possible arrangements is so large, it is best to experiment with small-sized games.</p>
+<p>Given the data structures and the <code>MOVECOLOR</code> program just described, the general search program can be written in a few lines. Here’s how the program is used:</p>
+<pre>      DISPLAY¨BEGIN(MOVECOLOR SEARCH1)END
+ .→----.  .→----.  .→----.  .→----.  .→----.
+ |WW_BB|  |_WWBB|  |BWW_B|  |B_WWB|  |BBWW_|
+ '-----'  '-----'  '-----'  '-----'  '-----'</pre>
+<p>Here is the definition of the search operator:</p>
+<pre>    ∇ Z←STRT(MOVE SEARCH1)G;B;M;NEWP
+[1]  ⍝ find path from start to goal
+[2]  ⍝ STRT ←→ starting position
+[3]  ⍝ G ←→ goal position
+[4]  ⍝ MOVE ←→ program to compute next positions
+[5]   M←,⊂,⊂STRT        ⍝ initial path is STRT
+[6]   Z←⍳0              ⍝ return empty on failure
+[7]  LOOP:→(0=⍴M)/0     ⍝ quit no more paths
+[8]   →(G≡B←↑↑M)/DONE   ⍝ done if goal
+[9]   NEWP←MOVE B       ⍝ compute new positions
+[10]  NEWP←(∼NEWP∊↑,/M)/NEWP ⍝ keep new positions
+[11]  M←(1↓M),(⊂¨NEWP),¨M[1] ⍝ add to paths
+[12]  →LOOP             ⍝ back for next path
+[13] DONE:Z←⌽↑M         ⍝ return with path
+[14]∇</pre>
+<p>Line <code>[5]</code> initializes the internal list of partial paths to the starting position <code>STRT</code>.</p>
+<p>Line <code>[6]</code> sets the explicit result to empty in case the list of partial paths is exhausted with no solution. This can’t happen in the simple game being used as the example but, in general, it can happen.</p>
+<p>Line <code>[7]</code> exits if there are no more paths to try.</p>
+<p>Line <code>[8]</code> checks to see if the path at the front of the list ends with the desired goal <code>G</code>. The first <strong>first</strong> gives the entire first path. The second <strong>first</strong> selects the leading position from the first path.</p>
+<p>Line <code>[9]</code> calls <code>MOVE</code> (which is the name given inside the program for the <code>MOVECOLOR</code> program), giving it the current ending position. <code>MOVE</code> is the name in the program for <code>MOVECOLOR</code> when the search program is called.</p>
+<p>Line <code>[10]</code> checks to see if any of the next positions already exist in a path. Only positions never before reached are accepted. This line contains an interesting subexpression. <code>M</code> is a vector of vectors of board positions. To check if the newly generated positions exist already, you want to do membership against the vector of positions already in <code>M</code>. The vector of vectors is joined into a single vector by using <strong>catenate-reduction</strong>. Since any reduction on a vector produces a scalar, the result is an enclosed vector. <strong>First</strong> is used to select the vector. Thus the final expression to turn a vector of vectors of positions into a vector of positions is <code>↑,/</code>.</p>
+<p>Line <code>[11]</code> takes the set of new positions and appends them to the front of the old path. <strong>Indexing</strong> is used to select the old path because it returns a scalar which by scalar extension is catenated onto each of the new positions. Finally, the old path is deleted from the list.</p>
+<p>Line <code>[12]</code> loops back to process the new first item in the list.</p>
+<p>Line <code>[13]</code> returns the path that reached the goal. It is reversed only because you would expect the start position on the left and the final position on the right.</p>
+<p>Note: There is absolutely nothing in the search program that uses the fact the game deals with a five-item vector. The start and end positions could be a matrix or any other data structure. As long as you can write a function that can compute the next positions from some given position, the search program will find the goal if any path to the goal exists. If no goal exists, the program may terminate with no more paths to try or may loop forever. If there is a finite number of positions in the game, it will not loop forever.</p>
+<p>Without any change to the program, you can use <code>SEARCH1</code> to solve other puzzles of this kind. You define the beginning and ending positions and write a program to compute the moves, and the <code>SEARCH1</code> operator will solve the puzzle.</p>
+<p><code>SEARCH1</code> implements what in AI terminology is a <em>breadth-first search</em>. It tries all possible paths in the tree until a path is found. It is guaranteed to find a path if one exists, but it can be horribly inefficient. To solve the simple marbles puzzle requires 26 loops, which is not so bad. If you use more marbles in a longer vector, or try more complicated games, the number of loops rises dramatically.</p>
+<p>The next section shows how adding knowledge about the puzzle reduces the number of positions to be examined.</p>
+<h4 id="a-puzzle-solving-program-using-strategy">A Puzzle-Solving Program Using Strategy<a href="#a-puzzle-solving-program-using-strategy" class="section-link">§</a></h4>
+<p>It is possible to write a search program that is still general but which makes use of information about the problem to reduce the number of paths tried. While only a matter of efficiency, it can make a problem feasible that otherwise could not be computed. This search program using strategy is discussed next.</p>
+<p>If you look at the set of all possible next moves from some given position of a game, you expect that some progress toward the goal, some progress away from the goal, and some make no difference. While it is often not possible to measure exactly the amount of progress made toward the goal, it is often possible to come up with a rough estimate. Even a very bad estimate can significantly reduce the number of game positions examined. A good estimate leads to examination of only a few positions not leading to the goal, and a perfect estimate would lead directly to the goal.</p>
+<p>If you can write a program that, given a position, computes a number that estimates the distance to the goal, you can pass the program as an operand to a search program.</p>
+<p>For the marble puzzle, a simpleminded but effective estimator counts the number of marbles not in their final position. This estimator produces zero only when the goal is reached. Here is a function that implements this estimator:</p>
+<pre>    ∇ Z←GOAL ESTC THIS
+[1]  ⍝ GOAL  is the desired goal
+[2]  ⍝ THIS  is the position to be estimated
+[3]   Z←+/GOAL≠THIS
+[4] ∇</pre>
+<p>The function simply counts the number of marbles out of position.</p>
+<p>The estimator shows that the starting position has no marble in its final position:</p>
+<pre>      GOAL ESTC BEGIN
+5</pre>
+<p>Applying the function to each of the next positions from the starting position gives the corresponding estimates:</p>
+<pre>      DISPLAY¨ MOVECOLOR BEGIN
+ .→----.  .→----.  .→----.  .→----. 
+ |_WWBB|  |W_WBB|  |WWB_B|  |WWBB_| 
+ '-----'  '-----'  '-----'  '-----' 
+      
+      (⊂END)ESTC¨MOVECOLOR BEGIN
+4 4 5 4</pre>
+<p>Notice the use of <strong>enclose</strong> to provide scalar extension in the call of <code>ESTC</code>.</p>
+<p>Since this estimate does not exactly reflect the number of moves required to reach the goal, it is not a perfect estimator. Therefore, using this estimator with a search program, you would expect some positions to be examined which are not on the path to the goal. Also, the search program might not choose the shortest solution.</p>
+<p>The second version of a search program uses a two-column matrix of a vector to remember positions. The first column contains the paths as before. The second column contains the estimates of the distance from the goal. Here is what the matrix contains after one move from the start position:</p>
+<pre>      DISPLAY¨MAT
+ .→----------------.
+ | .→----. .→----. |   4
+ | |_WWBB| |WW_BB| |
+ | '-----' '-----' |
+ '∊----------------'
+ 
+ .→----------------.
+ | .→----. .→----. |   4
+ | |W_WBB| |WW_BB| |
+ | '-----' '-----' |
+ '∊----------------'
+ 
+ .→----------------.
+ | .→----. .→----. |   5
+ | |WWB_B| |WW_BB| |
+ | '-----' '-----' |
+ '∊----------------'
+ 
+ .→----------------.
+ | .→----. .→----. |   4
+ | |WWBB_| |WW_BB| |
+ | '-----' '-----' |
+ '∊----------------'</pre>
+<p>Rather than select the top row of the matrix on each iteration, the path with the lowest estimator is chosen. This choice increases the likelihood that each move is closer to the goal. Here is the complete search program:</p>
+<pre>    ∇ Z←STRT(MOVE SEARCH2 EST)G;B;T;M;NP;IX
+[1]  ⍝ find path from start to goal
+[2]  ⍝ STRT ←→ starting position
+[3]  ⍝ G ←→ goal position
+[4]  ⍝ MOVE ←→ program to compute next positions
+[5]  ⍝ EST ←→ program to estimate distance to goal
+[6]   M←1 2⍴(,⊂STRT)(G EST STRT) ⍝ STRT + estimate
+[7]   Z←10                  ⍝ return empty on fail
+[8]  LOOP:→(0=↑⍴M)/0        ⍝ quit no more paths
+[9]   IX←M[;2]⍳⌊/M[;2]      ⍝ index of least est
+[10]  →(G≡B←↑IX⊃M[;1])/DONE ⍝ done if goal
+[11]  NP←MOVE B             ⍝ find new positions
+[12]  NP←(∼NP∊↑,/M[;1])/NP  ⍝ keep new positions
+[13]  T←((⊂¨NP), ¨M[IX;1]),[1.5](⊂G)EST¨NP
+[14]  M←M[(⍳↑⍴M)∼IX;],[1]T  ⍝ add to paths
+[15]  →LOOP                 ⍝ back for next path
+[16] DONE:Z←⌽↑M[IX;]        ⍝ return with path
+[17]  ∇</pre>
+<p>Using <code>SEARCH2</code> to solve the same puzzle produces the same path (in : this example) as <code>SEARCH1</code> but only requires 5 loops instead of 26:</p>
+<pre>      DISPLAY¨BEGIN (MOVECOLOR SEARCH2 ESTC) END
+ .→----.  .→----.  .→----.  .→----.  .→----. 
+ |WW_BB|  |_WWBB|  |BWW_B|  |B_WWB|  |BBWW_| 
+ '-----'  '-----'  '-----'  '-----'  '-----' </pre>
+<p>The improvement in the speed <code>SEARCH2</code> over <code>SEARCH1</code> is even more dramatic when they are applied to more complicated games. The real challenge is to come up with good enough estimators for those games.</p>
+<h4 id="exercises-for-section-8.3">Exercises for Section 8.3<sup class="answers-note">[<a href="answers.html#section-8.3-a-puzzle-solving-program">Answers</a>]</sup><a href="#exercises-for-section-8.3" class="section-link">§</a></h4>
+<ol>
+<li>Modify the search programs so they count and report the number of loops required to reach the goal.</li>
+<li>Modify <code>SEARCH1</code> so that every 20 loops it stops and asks if you want to continue.</li>
+<li>Modify the <code>SEARCH2</code> program so it keeps track of the number of moves so it can choose the next position based on number of moves plus estimated cost. Actual cost could be just a measure of the number of moves so far.</li>
+</ol>
+<p>Exercises 4 to 7 deal with a puzzle called the “eights puzzle.” It is a smaller version of the familiar “fifteens puzzle.” The “eights puzzle” has eight numbered square tiles on a three-by-three board. There is one blank square. Here’s an example:</p>
+<pre>      .→--.
+      ↓283|
+      |164|
+      |7 5|
+      '---'</pre>
+<p>The purpose of the game is to slide tiles into the empty space until the following pattern is achieved:</p>
+<pre>      .→--.
+      ↓283|
+      |164|
+      |7 5|
+      '---'</pre>
+<ol start="4">
+<li>Write a function that, given a position in the “eights puzzle,” computes the set of next moves.</li>
+<li>How many loops does <code>SEARCH1</code> require to arrive at the goal?</li>
+<li>Write an estimator function that counts the number of tiles not in their final position. How many loops does <code>SEARCH2</code> require to arrive at the goal using this estimator?</li>
+<li>Write an estimator function that computes the horizontal plus the vertical distance of each tile from its final position. For example, for the number 8 in the starting position, this number is 2 (1 horizontal plus 1 vertical). How many loops does <code>SEARCH2</code> require to arrive at the goal using the second estimator?</li>
+</ol>
+
+  </main>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="chapter7.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="postscript.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+    <footer>
+    
+  <a href="gemini://tranarchy.fish/~autumn/apl2/chapter8.gmi" title="View this page on gemini web"><img class="banner" src="/images/gemini.png" alt="best viewed in gemini://"/></a>
+
+
+<a href="https://en.wikipedia.org/wiki/Queer_Nation#Queer_Nation_in_other_locales"><img class="banner" alt="COCK SUCKING FAGGOT - QUEER NATION" src="/~autumn/img/cocksuckingfaggot.gif" /></a>
+<a href="https://social.tranarchy.fish/@autumnull"><img class="banner" alt="Follow me on GoToSocial" src="/~autumn/img/sloth_follow_me.gif"/></a>
+<a href="https://git.sr.ht/~autumnull/website/tree/main/item/pages/apl2/chapter8.html" title="View the source code for this page on sourcehut"><img class="banner" alt="view page source" src="/images/view_source.gif"/></a>
+<a href="https://anybrowser.org/campaign/"><img class="banner" alt="Best Viewed with Any Browser" src="/~autumn/img/anybrowser.gif" /></a>
+<a class="banner" href="/"><img class="banner" src="/images/tranarchy.gif" alt="Tranarchy" /></a>
+
+
+      <p>contact me: <code>curl cards.tranarchy.fish/~autumn/</code></p>
+    </footer>
+  </body>
+</html>
+

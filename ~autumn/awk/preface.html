@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <title>CONTENTS</title>
+    <link rel="icon" type="image/png" href="/~autumn/img/lips.png"/>
+    
+    <link rel="stylesheet" href="/~autumn/style/colors.css" />
+    
+    <link rel="stylesheet" href="/~autumn/style/main.css" />
+    
+    <link rel="stylesheet" href="/~autumn/awk/style.css" />
+    
+  </head>
+  <body>
+    <header>
+      
+        <a href="/~autumn/awk/">^ back to The AWK Programming Language</a>
+      
+    </header>
+
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="."><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="contents.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+  <main>
+    <h2 id="preface">PREFACE</h2>
+<p>Computer users spend a lot of time doing simple, mechanical data
+manipulation — changing the format of data, checking its validity,
+finding items with some property, adding up numbers, printing reports,
+and the like. All of these jobs ought to be mechanized, but it’s a real
+nuisance to have to write a special-purpose program in a standard
+language like C or Pascal each time such a task comes up.</p>
+<p>Awk is a programming language that makes it possible to handle such
+tasks with very short programs, often only one or two lines long. An awk
+program is a sequence of patterns and actions that tell what to look for
+in the input data and what to do when it’s found. Awk searches a set of
+files for lines matched by any of the patterns; when a matching line is
+found, the corresponding action is performed, A pattern can select lines
+by combinations of regular expressions and comparison operations on
+strings, numbers, fields, variables, and array elements. Actions may
+perform arbitrary processing on selected lines; the action language
+looks like C but there are no declarations, and strings and numbers are
+built-in data types.</p>
+<p>Awk scans the input files and splits each input line into fields
+automatically. Because so many things are automatic — input, field
+splitting, storage management, initialization — awk programs are usually
+much smaller than they would be in a more conventional language. Thus
+one common use of awk is for the kind of data manipulation suggested
+above. Programs, a line or two long, are composed at the keyboard, run
+once, then discarded. In effect, awk is a general-purpose programmable
+tool that can replace a host of specialized tools or programs.</p>
+<p>The same brevity of expression and convenience of operations make awk
+valuable for prototyping larger programs. One starts with a few lines,
+then refines the program until it does the desired job, experimenting
+with designs by trying alternatives quickly. Since programs are short,
+it’s easy to get started, and easy to start over when experience
+suggests a different direction. And it’s straightforward to translate an
+awk program into another language once the design is right.</p>
+<h4 id="organization-of-the-book">Organization of the Book</h4>
+<p>The first goal of this book is to teach you what awk is and how to
+use it effectively. Chapter 1 is a tutorial on the bare minimum
+necessary to get started; after reading even a few pages, you should
+have enough information to begin writing useful programs. The examples
+in this chapter are very short and simple, typical of the interactive
+use of awk.</p>
+<p>Chapter 2 covers the entire language in a systematic order. Although
+there are plenty of examples in this chapter, like most manuals it’s
+long and a bit dry, so you will probably want to skim it on a first
+reading.</p>
+<p>The rest of the book contains a wide variety of examples, chosen to
+show the breadth of applicability of awk and how to make good use of its
+facilities. Some of the programs are in regular use in our environment;
+others show ideas but are not intended for production use; a few are
+included just because they are fun.</p>
+<p>The emphasis in Chapter 3 is on retrieval, transformation, reduction
+and validation of data — the tasks that awk was originally designed for.
+There is also a discussion of how to handle data like address lists that
+naturally comes in multiline chunks.</p>
+<p>Awk is a good language for managing small, personal databases.
+Chapter 4 discusses the generation of reports from databases, and builds
+a simple relational database system and query language for data stored
+in multiple files.</p>
+<p>Awk handles text with much the same convenience that most languages
+handle numbers, so it often finds application in text processing.
+Chapter 5 describes programs for generating text, and some that help
+with document preparation. One of the examples is an indexing program
+based on the one we used for this book.</p>
+<p>Chapter 6 is about “little languages,” that is, specialized languages
+that focus on a narrow domain. Awk is convenient for writing small
+translators because its basic operations support many of the lexical and
+table-management tasks encountered in translation. The chapter includes
+an assembler, a graphics language, and several calculators.</p>
+<p>Awk is a good language for expressing certain kinds of algorithms.
+Because there are no declarations and because storage management is
+easy, an awk program has many of the advantages of pseudo-code but awk
+programs can be run, which is not true of pseudo-code. The focus in
+Chapter 7 is on experimentation with algorithms, including testing and
+performance evaluation. It shows several sorting algorithms, and
+culminates in a version of the Unix <code>make</code> program.</p>
+<p>Chapter 8 describes some of the historical reasons why awk is as it
+is, and offers some suggestions on what to do when it is too slow or too
+confining.</p>
+<p>Appendix A is a summary of the language; Appendix B contains answers
+to selected exercises.</p>
+<p>You should begin by reading Chapter 1, and trying some small examples
+of your own. Go through Chapter 2 quickly, concentrating on the
+summaries and tables; don’t get bogged down in the details. Then read as
+far into each of the subsequent chapters as your interest takes you. The
+chapters are nearly independent of each other, so the order doesn’t
+matter much.</p>
+<h4 id="the-examples">The Examples</h4>
+<p>There are several themes in the examples. The primary one, of course,
+is to show how to use awk well. We have tried to include a wide variety
+of useful constructions, and we have stressed particular aspects like
+associative arrays and regular expressions that typify awk
+programming.</p>
+<p>A second theme is to show awk’s versatility. Awk programs have been
+used from databases to circuit design, from numerical analysis to
+graphics, from compilers to system administration, from a first language
+for nonprogrammers to the implementation language for software
+engineering courses. We hope that the diversity of applications
+illustrated in the book will suggest new possibilities to you as
+well.</p>
+<p>A third theme is to show how common computing operations are done.
+The book contains a relational database system, an assembler and
+interpreter for a toy computer, a graph-drawing language, a
+recursive-descent parser for an awk subset, a file-update program based
+on <code>make</code>, and many other examples. In each case, a short awk
+program conveys the essence of how something works in a form that you
+can understand and play with.</p>
+<p>We have also tried to illustrate a spectrum of ways to attack
+programming problems. Rapid prototyping is an approach that awk supports
+well. A less obvious strategy is divide and conquer: breaking a big job
+into small components, each concentrating on one aspect of the problem.
+Another is writing programs that create other programs. Little languages
+define a good user interface and often suggest a sound implementation.
+Although these ideas are presented here in the context of awk, they are
+much more generally applicable, and ought to be part of every
+programmer’s repertoire.</p>
+<p>The examples have all been tested directly from the text, which is in
+machine-readable form. We have tried to make the programs error-free,
+but we have not added features nor made them proof against all possible
+invalid inputs, preferring to concentrate on conveying the
+essentials.</p>
+<h4 id="evolution-of-the-awk-language">Evolution of the AWK
+Language</h4>
+<p>Awk was originally designed and implemented by the authors in 1977,
+in part as an experiment to see how the Unix tools <code>grep</code> and
+<code>sed</code> could be generalized to deal with numbers as well as
+text. It was based on our interests in regular expressions and
+programmable editors. Although it was meant for writing very short
+programs, its combination of facilities soon attracted users who wrote
+significantly larger programs. These larger programs needed features
+that had not been part of the original implementation, so awk was
+enhanced in a new version made available in 1985.</p>
+<p>The major new feature is the ability for users to define their own
+functions. Other enhancements include dynamic regular expressions, with
+text substitution and pattern-matching functions; additional built-in
+functions and variables; some new operators and statements; input from
+multiple files; and access to command-line arguments. Error messages
+have also been improved. The examples in Chapter 1 use only facilities
+of the original version; many examples in later chapters take advantage
+of new features.</p>
+<p>This version of awk is part of Unix System V Release 3.1. Source code
+for this version is also available through AT&amp;T’s Unix System
+Toolchest software distribution system; call 1-201-522-6900 and log in
+as <code>guest</code>. In Europe, contact AT&amp;T Unix Europe in London
+(44-1-567-7711); in the Far East, contact AT&amp;T Unix Pacific in Tokyo
+(81-3-431-3670).</p>
+<p>Since awk was developed under Unix, some of its features reflect
+capabilities usually found only there; these features are used in some
+of our examples. Furthermore, we have assumed the existence of some Unix
+utilities, particularly <code>sort</code>, for which exact equivalents
+may not exist elsewhere. Aside from these limitations, however, awk
+should be useful in any environment; in particular, it runs on MS-DOS.
+Further information is available from Addison-Wesley.</p>
+<p>Awk is certainly not perfect; it has its share of irregularities,
+omissions, and just plain bad ideas, and it’s sometimes painfully slow.
+But it’s also a rich and versatile language, useful in a remarkable
+number of cases. We hope you’ll find it as valuable as we do.</p>
+<h4 id="acknowledgments">Acknowledgments</h4>
+<p>We are deeply indebted to friends who made comments and suggestions
+on drafts of this book. We are particularly grateful to Jon Bentley,
+whose enthusiasm has been an inspiration for years. Jon contributed many
+ideas and programs derived from his experience using and teaching awk;
+he also read several drafts with great care. Doug McIlroy also deserves
+special recognition; his peerless talent as a reader greatly improved
+the structure and content of the whole book. Others who made helpful
+comments on the manuscript include Susan Aho, Jaap Akkerhuis, Lorinda
+Cherry, Chris Fraser, Eric Grosse, Riccardo Gusella, Bob Herbst, Mark
+Kernighan, John Linderman, Bob Martin, Howard Moscovitz, Gerard Schmitt,
+Don Swartwout, Howard Trickey, Peter van Eijk, Chris Van Wyk, and
+Mihalis Yannakakis. We thank them all.</p>
+<p>Alfred V. Aho<br/>Brian W. Kernighan<br/>Peter J. Weinberger</p>
+
+  </main>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="."><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="contents.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+    <footer>
+    
+  <a href="gemini://tranarchy.fish/~autumn/awk/preface.gmi" title="View this page on gemini web"><img class="banner" src="/images/gemini.png" alt="best viewed in gemini://"/></a>
+
+
+<a href="https://en.wikipedia.org/wiki/Queer_Nation#Queer_Nation_in_other_locales"><img class="banner" alt="COCK SUCKING FAGGOT - QUEER NATION" src="/~autumn/img/cocksuckingfaggot.gif" /></a>
+<a href="https://social.tranarchy.fish/@autumnull"><img class="banner" alt="Follow me on GoToSocial" src="/~autumn/img/sloth_follow_me.gif"/></a>
+<a href="https://git.sr.ht/~autumnull/website/tree/main/item/pages/awk/preface.html" title="View the source code for this page on sourcehut"><img class="banner" alt="view page source" src="/images/view_source.gif"/></a>
+<a href="https://anybrowser.org/campaign/"><img class="banner" alt="Best Viewed with Any Browser" src="/~autumn/img/anybrowser.gif" /></a>
+<a class="banner" href="/"><img class="banner" src="/images/tranarchy.gif" alt="Tranarchy" /></a>
+
+
+      <p>contact me: <code>curl cards.tranarchy.fish/~autumn/</code></p>
+    </footer>
+  </body>
+</html>
+

@@ -1,0 +1,14 @@
+body {
+	background: #fed;
+	font-family: monospace;
+}
+
+main {
+	padding: 0 1em;
+	margin: auto;
+	border-left: 1px dashed #000;
+}
+
+img {
+	image-rendering: pixelated;
+}

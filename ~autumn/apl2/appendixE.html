@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <title>Appendix E: APL2 Character Set</title>
+    <link rel="icon" type="image/png" href="/~autumn/img/lips.png"/>
+    
+    <link rel="stylesheet" href="/~autumn/style/colors.css" />
+    
+    <link rel="stylesheet" href="/~autumn/style/main.css" />
+    
+    <link rel="stylesheet" href="/~autumn/apl2/style.css" />
+    
+  </head>
+  <body>
+    <header>
+      
+        <a href="/~autumn/apl2/">^ back to APL2 at a Glance</a>
+      
+    </header>
+
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="appendixD.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="appendixF.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+  <main>
+    <div class="chapter-rule">
+    <hr class="chapter-long">
+    <p>Appendix</p>
+    <hr class="chapter-short">
+    <div>
+        <div>
+            E
+        </div>
+    </div>
+</div>
+<h2 id="apl2-character-set">APL2 Character Set</h2>
+<p>The entire set of displayable <span class="small-caps">APL2</span> characters is shown in the chart on the next page, along with their common-usage names. The names shown are for the symbols themselves and not necessarily for the operations that they represent.</p>
+<center>
+<figure>
+<img src="images/apl_keyboard_2.png" alt="Keyboard for APL2">
+<figcaption>Keyboard for APL2</figcaption>
+</figure>
+<table id="character-set">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<!--using capital letters with 'U+0332 COMBINING LOW LINE' character-->
+<td class="b" colspan="4"><pre>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+A̲ B̲ C̲ D̲ E̲ F̲ G̲ H̲ I̲ J̲ K̲ L̲ M̲ N̲ O̲ P̲ Q̲ R̲ S̲ T̲ U̲ V̲ W̲ X̲ Y̲ Z̲
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+0 1 2 3 4 5 6 7 8 9</pre></td>
+</tr>
+<tr>
+<td class="t r"><code>¨</code> dieresis</td><!--U+00A8-->
+<td class="l t r"><code>⍺</code> alpha<a href="#fnstar">★</a></td><!--U+237A-->
+<td class="l t"><code>⍱</code> nor</td><!--U+2371-->
+<td class="t"><code>∨ ∼</code></td>
+</tr>
+<tr>
+<td class="r"><code>¯</code> overbar</td><!--U+00AF-->
+<td class="l r"><code>⌈</code> up stile</td><!--U+2308-->
+<td class="l"><code>⍲</code> nand</td><!--U+2372-->
+<td><code>∧&nbsp;∼</code></td>
+</tr>
+<tr>
+<td class="r"><code>&lt;</code> less than</td><!--U+003C-->
+<td class="l r"><code>⌊</code> down stile</td><!--U+003E-->
+<td class="l"><code>⍒</code> del stile</td><!--U+2352-->
+<td><code>∇&nbsp;∣</code></td>
+</tr>
+<tr>
+<td class="r"><code>≤</code> less than or equal to</td><!--U+2264-->
+<td class="l r"><code>_</code> underbar</td><!--U+005F-->
+<td class="l"><code>⍋</code> delta stile</td><!--U+234B-->
+<td><code>∆&nbsp;∣</code></td>
+</tr>
+<tr>
+<td class="r"><code>=</code> equal</td><!--U+003D-->
+<td class="l r"><code>∇</code> del</td><!--U+2207-->
+<td class="l"><code>⍙</code> delta underbar</td><!--U+2359-->
+<td><code>∆&nbsp;_</code></td>
+</tr>
+<tr>
+<td class="r"><code>≥</code> greater than or equal to</td><!--U+2265-->
+<td class="l r"><code>∆</code> delta</td><!--U+2206-->
+<td class="l"><code>⌽</code> circle stile</td><!--U+233D-->
+<td><code>○&nbsp;∣</code></td>
+</tr>
+<tr>
+<td class="r"><code>&gt;</code> greater than</td><!--U+003E-->
+<td class="l r"><code>∘</code> jot</td><!--U+2218-->
+<td class="l"><code>⍉</code> circle backslash</td><!--U+2349-->
+<td><code>○&nbsp;\</code></td>
+</tr>
+<tr>
+<td class="r"><code>≠</code> not equal</td><!--U+2260-->
+<td class="l r"><code>'</code> quote</td><!--U+0027-->
+<td class="l"><code>⊖</code> circle bar</td><!--U+2296-->
+<td><code>○&nbsp;−</code></td>
+</tr>
+<tr>
+<td class="r"><code>∨</code> down caret</td><!--U+2228-->
+<td class="l r"><code>⎕</code> quad</td><!--U+2395-->
+<td class="l"><code>⍟</code> circle star</td><!--U+235F-->
+<td><code>○&nbsp;⋆</code></td>
+</tr>
+<tr>
+<td class="r"><code>∧</code> caret</td><!--U+2227-->
+<td class="l r"><code>(</code> left paren</td><!--U+0028-->
+<td class="l"><code>⌶</code> I-beam<a href="#fnstar">★</a></td><!--U+2336-->
+<td><code>⊥&nbsp;⊤</code></td>
+</tr>
+<tr>
+<td class="r"><code>−</code> minus (bar or midbar)</td><!--U+2212-->
+<td class="l r"><code>)</code> right paren</td><!--U+0029-->
+<td class="l"><code>⍫</code> del tilde</td><!--U+236B-->
+<td><code>∇&nbsp;∼</code></td>
+</tr>
+<tr>
+<td class="r"><code>÷</code> divide</td><!--U+00F7-->
+<td class="l r"><code>[</code> left bracket</td><!--U+005B-->
+<td class="l"><code>⍎</code> base jot</td><!--U+234E-->
+<td><code>⊥&nbsp;∘</code></td>
+</tr>
+<tr>
+<td class="r"><code>+</code> plus</td><!--U+002B-->
+<td class="l r"><code>]</code> right bracket</td><!--U+005D-->
+<td class="l"><code>⍕</code> top jot</td><!--U+2355-->
+<td><code>⊤&nbsp;∘</code></td>
+</tr>
+<tr>
+<td class="r"><code>×</code> times</td><!--U+00D7-->
+<td class="l r"><code>⊂</code> left shoe</td><!--U+2282-->
+<td class="l"><code>⍀</code> backslash bar</td><!--U+2340-->
+<td><code>\&nbsp;−</code></td>
+</tr>
+<tr>
+<td class="r"><code>?</code> query</td><!--U+003F-->
+<td class="l r"><code>⊃</code> right shoe</td><!--U+2283-->
+<td class="l"><code>⌿</code> slash bar</td><!--U+233F-->
+<td><code>/&nbsp;−</code></td>
+</tr>
+<tr>
+<td class="r"><code>⍵</code> omega<a href="#fnstar">★</a></td><!--U+2375-->
+<td class="l r"><code>∩</code> cap</td><!--U+2229-->
+<td class="l"><code>⍝</code> lamp</td><!--U+235D-->
+<td><code>∩&nbsp;∘</code></td>
+</tr>
+<tr>
+<td class="r"><code>∊</code> epsilon</td><!--U+220A-->
+<td class="l r"><code>∪</code> cup</td><!--U+222A-->
+<td class="l"><code>⍞</code> quote-quad (quad-prime)</td><!--U+235E-->
+<td><code>⎕&nbsp;'</code></td>
+</tr>
+<tr>
+<td class="r"><code>⍴</code> rho</td><!--U+2374-->
+<td class="l r"><code>⊥</code> base</td><!--U+22A5-->
+<td class="l"><code>!</code> shriek</td><!--U+0021-->
+<td><code>.&nbsp;'</code></td>
+</tr>
+<tr>
+<td class="r"><code>∼</code> tilde</td><!--U+223C-->
+<td class="l r"><code>⊤</code> top</td><!--U+22A4-->
+<td class="l"><code>⌹</code> domino</td><!--U+2339-->
+<td><code>⎕&nbsp;÷</code></td>
+</tr>
+<tr>
+<td class="r"><code>↑</code> up arrow</td><!--U+2191-->
+<td class="l r"><code>∣</code> stile</td><!--U+2223-->
+<td class="l"><code>⍂</code> quad backslash<a href="#fnstar">★</a></td><!--U+2342-->
+<td><code>⎕&nbsp;\</code></td>
+</tr>
+<tr>
+<td class="r"><code>↓</code> down arrow</td><!--U+2193-->
+<td class="l r"><code>;</code> semicolon</td><!--U+003B-->
+<td class="l"><code>⌻</code> quad jot<a href="#fnstar">★</a></td><!--U+233B-->
+<td><code>⎕&nbsp;∘</code></td>
+</tr>
+<tr>
+<td class="r"><code>⍳</code> iota</td><!--U+2373-->
+<td class="l r"><code>:</code> colon</td><!--U+003A-->
+<td class="l"><code>⌷</code> squad (squished quad)</td><!--U+2337-->
+<td><code>[&nbsp;]</code></td>
+</tr>
+<tr>
+<td class="r"><code>○</code> circle</td><!--U+25CB-->
+<td class="l r"><code>,</code> comma</td><!--U+002C-->
+<td class="l"><code>≡</code> equal underbar</td><!--U+2261-->
+<td><code>=&nbsp;_</code></td>
+</tr>
+<tr>
+<td class="r"><code>⋆</code> star</td><!--U+22C6-->
+<td class="l r"><code>.</code> dot</td><!--U+002E-->
+<td class="l"><code>⍷</code> epsilon underbar</td><!--U+2377-->
+<td><code>∊&nbsp;_</code></td>
+</tr>
+<tr>
+<td class="r"><code>→</code> right arrow</td><!--U+2192-->
+<td class="l r"><code>\</code> backslash</td><!--U+005C-->
+<td class="l"><code>⍸</code> iota underbar<a href="#fnstar">★</a></td><!--U+2378-->
+<td><code>⍳&nbsp;_</code></td>
+</tr>
+<tr>
+<td class="r"><code>←</code> left arrow</td><!--U+2190-->
+<td class="l r"><code>/</code> slash</td><!--U+002F-->
+<td class="l"><code>∵</code> dotted del<a href="#fnstar">★</a></td><!--U+2235-->
+<td><code>¨&nbsp;.</code></td>
+</tr>
+<tr>
+<td class="r b" rowspan=2></td>
+<td class="l r"></td>
+<td class="l"><code>%</code> percent<a href="#fnstar">★</a></td><!--U+0025-->
+<td><code>/&nbsp;÷</code></td>
+</tr>
+<tr>
+<td class="l r b"><code>&nbsp;</code> blank (space)</td><!--U+0020-->
+<td class="l"><code>&amp;</code> ampersand<a href="#fnstar">★</a></td><!--U+0026-->
+<td><code>∣&nbsp;∊</code></td>
+</tr>
+<tr>
+<td class="t r" colspan=2 rowspan=14 style="width: min-content; vertical-align: bottom;"><ul>
+<li id="fnstar">These characters currently have no assigned purpose in APL2, other than their use as decorators.</li>
+</ul></td>
+<td class="l"><code>¢</code> cent<a href="#fnstar">★</a></td><!--U+00A2-->
+<td><code>∣&nbsp;⊂</code></td>
+</tr>
+<tr>
+<td class="l"><code>$</code> dollar<a href="#fnstar">★</a></td><!--U+0024-->
+<td><code>S&nbsp;/</code></td>
+</tr>
+<tr>
+<td class="l"><code>#</code> pound<a href="#fnstar">★</a></td><!--U+0023-->
+<td><code>N&nbsp;=</code></td>
+</tr>
+<tr>
+<td class="l"><code>@</code> at<a href="#fnstar">★</a></td><!--U+0040-->
+<td><code>Q&nbsp;∘</code></td>
+</tr>
+<tr>
+<td class="l"><code>ǃ</code> exclamation<a href="#fnstar">★</a></td><!--U+01C3-->
+<td><code>'&nbsp;∘</code></td>
+</tr>
+<tr>
+<td class="l"><code>|</code> vertical bar<a href="#fnstar">★</a></td><!--U+007C-->
+<td><code>∣&nbsp;⊥</code></td>
+</tr>
+<tr>
+<td class="l"><code>~</code> tilde<a href="#fnstar">★</a></td><!--U+007E-->
+<td><code>∣&nbsp;∼</code></td>
+</tr>
+<tr>
+<td class="l"><code>¬</code> not<a href="#fnstar">★</a></td><!--U+00AC-->
+<td><code>/&nbsp;∼</code></td>
+</tr>
+<tr>
+<td class="l"><code>¦</code> split bar<a href="#fnstar">★</a></td><!--U+00A6-->
+<td><code>,&nbsp;'</code></td>
+</tr>
+<tr>
+<td class="l"><code>"</code> double quote<a href="#fnstar">★</a></td><!--U+0022-->
+<td><code>¨&nbsp;'</code></td>
+</tr>
+<tr>
+<td class="l"><code>{</code> left brace<a href="#fnstar">★</a></td><!--U+007B-->
+<td><code>−&nbsp;(</code></td>
+</tr>
+<tr>
+<td class="l"><code>}</code> right brace<a href="#fnstar">★</a></td><!--U+007D-->
+<td><code>−&nbsp;)</code></td>
+</tr>
+<tr>
+<td class="l"><code>∖</code> backslash<a href="#fnstar">★</a></td><!--U+2216-->
+<td><code>\&nbsp;∣</code></td>
+</tr>
+<tr>
+<td class="l b"><code>`</code> accent<a href="#fnstar">★</a></td><!--U+0060-->
+<td class="b"><code>\ ¯</code></td>
+</tr>
+</tbody>
+</table>
+</center>
+
+  </main>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="appendixD.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="appendixF.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+    <footer>
+    
+  <a href="gemini://tranarchy.fish/~autumn/apl2/appendixE.gmi" title="View this page on gemini web"><img class="banner" src="/images/gemini.png" alt="best viewed in gemini://"/></a>
+
+
+<a href="https://en.wikipedia.org/wiki/Queer_Nation#Queer_Nation_in_other_locales"><img class="banner" alt="COCK SUCKING FAGGOT - QUEER NATION" src="/~autumn/img/cocksuckingfaggot.gif" /></a>
+<a href="https://social.tranarchy.fish/@autumnull"><img class="banner" alt="Follow me on GoToSocial" src="/~autumn/img/sloth_follow_me.gif"/></a>
+<a href="https://git.sr.ht/~autumnull/website/tree/main/item/pages/apl2/appendixE.html" title="View the source code for this page on sourcehut"><img class="banner" alt="view page source" src="/images/view_source.gif"/></a>
+<a href="https://anybrowser.org/campaign/"><img class="banner" alt="Best Viewed with Any Browser" src="/~autumn/img/anybrowser.gif" /></a>
+<a class="banner" href="/"><img class="banner" src="/images/tranarchy.gif" alt="Tranarchy" /></a>
+
+
+      <p>contact me: <code>curl cards.tranarchy.fish/~autumn/</code></p>
+    </footer>
+  </body>
+</html>
+

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <title>CHAPTER 1: AN AWK TUTORIAL</title>
+    <link rel="icon" type="image/png" href="/~autumn/img/lips.png"/>
+    
+    <link rel="stylesheet" href="/~autumn/style/colors.css" />
+    
+    <link rel="stylesheet" href="/~autumn/style/main.css" />
+    
+    <link rel="stylesheet" href="/~autumn/awk/style.css" />
+    
+  </head>
+  <body>
+    <header>
+      
+        <a href="/~autumn/awk/">^ back to The AWK Programming Language</a>
+      
+    </header>
+
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="contents.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="chapter2.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+  <main>
+    <h2 id="an-awk-tutorial">1 AN AWK TUTORIAL</h2>
+<p>Awk is a convenient and expressive programming language that can be
+applied to a wide variety of computing and data-manipulation tasks. This
+chapter is a tutorial, designed to let you start writing your own
+programs as quickly as possible. Chapter 2 describes the whole language,
+and the remaining chapters show how awk can be used to solve problems
+from many different areas. Throughout the book, we have tried to pick
+examples that you should find useful, interesting, and instructive.</p>
+<h3 id="getting-started">1.1 Getting Started</h3>
+<p>Useful awk programs are often short, just a line or two. Suppose you
+have a file called <code>emp.data</code> that contains the name, pay
+rate in dollars per hour, and number of hours worked for your employees,
+one employee record per line, like this:</p>
+<pre><code>Beth	4.00	0
+Dan	3.75	0
+Kathy	4.00	10
+Mark	5.00	20
+Mary	5.50	22
+Susie	4.25	18</code></pre>
+<p>Now you want to print the name and pay (rate times hours) for
+everyone who worked more than zero hours. This is the kind of job that
+awk is meant for, so it’s easy. Just type this command line:</p>
+<pre><code>awk &#39;$3 &gt; 0 { print $1, $2 * $3 }&#39; emp.data</code></pre>
+<p>You should get this output:</p>
+<pre><code>Kathy 40
+Mark 100
+Mary 121
+Susie 76.5</code></pre>
+<p>This command line tells the system to run awk, using the program
+inside the quote characters, taking its data from the input file
+<code>emp.data</code>. The part inside the quotes is the complete awk
+program. It consists of a single <em>pattern-action statement</em>. The
+pattern, <code>$3 &gt; 0</code>, matches every input line in which the
+third column, or <em>field</em>, is greater than zero, and the
+action</p>
+<pre><code>{ print $1, $2 * $3 }</code></pre>
+<p>prints the first field and the product of the second and third fields
+of each matched line.</p>
+<p>If you want to print the names of those employees who did not work,
+type this command line:</p>
+<pre><code>awk &#39;$3 == 0 { print $1 }&#39; emp.data</code></pre>
+<p>Here the pattern, $3 == 0, matches each line in which the third field
+is equal to zero, and the action</p>
+<pre><code>{ print $1 }</code></pre>
+<p>prints its first field.</p>
+<p>As you read this book, try running and modifying the programs that
+are presented. Since most of the programs are short, you’ll quickly get
+an understanding of how awk works. On a Unix system, the two
+transactions above would look like this on the terminal:</p>
+<pre><code>$ awk &#39;$3 &gt; 0 { print $1, $2 * $3 }&#39; emp.data
+Kathy 40
+Mark 100
+Mary 121
+Susie 76.5
+$ awk &#39;$3 == 0 { print $1 }&#39; emp.data
+Beth
+Dan
+$</code></pre>
+<p>The <code>$</code> at the beginning of a line is the prompt from the
+system; it may be different on your machine.</p>
+<h4 id="the-structure-of-an-awk-program">The Structure of an AWK
+Program</h4>
+<p>Let’s step back a moment and look at what is going on. In the command
+lines above, the parts between the quote characters are programs written
+in the awk programming language. Each awk program in this chapter is a
+sequence of one or more pattern-action statements:</p>
+<pre><code><i>pattern</i> { <i>action</i> }
+<i>pattern</i> { <i>action</i> }
+...</code></pre>
+<p>The basic operation of awk is to scan a sequence of input lines one
+after another, searching for lines that are <em>matched</em> by any of
+the patterns in the program. The precise meaning of the word “match”
+depends on the pattern in question; for patterns like
+<code>$3 &gt; 0</code>, it means “the condition is true.”</p>
+<p>Every input line is tested against each of the patterns in turn. For
+each pattern that matches, the corresponding action (which may involve
+multiple steps) is performed. Then the next line is read and the
+matching starts over. This continues until all the input has been
+read.</p>
+<p>The programs above are typical examples of patterns and actions.</p>
+<pre><code>$3 == 0 { print $1 }</code></pre>
+<p>is a single pattern-action statement; for every line in which the
+third field is zero, the first field is printed.</p>
+<p>Either the pattern or the action (but not both) in a pattern-action
+statement may be omitted. If a pattern has no action, for example,</p>
+<pre><code>$3 == 0</code></pre>
+<p>then each line that the pattern matches (that is, each line for which
+the condition is true) is printed. This program prints the two lines
+from the <code>emp.data</code> file where the third field is zero:</p>
+<pre><code>Beth	4.00	0
+Dan	3.75	0</code></pre>
+<p>If there is an action with no pattern, for example,</p>
+<pre><code>{ print $1 }</code></pre>
+<p>then the action, in this case printing the first field, is performed
+for every input line.</p>
+<p>Since patterns and actions are both optional, actions are enclosed in
+braces to distinguish them from patterns.</p>
+<h4 id="running-an-awk-program">Running an AWK Program</h4>
+<p>There are several ways to run an awk program. You can type a command
+line of the form</p>
+<pre><code>awk &#39;<i>program</i>&#39; <i>input files</i></code></pre>
+<p>to run the <i>program</i> on each of the specified input files. For
+example, you could type</p>
+<pre><code>awk &#39;$3 == 0 { print $1 }&#39; file1 file2</code></pre>
+<p>to print the first field of every line of <code>file1</code> and
+<code>file2</code> in which the third field is zero.</p>
+<p>You can omit the input files from the command line and just type</p>
+<pre><code>awk &#39;<i>program</i>&#39;</code></pre>
+<p>In this case awk will apply the <i>program</i> to whatever you type
+next on your terminal until you type an end-of-file signal (control-d on
+Unix systems). Here is a sample of a session on Unix:</p>
+<pre><code>$ awk &#39;$3 == 0 { print $1 }&#39;
+Beth	4.00	0
+<b>Beth</b>
+Dan	3.75	0
+<b>Dan</b>
+Kathy	3.75	10
+Kathy	3.75	0
+<b>Kathy</b>
+...</code></pre>
+<p>The <code><b>heavy</b></code> characters are what the
+computer printed.</p>
+<p>This behavior makes it easy to experiment with awk: type your
+program, then type data at it and see what happens. We again encourage
+you to try the examples and variations on them.</p>
+<p>Notice that the program is enclosed in single quotes on the command
+line. This protects characters like <code>$</code> in the program from
+being interpreted by the shell and also allows the program to be longer
+than one line.</p>
+<p>This arrangement is convenient when the program is short (a few
+lines). If the program is long, however, it is more convenient to put it
+into a separate file, say <code>progfile</code>, and type the command
+line</p>
+<pre><code>awk -f progfile <i>optional list of input files</i></code></pre>
+<p>The <code>-f</code> option instructs awk to fetch the program from
+the named file. Any filename can be used in place of
+<code>progfile</code>.</p>
+<h4 id="errors">Errors</h4>
+<p>If you make an error in an awk program, awk will give you a
+diagnostic message. For example, if you mistype a brace, like this:</p>
+<pre><code>awk &#39;$3 == 0 [ print $1 }&#39; emp.data</code></pre>
+<p>you will get a message like this:</p>
+<pre><code>awk: syntax error at source line 1
+ context is
+	$3 == 0 &gt;&gt;&gt;  [ &lt;&lt;&lt;
+	extra }
+	missing ]
+awk: bailing out at source line 1</code></pre>
+<p>“Syntax error” means that you have made a grammatical error that was
+detected at the place marked by <code>&gt;&gt;&gt; &lt;&lt;&lt;</code>.
+“Bailing out” means that no recovery was attempted. Sometimes you get a
+little more help about what the error was, such as a report of
+mismatched braces or parentheses.</p>
+<p>Because of the syntax error, awk did not try to execute this program.
+Some errors, however, may not be detected until your program is running.
+For example, if you attempt to divide a number by zero, awk will stop
+its processing and report the input line number and the line number in
+the program at which the division was attempted.</p>
+<h3 id="simple-output">1.2 Simple Output</h3>
+<p>The rest of this chapter contains a collection of short, typical awk
+programs based on manipulation of the <code>emp.data</code> file above.
+We’ll explain briefly what’s going on, but these examples are meant
+mainly to suggest useful operations that are easy to do with awk —
+printing fields, selecting input, and transforming data. We are not
+showing everything that awk can do by any means, nor are we going into
+many details about the specific things presented here. But by the end of
+this chapter, you will be able to accomplish quite a bit, and you’ll
+find it much easier to read the later chapters.</p>
+<p>We will usually show just the program, not the whole command line. In
+every case, the program can be run either by enclosing it in quotes as
+the first argument of the <code>awk</code> command, as shown above, or
+by putting it in a file and invoking awk on that file with the
+<code>-f</code> option.</p>
+<p>There are only two types of data in awk: numbers and strings of
+characters. The <code>emp.data</code> file is typical of this kind of
+information — a mixture of words and numbers separated by blanks and/or
+tabs.</p>
+<p>Awk reads its input one line at a time and splits each line into
+fields, where, by default, a field is a sequence of characters that
+doesn’t contain any blanks or tabs. The first field in the current input
+line is called <code>$1</code>, the second <code>$2</code>, and so
+forth. The entire line is called <code>$0</code>. The number of fields
+can vary from line to line.</p>
+<p>Often, all we need to do is print some or all of the fields of each
+line, perhaps performing some calculations. The programs in this section
+are all of that form.</p>
+<h4 id="printing-every-line">Printing Every Line</h4>
+<p>If an action has no pattern, the action is performed for all input
+lines. The statement <code>print</code> by itself prints the current
+input line, so the program</p>
+<pre><code>{ print }</code></pre>
+<p>prints all of its input on the standard output. Since <code>$0</code>
+is the whole line,</p>
+<pre><code>{ print $0 }</code></pre>
+<p>does the same thing.</p>
+<h4 id="printing-certain-fields">Printing Certain Fields</h4>
+<p>More than one item can be printed on the same output line with a
+single <code>print</code> statement. The program to print the first and
+third fields of each input line is</p>
+<pre><code>{ print $1, $3 }</code></pre>
+<p>With <code>emp.data</code> as input, it produces</p>
+<pre><code>Beth 0
+Dan 0
+Kathy 10
+Mark 20
+Mary 22
+Susie 18</code></pre>
+<p>Expressions separated by a comma in a <code>print</code> statement
+are, by default, separated by a single blank when they are printed. Each
+line produced by <code>print</code> ends with a newline character. Both
+of these defaults can be changed; we’ll show how in Chapter 2.</p>
+<h4 id="nf-the-number-of-fields">NF, the Number of Fields</h4>
+<p>It might appear you must always refer to fields as <code>$1</code>,
+<code>$2</code>, and so on, but any expression can be used after
+<code>$</code> to denote a field number; the expression is evaluated and
+its numeric value is used as the field number. Awk counts the number of
+fields in the current input line and stores the count in a built-in
+variable called <code>NF</code>. Thus, the program</p>
+<pre><code>{ print NF, $1, $NF }</code></pre>
+<p>prints the number of fields and the first and last fields of each
+input line.</p>
+<h4 id="computing-and-printing">Computing and Printing</h4>
+<p>You can also do computations on the field values and include the
+results in what is printed. The program</p>
+<pre><code>{ print $1, $2 * $3 }</code></pre>
+<p>is a typical example. It prints the name and total pay (rate times
+hours) for each employee:</p>
+<pre><code>Beth 0
+Dan 0
+Kathy 40
+Mark 100
+Mary 121
+Susie 76.5</code></pre>
+<p>We’ll show in a moment how to make this output look better.</p>
+<h4 id="printing-line-numbers">Printing Line Numbers</h4>
+<p>Awk provides another built-variable, called <code>NR</code>, that
+counts the number of lines read so far. We can use <code>NR</code> and
+<code>$0</code> to prefix each line of <code>emp.data</code> with its
+line number:</p>
+<pre><code>{ print NR, $0 }</code></pre>
+<p>The output looks like this:</p>
+<pre><code>1 Beth	4.00	0
+2 Dan	3.75	0
+3 Kathy	4.00	10
+4 Mark	5.00	20
+5 Mary	5.50	22
+6 Susie	4.25	18</code></pre>
+<h4 id="putting-text-in-the-output">Putting Text in the Output</h4>
+<p>You can also print words in the midst of fields and computed
+values:</p>
+<pre><code>{ print &quot;total pay for&quot;, $1, &quot;is&quot;, $2 * $3 }</code></pre>
+<p>prints</p>
+<pre><code>total pay for Beth is 0
+total pay for Dan is 0
+total pay for Kathy is 40
+total pay for Mark is 100
+total pay for Mary is 121
+total pay for Susie is 76.5</code></pre>
+<p>In the <code>print</code> statement, the text inside the double
+quotes is printed along with the fields and computed values.</p>
+<h3 id="fancier-output">1.3 Fancier Output</h3>
+<p>The <code>print</code> statement is meant for quick and easy output.
+To format the output exactly the way you want it, you may have to use
+the <code>printf</code> statement. As we shall see in Section 2.4,
+<code>printf</code> can produce almost any kind of output, but in this
+section we’ll only show a few of its capabilities.</p>
+<h4 id="lining-up-fields">Lining Up Fields</h4>
+<p>The <code>printf</code> statement has the form</p>
+<pre><code>printf(<i>format</i>, <i>value</i><sub>1</sub>, <i>value</i><sub>2</sub>, ... , <i>value</i><sub><i>n</i></sub>)</code></pre>
+<p>where <i>format</i> is a string that contains text to be printed
+verbatim, interspersed with specifications of how each of the values is
+to be printed. A specification is a <code>%</code> followed by a few
+characters that control the format of a <i>value</i>. The first
+specification tells how <i>value</i><sub>1</sub> is to be printed, the second
+how <i>value</i><sub>2</sub> is to be printed, and so on. Thus, there must be as
+many <code>%</code> specifications in <i>format</i> as <i>values</i>
+to be printed.</p>
+<p>Here’s a program that uses <code>printf</code> to print the total pay
+for every employee:</p>
+<pre><code>{ printf(&quot;total pay for %s is $%.2f\n&quot;, $1, $2 * $3) }</code></pre>
+<p>The specification string in the <code>printf</code> statement
+contains two <code>%</code> specifications.</p>
+<p>The first, <code>%s</code>, says to print the first value,
+<code>$1</code>, as a string of characters; the second,
+<code>%.2f</code>, says to print the second value, <code>$2*$3</code>,
+as a number with 2 digits after the decimal point. Everything else in
+the specification string, including the dollar sign, is printed
+verbatim; the <code>\n</code> at the end of the string stands for a
+newline, which causes subsequent output to begin on the next line. With
+<code>emp.data</code> as input, this program yields:</p>
+<pre><code>total pay for Beth is $0.00
+total pay for Dan is $0.00
+total pay for Kathy is $40.00
+total pay for Mark is $100.00
+total pay for Mary is $121.00
+total pay for Susie is $76.50</code></pre>
+<p>With <code>printf</code>, no blanks or newlines are produced
+automatically; you must create them yourself. Don’t forget the
+<code>\n</code>.</p>
+<p>Here’s another program that prints each employee’s name and pay:</p>
+<pre><code>{ printf(&quot;%-8s $%6.2f\n&quot;, $1, $2 * $3) }</code></pre>
+<p>The first specification, <code>%-8s</code>, prints a name as a string
+of characters leftjustified in a field 8 characters wide. The second
+specification, <code>%6.2f</code>, prints the pay as a number with two
+digits after the decimal point, in a field 6 characters wide:</p>
+<pre><code>Beth     $  0.00
+Dan      $  0.00
+Kathy    $ 40.00
+Mark     $100.00
+Mary     $121.00
+Susie    $ 76.50</code></pre>
+<p>We’ll show lots more examples of <code>printf</code> as we go along;
+the full story is in Section 2.4.</p>
+<h4 id="sorting-the-output">Sorting the Output</h4>
+<p>Suppose you want to print all the data for each employee, along with
+his or her pay, sorted in order of increasing pay. The easiest way is to
+use awk to prefix the total pay to each employee record, and run that
+output through a sorting program. On Unix, the command line</p>
+<pre><code>awk &#39;{ printf(&quot;%6.2f  %s\n&quot;, $2 * $3, $0) }&#39; emp.data | sort</code></pre>
+<p>pipes the output of awk into the <code>sort</code> command, and
+produces:</p>
+<pre><code>  0.00  Beth	4.00	0
+  0.00  Dan	3.75	0
+ 40.00  Kathy	4.00	10
+ 76.50  Susie	4.25	18
+100.00  Mark	5.00	20
+121.00  Mary	5.50	22</code></pre>
+<h3 id="selection">1.4 Selection</h3>
+<p>Awk patterns are good for selecting interesting lines from the input
+for further processing. Since a pattern without an action prints all
+lines matching the pattern, many awk programs consist of nothing more
+than a single pattern. This section gives some examples of useful
+patterns.</p>
+<h4 id="selection-by-comparison">Selection by Comparison</h4>
+<p>This program uses a comparison pattern to select the records of
+employees who earn $5.00 or more per hour, that is, lines in which the
+second field is greater than or equal to 5:</p>
+<pre><code>$2 &gt;= 5</code></pre>
+<p>It selects these lines from <code>emp.data</code>:</p>
+<pre><code>Mark	5.00	20
+Mary	5.50	22</code></pre>
+<h4 id="selection-by-computation">Selection by Computation</h4>
+<p>The program</p>
+<pre><code>$2 * $3 &gt; 50 { printf(&quot;$%.2f for %s\n&quot;, $2 * $3, $1) }</code></pre>
+<p>prints the pay of those employees whose total pay exceeds $50:</p>
+<pre><code>$100.00 for Mark
+$121.00 for Mary
+$76.50 for Susie</code></pre>
+<h4 id="selection-by-text-content">Selection by Text Content</h4>
+<p>Besides numeric tests, you can select input lines that contain
+specific words or phrases. This program prints all lines in which the
+first field is <code>Susie</code>:</p>
+<pre><code>$1 == &quot;Susie&quot;</code></pre>
+<p>The operator <code>==</code> tests for equality. You can also look
+for text containing any of a set of letters, words, and phrases by using
+patterns called <em>regular expressions</em>. This program prints all
+lines that contain <code>Susie</code> anywhere:</p>
+<pre><code>/Susie/</code></pre>
+<p>The output is this line:</p>
+<pre><code>Susie	4.25	18</code></pre>
+<p>Regular expressions can be used to specify much more elaborate
+patterns; Section 2.1 contains a full discussion.</p>
+<h4 id="combinations-of-patterns">Combinations of Patterns</h4>
+<p>Patterns can be combined with parentheses and the logical operators
+<code>&amp;&amp;</code>, <code>||</code>, and <code>!</code>, which
+stand for AND, OR, and NOT. The program</p>
+<pre><code>$2 &gt;= 4 || $3 &gt;= 20</code></pre>
+<p>prints those lines where <code>$2</code> is at least 4 <em>or</em>
+<code>$3</code> is at least 20:</p>
+<pre><code>Beth	4.00	0
+Kathy	4.00	10
+Mark	5.00	20
+Mary	5.50	22
+Susie	4.25	18</code></pre>
+<p>Lines that satisfy both conditions are printed only once. Contrast
+this with the following program, which consists of two patterns:</p>
+<pre><code>$2 &gt;= 4
+$3 &gt;= 20</code></pre>
+<p>This program prints an input line twice if it satisfies both
+conditions:</p>
+<pre><code>Beth	4.00	0
+Kathy	4.00	10
+Mark	5.00	20
+Mark	5.00	20
+Mary	5.50	22
+Mary	5.50	22
+Susie	4.25	18</code></pre>
+<p>Note that the program</p>
+<pre><code>!($2 &lt; 4 &amp;&amp; $3 &lt; 20)</code></pre>
+<p>prints lines where it is <em>not</em> true that <code>$2</code> is
+less than 4 <em>and</em> <code>$3</code> is less than 20; this condition
+is equivalent to the first one above, though perhaps less readable.</p>
+<h4 id="data-validation">Data Validation</h4>
+<p>There are always errors in real data. Awk is an excellent tool for
+checking that data has reasonable values and is in the right format, a
+task that is often called <em>data validation</em>.</p>
+<p>Data validation is essentially negative: instead of printing lines
+with desirable properties, one prints lines that are suspicious. The
+following program uses comparison patterns to apply five plausibility
+tests to each line of <code>emp.data</code>:</p>
+<pre><code>NF != 3   { print $0, &quot;number of fields is not equal to 3&quot; }
+$2 &lt; 3,35 { print $0, &quot;rate is below minimum wage&quot; }
+$2 &gt; 10   { print $0, &quot;rate exceeds $10 per hour&quot; }
+$3 &lt; 0    { print $0, &quot;negative hours worked&quot; }
+$3 &gt; 60   { print $0, &quot;too many hours worked&quot; }</code></pre>
+<p>If there are no errors, there’s no output.</p>
+<h4 id="begin-and-end">BEGIN and END</h4>
+<p>The special pattern <code>BEGIN</code> matches before the first line
+of the first input file is read, and <code>END</code> matches after the
+last line of the last file has been processed. This program uses
+<code>BEGIN</code> to print a heading:</p>
+<pre><code>BEGIN { print &quot;NAME    RATE   HOURS&quot;; print &quot;&quot; }
+      { print }</code></pre>
+<p>The output is:</p>
+<pre><code>NAME    RATE   HOURS
+
+Beth	4.00	0
+Dan	3.75	0
+Kathy	4.00	10
+Mark	5.00	20
+Mary	5.50	22
+Susie	4.25	18</code></pre>
+<p>You can put several statements on a single line if you separate them
+by semicolons. Notice that <code>print ""</code> prints a blank line,
+quite different from just plain <code>print</code>, which prints the
+current input line.</p>
+<h3 id="computing-with-awk">1 .5 Computing with AWK</h3>
+<p>An action is a sequence of statements separated by newlines or
+semicolons. You have already seen examples in which the action was a
+single <code>print</code> statement. This section provides examples of
+statements for performing simple numeric and string computations. In
+these statements you can use not only the built-in variables like
+<code>NF</code>, but you can create your own variables for performing
+calculations, storing data, and the like. In awk, user-created variables
+are not declared.</p>
+<h4 id="counting">Counting</h4>
+<p>This program uses a variable <code>emp</code> to count employees who
+have worked more than 15 hours:</p>
+<pre><code>$3 &gt; 15 { emp = emp + 1 }
+END     { print emp, &quot;employees worked more than 15 hours&quot; }</code></pre>
+<p>For every line in which the third field exceeds 15, the previous
+value of <code>emp</code> is incremented by 1. With
+<code>emp.data</code> as input, this program yields:</p>
+<pre><code>3 employees worked more than 15 hours</code></pre>
+<p>Awk variables used as numbers begin life with the value 0, so we
+didn’t need to initialize <code>emp</code>.</p>
+<h4 id="computing-sums-and-averages">Computing Sums and Averages</h4>
+<p>To count the number of employees, we can use the built-in variable
+<code>NR</code>, which holds the number of lines read so far; its value
+at the end of all input is the total number of lines read.</p>
+<pre><code>END { print NR, &quot;employees&quot; }</code></pre>
+<p>The output is:</p>
+<pre><code>6 employees</code></pre>
+<p>Here is a program that uses <code>NR</code> to compute the average
+pay:</p>
+<pre><code>    { pay = pay + $2 * $3 }
+END { print NR, &quot;employees&quot;
+      print &quot;total pay is&quot;, pay
+      print &quot;average pay is&quot;, pay/NR
+    }</code></pre>
+<p>The first action accumulates the total pay for all employees. The
+<code>END</code> action prints</p>
+<pre><code>6 employees
+total pay is 337.5
+average pay is 56.25</code></pre>
+<p>Clearly, <code>printf</code> could be used to produce neater output.
+There’s also a potential error: in the unlikely case that
+<code>NR</code> is zero, the program will attempt to divide by zero and
+thus will generate an error message.</p>
+<h4 id="handling-text">Handling Text</h4>
+<p>One of the strengths of awk is its ability to handle strings of
+characters as conveniently as most languages handle numbers. Awk
+variables can hold strings of characters as well as numbers. This
+program finds the employee who is paid the most per hour:</p>
+<pre><code>$2 &gt; maxrate { maxrate = $2; maxemp = $1 }
+END { print &quot;highest hourly rate:&quot;, maxrate, &quot;for&quot;, maxemp }</code></pre>
+<p>It prints</p>
+<pre><code>highest hourly rate: 5.50 for Mary</code></pre>
+<p>In this program the variable <code>maxrate</code> holds a numeric
+value, while the variable <code>maxemp</code> holds a string. (If there
+are several employees who all make the same maximum pay, this program
+finds only the first.)</p>
+<h4 id="string-concatenation">String Concatenation</h4>
+<p>New strings may be created by combining old ones; this operation is
+called <em>concatenation</em>. The program</p>
+<pre><code>    { names = names $1 &quot; &quot; }
+END { print names }</code></pre>
+<p>collects all the employee names into a single string, by appending
+each name and a blank to the previous value in the variable
+<code>names</code>. The value of <code>names</code> is printed by the
+<code>END</code> action:</p>
+<pre><code>Beth Dan Kathy Mark Mary Susie</code></pre>
+<p>The concatenation operation is represented in an awk program by
+writing string values one after the other. At every input line, the
+first statement in the program concatenates three strings: the previous
+value of <code>names</code>, the first field, and a blank; it then
+assigns the resulting string to <code>names</code>. Thus, after all
+input lines have been read, <code>names</code> contains a single string
+consisting of the names of all the employees, each followed by a blank.
+Variables used to store strings begin life holding the null string (that
+is, the string containing no characters), so in this program
+<code>names</code> did not need to be explicitly initialized.</p>
+<h4 id="printing-the-last-input-line">Printing the Last Input Line</h4>
+<p>Although <code>NR</code> retains its value in an <code>END</code>
+action, <code>$0</code> does not. The program</p>
+<pre><code>    { last = $0 }
+END { print last }</code></pre>
+<p>is one way to print the last input line:</p>
+<pre><code>Susie	4.25	18</code></pre>
+<h4 id="built-in-functions">Built-in Functions</h4>
+<p>We have already seen that awk provides built-in variables that
+maintain frequently used quantities like the number of fields and the
+input line number. Similarly, there are built-in functions for computing
+other useful values. Besides arithmetic functions for square roots,
+logarithms, random numbers, and the like, there are also functions that
+manipulate text. One of these is <code>length</code>, which counts the
+number of characters in a string. For example, this program computes the
+length of each person’s name:</p>
+<pre><code>{ print $1, length($1) }</code></pre>
+<p>The result:</p>
+<pre><code>Beth 4
+Dan 3
+Kathy 5
+Mark 4
+Mary 4
+Susie 5</code></pre>
+<h4 id="counting-lines-words-and-characters">Counting Lines, Words, and
+Characters</h4>
+<p>This program uses <code>length</code>, <code>NF</code>, and
+<code>NR</code> to count the number of lines, words, and characters in
+the input. For convenience, we’ll treat each field as a word.</p>
+<pre><code>    { nc = nc + length($0) + 1
+      nw = nw + NF
+    }
+END { print NR, &quot;lines,&quot;, nw, &quot;words,&quot;, nc, &quot;characters&quot; }</code></pre>
+<p>The file <code>emp.data</code> has</p>
+<pre><code>6 lines, 18 words, 77 characters</code></pre>
+<p>We have added one for the newline character at the end of each input
+line, since <code>$0</code> doesn’t include it.</p>
+<h3 id="control-flow-statements">1.6 Control-Flow Statements</h3>
+<p>Awk provides an <code>if-else</code> statement for making decisions
+and several statements for writing loops, all modeled on those found in
+the C programming language. They can only be used in actions.</p>
+<h4 id="if-else-statement">If-Else Statement</h4>
+<p>The following program computes the total and average pay of employees
+making more than $6.00 an hour. It uses an <code>if</code> to defend
+against division by zero in computing the average pay.</p>
+<pre><code>$2 &gt; 6 { n = n + 1; pay = pay + $2 * $3 }
+END    { if (n &gt; 0)
+             print n, &quot;employees, total pay is&quot;, pay,
+                      &quot;average pay is&quot;, pay/n
+         else
+             print &quot;no employees are paid more than $6/hour&quot;
+       }</code></pre>
+<p>The output for <code>emp.data</code> is:</p>
+<pre><code>no employees are paid more than $6/hour</code></pre>
+<p>In the <code>if-else</code> statement, the condition following the
+<code>if</code> is evaluated. If it is true, the first
+<code>print</code> statement is performed. Otherwise, the second
+<code>print</code> statement is performed. Note that we can continue a
+long statement over several lines by breaking it after a comma.</p>
+<h4 id="while-statement">While Statement</h4>
+<p>A <code>while</code> statement has a condition and a body. The
+statements in the body are performed repeatedly while the condition is
+true. This program shows how the value of an amount of money invested at
+a particular interest rate grows over a number of years, using the
+formula <i>value</i> = <i>amount</i> (1 +
+<i>rate</i>)<sup><i>years</i></sup>.</p>
+<pre><code># interest 1 - compute compound interest
+#   input:  amount  rate  years
+#   output: compounded value at the end of each year
+
+{   i = 1
+    while (i &lt;= $3) {
+        printf(&quot;\t%.2f\n&quot;, $1 * (1 + $2) ^ i)
+        i = i + 1
+    }
+}</code></pre>
+<p>The condition is the parenthesized expression after the
+<code>while</code>; the loop body is the two statements enclosed in
+braces after the condition. The <code>\t</code> in the
+<code>printf</code> specification string stands for a tab character; the
+<code>^</code> is the exponentiation operator. Text from a
+<code>#</code> to the end of the line is a <em>comment</em>, which is
+ignored by awk but should be helpful to readers of the program who want
+to understand what is going on.</p>
+<p>You can type triplets of numbers at this program to see what various
+amounts, rates, and years produce. For example, this transaction shows
+how $1000 grows at 6% and 12% compound interest for five years:</p>
+<pre><code>$ awk -f interest1
+1000 .06 5
+	1060.00
+	1123.60
+	1191.02
+	1262.48
+	1338.23
+1000 .12 5
+	1120.00
+	1254.40
+	1404.93
+	1573.52
+	1762.34</code></pre>
+<h4 id="for-statement">For Statement</h4>
+<p>Another statement, <code>for</code>, compresses into a single line
+the initialization, test, and increment that are part of most loops.
+Here is the previous interest computation with a <code>for</code>:</p>
+<pre><code># interest2 - compute compound interest
+#   input:  amount  rate  years
+#   output: compounded value at the end of each year
+
+{   for (i = 1; i &lt;= $3; i = i + 1)
+        printf (&quot;\t%.2f\n&quot;, $1 * (1 + $2) ^ i)
+}</code></pre>
+<p>The initialization <code>i = 1</code> is performed once. Next, the
+condition <code>i &lt;= $3</code> is tested; if it is true, the
+<code>printf</code> statement, which is the body of the loop, is
+performed. Then the increment <code>i = i + 1</code> is performed after
+the body, and the next iteration of the loop begins with another test of
+the condition. The code is more compact, and since the body of the loop
+is only a single statement, no braces are needed to enclose it.</p>
+<h3 id="arrays">1.7 Arrays</h3>
+<p>Awk provides arrays for storing groups of related values. Although
+arrays give awk considerable power, we will show only a simple example
+here. The following program prints its input in reverse order by line.
+The first action puts the input lines into successive elements of the
+array <code>line</code>; that is, the first line goes into
+<code>line[1]</code>, the second line into <code>line[2]</code>, and
+so on. The <code>END</code> action uses a <code>while</code> statement
+to print the lines from the array from last to first:</p>
+<pre><code># reverse - print input in reverse order by line
+
+    { line[NR] = $0 }  # remember each input line
+
+END { i = NR           # print lines in reverse order
+      while (i &gt; 0) {
+          print line[i]
+          i = i - 1
+      }
+    }</code></pre>
+<p>With <code>emp.data</code>, the output is</p>
+<pre><code>Susie	4.25	18
+Mary	5.50	22
+Mark	5.00	20
+Kathy	4.00	10
+Dan	3.75	0
+Beth	4.00	0</code></pre>
+<p>Here is the same example with a <code>for</code> statement:</p>
+<pre><code># reverse - print input in reverse order by line
+
+    { line[NR] = $0 }  # remember each input line
+
+END { for (i = NR; i &gt; 0; i = i - 1)
+          print line[i]
+    }</code></pre>
+<h3 id="a-handful-of-useful-one-liners">1.8 A Handful of Useful
+“One-liners”</h3>
+<p>Although awk can be used to write programs of some complexity, many
+useful programs are not much more complicated than what we’ve seen so
+far. Here is a collection of short programs that you might find handy
+and/or instructive. Most are variations on material already covered.</p>
+<ol type="1">
+<li>Print the total number of input lines:
+<pre><code>END { print NR }</code></pre></li>
+<li>Print the tenth input line:
+<pre><code>NR == 10</code></pre></li>
+<li>Print the last field of every input line:
+<pre><code>{ print $NF }</code></pre></li>
+<li>Print the last field of the last input line:
+<pre><code>    { field = $NF}
+END { print field }</code></pre></li>
+<li>Print every input line with more than four fields:
+<pre><code>NF &gt; 4</code></pre></li>
+<li>Print every input line in which the last field is more than 4:
+<pre><code>$NF &gt; 4</code></pre></li>
+<li>Print the total number of fields in all input lines:
+<pre><code>    { nf = nf + NF }
+END { print nf }</code></pre></li>
+<li>Print the total number of lines that contain <code>Beth</code>:
+<pre><code>/Beth/ { nlines = nlines + 1 }
+END    { print nlines }</code></pre></li>
+<li>Print the largest first field and the line that contains it (assumes
+some <code>$1</code> is positive):
+<pre><code>$1 &gt; max { max = $1; maxline = $0 }
+END      { print max, maxline }</code></pre></li>
+<li>Print every line that has at least one field:
+<pre><code>NF &gt; 0</code></pre></li>
+<li>Print every line longer than 80 characters:
+<pre><code>length($0) &gt; 80</code></pre></li>
+<li>Print the number of fields in every line followed by the line
+itself:
+<pre><code>{ print NF, $0 }</code></pre></li>
+<li>Print the first two fields, in opposite order, of every line:
+<pre><code>{ print $2, $1 }</code></pre></li>
+<li>Exchange the first two fields of every line and then print the line:
+<pre><code>{ temp = $1; $1 = $2; $2 = temp; print }</code></pre></li>
+<li>Print every line with the first field replaced by the line number:
+<pre><code>{ $1 = NR; print }</code></pre></li>
+<li>Print every line after erasing the second field:
+<pre><code>{ $2 = ""; print }</code></pre></li>
+<li>Print in reverse order the fields of every line:
+<pre><code>{ for (i = NF; i &gt; 0; i = i - 1) printf("%s " , $i)
+  printf ("\n")
+}</code></pre></li>
+<li>Print the sums of the fields of every line:
+<pre><code>{ sum = 0
+  for (i = 1; i &lt;= NF; i = i + 1) sum = sum + $i
+  print sum
+}</code></pre></li>
+<li>Add up all fields in all lines and print the sum:
+<pre><code>    { for (i = 1; i &lt;= NF; i = i + 1) sum = sum + $i }
+END { print sum }</code></pre></li>
+<li>Print every line after replacing each field by its absolute value:
+<pre><code>{ for (i = 1; i &lt;= NF; i = i + 1) if ($i &lt; 0) $i = -$i
+  print
+}</code></pre></li>
+</ol>
+<h3 id="what-next">1.9 What Next?</h3>
+<p>You have now seen the essentials of awk. Each program in this chapter
+has been a sequence of pattern-action statements. Awk tests every input
+line against the patterns, and when a pattern matches, performs the
+corresponding action. Patterns can involve numeric and string
+comparisons, and actions can include computation and formatted printing.
+Besides reading through your input files automatically, awk splits each
+input line into fields. It also provides a number of built-in variables
+and functions, and lets you define your own as well. With this
+combination of features, quite a few useful computations can be
+expressed by short programs — many of the details that would be needed
+in another language are handled implicitly in an awk program.</p>
+<p>The rest of the book elaborates on these basic ideas. Since some of
+the examples are quite a bit bigger than anything in this chapter, we
+encourage you strongly to begin writing programs as soon as possible.
+This will give you familiarity with the language and make it easier to
+understand the larger programs. Furthermore, nothing answers questions
+so well as some simple experiments. You should also browse through the
+whole book; each example conveys something about the language, either
+about how to use a particular feature, or how to create an interesting
+program.</p>
+
+  </main>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="contents.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="chapter2.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+    <footer>
+    
+  <a href="gemini://tranarchy.fish/~autumn/awk/chapter1.gmi" title="View this page on gemini web"><img class="banner" src="/images/gemini.png" alt="best viewed in gemini://"/></a>
+
+
+<a href="https://en.wikipedia.org/wiki/Queer_Nation#Queer_Nation_in_other_locales"><img class="banner" alt="COCK SUCKING FAGGOT - QUEER NATION" src="/~autumn/img/cocksuckingfaggot.gif" /></a>
+<a href="https://social.tranarchy.fish/@autumnull"><img class="banner" alt="Follow me on GoToSocial" src="/~autumn/img/sloth_follow_me.gif"/></a>
+<a href="https://git.sr.ht/~autumnull/website/tree/main/item/pages/awk/chapter1.html" title="View the source code for this page on sourcehut"><img class="banner" alt="view page source" src="/images/view_source.gif"/></a>
+<a href="https://anybrowser.org/campaign/"><img class="banner" alt="Best Viewed with Any Browser" src="/~autumn/img/anybrowser.gif" /></a>
+<a class="banner" href="/"><img class="banner" src="/images/tranarchy.gif" alt="Tranarchy" /></a>
+
+
+      <p>contact me: <code>curl cards.tranarchy.fish/~autumn/</code></p>
+    </footer>
+  </body>
+</html>
+

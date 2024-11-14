@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <title>Chapter 3: Working with Programs</title>
+    <link rel="icon" type="image/png" href="/~autumn/img/lips.png"/>
+    
+    <link rel="stylesheet" href="/~autumn/style/colors.css" />
+    
+    <link rel="stylesheet" href="/~autumn/style/main.css" />
+    
+    <link rel="stylesheet" href="/~autumn/apl2/style.css" />
+    
+  </head>
+  <body>
+    <header>
+      
+        <a href="/~autumn/apl2/">^ back to APL2 at a Glance</a>
+      
+    </header>
+
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="chapter2.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="chapter4.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+  <main>
+    <div class="chapter-rule">
+    <hr class="chapter-long">
+    <p>Chapter</p>
+    <hr class="chapter-short">
+    <div>
+        <div>
+            3
+        </div>
+    </div>
+</div>
+<h2>Working with Programs</h2>
+<p><a href="chapter1.html">Chapter 1</a> introduced two important programming concepts:</p>
+<ul>
+<li>Functions apply to data.</li>
+<li>Variables remember data.</li>
+</ul>
+<p>This chapter extends the concepts you need to program effectively by introducing two more programming concepts:</p>
+<ul>
+<li>Operators apply to functions.</li>
+<li>Programs remember expressions.</li>
+</ul>
+<p>The last part of the chapter explains how to build a program.</p>
+<h3 id="section-3.1-operators-apply-to-functions">Section 3.1 — Operators Apply to Functions<a href="#section-3.1-operators-apply-to-functions" class="section-link">§</a></h3>
+<p>Each <span class="small-caps">APL2</span> function applies to its arguments in some specified way. Operators control the way functions are applied to arguments. For example, in <a href="chapter2.html">Chapter 2</a>, you learned that the expression <code>+/⍳10</code> finds the sum of the first ten integers. <code>+/</code> applies the operator <strong>reduction</strong> (<code>/</code>) to the function <strong>addition</strong> (<code>+</code>) to <em>derive</em> the function <strong>summation</strong>. This derived function is then applied to the ten integers to produce the sum. In effect, the operator causes <strong>addition</strong> to be applied nine times:</p>
+<pre>      +/⍳10   &lt;--&gt;   1+2+3+4+5+6+7+8+9+10   &lt;--&gt;   55</pre>
+<p>Operators are a powerful way to create whole families of new functions. For instance, <strong>addition</strong> is just one function that <strong>reduction</strong> can operate on to derive a new function. This section tells you more about operators by using <strong>reduction</strong> to illustrate the concepts involved in making and using derived functions, and then introduces you to the <strong>each</strong> operator.</p>
+<h4 id="reduction-on-vectors">Reduction on Vectors<a href="#reduction-on-vectors" class="section-link">§</a></h4>
+<p>You can use <strong>reduction</strong> with any dyadic function. Some of the derived functions formed with reduction are very useful. Others have limited use. But they all apply to vectors in the same way. In effect, <strong><em>fn/ vector</em></strong> puts the function <strong><em>fn</em></strong> between items of a vector and evaluates the resulting expression to reduce it to a scalar.</p>
+<p>The derived function <code>×/</code> yields the product of a set of numbers. Suppose the variables <code>HEIGHT</code>, <code>DEPTH</code>, and <code>WIDTH</code> contain the height, depth, and width of a rectangular solid. The following computation produces the volume of the solid:</p>
+<pre>      HEIGHT←5
+      DEPTH←6
+      WIDTH←4
+      ×/HEIGHT DEPTH WIDTH
+120</pre>
+<p>As another illustration of this derived function, you can compute the number of seconds in five days as follows:</p>
+<pre>      ×/5 24 60 60
+432000</pre>
+<p>Two more examples of <strong>reduction</strong> use the functions <strong>minimum</strong> (<code>⌊</code>) and <strong>maximum</strong> (<code>⌈</code>). <strong>Maximum-reduction</strong> (<code>⌈/</code>) produces the largest number in a list of numbers. <strong>Minimum-reduction</strong> (<code>⌊/</code>) produces the smallest number in a list. For example, suppose you have five test scores. You can compute the largest and smallest of the scores:</p>
+<pre>      SCORES←88 75 99 67 92
+      ⌈/SCORES
+99
+      ⌊/SCORES
+67</pre>
+<p>The difference between the high and low scores is:</p>
+<pre>      (⌈/SCORES) − (⌊/SCORES)
+32</pre>
+<h5 id="naming-derived-functions">Naming Derived Functions<a href="#naming-derived-functions" class="section-link">§</a></h5>
+<p>Because <code>+/</code> has a counterpart in mathematics, namely, <math><mo>∑</mo></math>, <span class="small-caps">APL2</span> names this derived function <strong>summation</strong>. In general, derived functions have no special names and are simply named for the purpose of discussion by combining the function and operator names. For example, <strong>multiplication-reduction</strong> (<code>×/</code>), <strong>division-reduction</strong> (<code>÷/</code>), and <strong>take-reduction</strong> (<code>↑/</code>).</p>
+<h5 id="using-derived-functions">Using Derived Functions<a href="#using-derived-functions" class="section-link">§</a></h5>
+<p>For a monadic operator, the operand appears to the left of the operator (in contrast to a monadic function where the argument appears to the right of the function). Thus, <code>+/⍳10</code> is a <strong>summation</strong> and <code>⍳</code> is a monadic function applying to the number <code>10</code>.</p>
+<p>An operator ends up applying its operand function to subsets of the data arguments. Thus, the permissible data for a derived function is related to the permissible data of the function operand. <strong>Summation</strong> and <strong>multiplication-reduction</strong>, for example, apply to all numbers, but not to characters. A <strong>catenate-reduction</strong> (<code>,/</code>) applies to both numbers and characters:</p>
+<pre>      ,/ 2 'A' 3 'B' 5
+2 A 3 B 5</pre>
+<p>The argument to the derived function in the preceding example is a simple vector of numbers and characters, and the result is a nested scalar.</p>
+<pre>      DISPLAY ,/ 2 'A' 3 'B' 5
+.-------------.
+| .→--------. |
+| |2 A 3 B 5| |
+| '+--------' |
+'∊------------'</pre>
+<p>You can extract the vector from the scalar using <strong>first</strong>:</p>
+<pre>      ↑,/ 2 'A' 3 'B' 5
+2 A 3 B 5
+      ⍴↑,/ 2 'A' 3 'B' 5
+5</pre>
+<p><strong>Reduction</strong> applied to a vector always produces a scalar. The operator is called <strong>reduction</strong> because, in general, the result has rank one smaller than the argument. Thus, the result of the above <strong>catenate-reduction</strong> is not a five-item vector but a nested scalar containing a five-item vector.</p>
+<p>Even with a nested argument, the function is still placed between each data item and the result is a scalar:</p>
+<pre>      +/(2 4 6)(1 3 5)(7 8 9)
+10 15 20
+      DISPLAY +/(2 4 6)(1 3 5)(7 8 9)
+.------------.
+| .→-------. |
+| |10 15 20| |
+| '∼-------' |
+'∊-----------'</pre>
+<p><strong>Reduction</strong> applies the function that is the operand of <strong>reduction</strong> between items of the argument. If the items are not appropriate for the function, <span class="small-caps">APL2</span> generates an error. For example, in the following expression, the application of <code>+</code> between two vectors of different length causes a <code>LENGTH ERROR</code>:</p>
+<pre>      +/(2 4 6) (1 3 5 7) (8 9)
+LENGTH ERROR
+      +/(2 4 6) (1 3 5 7) (8 9)
+      ^^</pre>
+<p>The <strong>reduction</strong> is correct. It is the implied <strong>addition</strong> of the four-item vector to the two-item vector that causes the <code>LENGTH ERROR</code>.</p>
+<p>Here’s an example of a correct summation with a nested argument:</p>
+<pre>      +/(2 5 3) 4 (6 8 1)
+12 17 8</pre>
+<p>In this example, recall that the scalar <code>4</code> extends to be conformable with the three-item vectors in the argument.</p>
+<p>You might be surprised at what happens when you apply <strong>reduction</strong> to an empty vector. The identity of the function operand determines the answer you get. For example:</p>
+<pre>      +/⍳0
+0</pre>
+<p>The answer is <code>0</code> because <code>0</code> plus any number returns that number. That’s what it means for 0 to be the identity of <code>+</code>. <strong>Reduction</strong> gives this answer because it makes programs work even on empty data. For example, if you have a vector of test scores <code>SCORES</code>, the expression <code>+/SCORES</code> adds up the sum of the scores even before you take any tests.</p>
+<p>Here are two other examples of <strong>reduction</strong> on empty vectors:</p>
+<pre>      ×/⍳0
+1
+      ⌊/⍳0
+7.237005577E75</pre>
+<p><strong>Times-reduction</strong> gives <code>1</code> because multiplication by <code>1</code> does not alter a number. Thus, <code>1</code> is the identity for <code>×</code>.</p>
+<p>For <strong>minimum-reduction</strong> the answer given is the largest number representable on the computer system and may be different for different machines. The actual identity element of <strong>minimum</strong> should be infinity. In a practical sense, the minimum between the largest number possible in the computer and any other number in the computer is that other number.</p>
+<h4 id="each">Each<a href="#each" class="section-link">§</a></h4>
+<p><a href="chapter2.html">Chapter 2</a> introduced the <strong>interval</strong> function (<code>⍳</code>) as a way to generate a list of integers. If you want to obtain three lists of integers, you might enter this:</p>
+<pre>      (⍳3) (⍳5) (⍳6)
+ 1 2 3  1 2 3 4 5  1 2 3 4 5 6</pre>
+<p>and get three answers, each of which is a sequence of integers. <span class="small-caps">APL2</span> has a general way to do this kind of operation using the <strong>each</strong> operator (<code>¨</code>) to request that a function be applied to each item of data.</p>
+<p>The <strong>each</strong> operator applies a function to each of the items of its argument. Here’s a picture that shows how <strong>each</strong> works with an arbitrary monadic function <strong><em>fn</em></strong>:</p>
+<center>
+<img src="images/each.png">
+</center>
+<p>Here’s the application of <strong>each</strong> to <strong>interval</strong>:</p>
+<pre>      ⍳¨3 5 6
+ 1 2 3  1 2 3 4 5  1 2 3 4 5 6
+
+      DISPLAY ⍳¨3 5 6
+.→----------------------------------.
+| .→----. .→--------. .→----------. |
+| |1 2 3| |1 2 3 4 5| |1 2 3 4 5 6| |
+| '∼----' '∼--------' '∼----------' |
+'∊----------------------------------'</pre>
+<p>This expression literally means apply <strong>interval</strong> to each of the three numbers.</p>
+<p>Like <strong>reduction</strong>, <strong>each</strong> modifies a function and applies it in a related but different way from its application without <strong>each</strong>.</p>
+<p>When <strong>each</strong> is applied to a dyadic function, the function is applied between corresponding items from the two arguments. Here’s a picture that shows how each works with an arbitrary dyadic function <strong><em>fn</em></strong>:</p>
+<center>
+<img src="images/each_dyadic.png">
+</center>
+<p>Suppose the nested vector <code>SC</code> contains the four test scores of a group of students. You can use the following expression to select the first two scores from the first student’s grades, the first three scores from the second student’s grades, and the first score from the third student’s grades:</p>
+<pre>      SC←(95 83 71 85)(49 58 78 65)(75 90 81 72)
+      2 3 1↑¨SC
+ 95 83  49 58 78  75</pre>
+<p>If one argument is a scalar, the item of that scalar pairs with each item of the other argument. The following expression produces the first two test scores of each student as follows:</p>
+<pre>      2↑¨SC
+95 83  49 58  75 90
+
+      ⍴2↑¨SC
+3</pre>
+<p>A <strong>pick-each</strong> (<code>⊃¨</code>) extracts any score from each student’s grade records. For example, the third score for each student is:</p>
+<pre>      3⊃¨SC
+71 78 81</pre>
+<p>As you can see with <strong>interval-each</strong> (<code>⍳¨</code>), <strong>take-each</strong> (<code>↑¨</code>), and <strong>pick-each</strong> (<code>⊃¨</code>), an each-derived function can be either monadic or dyadic, according to whether it is used with one or two arguments.</p>
+<p><strong>Each</strong> can be applied to a derived function. This expression applies <strong>each</strong> to a <strong>reduction</strong>-derived function to compute the largest score of each student:</p>
+<pre>      ⌈/¨SC
+95 78 90</pre>
+<p>This result is a simple vector because the <strong>reduction</strong> of each item produced a simple scalar.</p>
+<p>Because scalar functions already apply to their arguments item-by-item, <strong>each</strong> has no effect when applied to them. The following two expressions produce the same result:</p>
+<pre>      2 4 6 +¨ 1 3 5
+3 7 11
+
+      2 4 6 + 1 3 5
+3 7 11</pre>
+<p>This is a simple vector of three numbers.</p>
+<p>Later when you write your own programs, you can apply <strong>each</strong> to them also.</p>
+<h4 id="exercises-for-section-3.1">Exercises for Section 3.1<sup class="answers-note">[<a href="answers.html#section-3.1-operators-apply-to-functions">Answers</a>]</sup><a href="#exercises-for-section-3.1" class="section-link">§</a></h4>
+<ol>
+<li><p>Given the variable <code>A</code>:</p>
+<pre>      A←'ABC' (10 20 30 40)</pre>
+<p>Evaluate:</p>
+<ol type="a">
+<li><code>⍴A</code></li>
+<li><code>⍴¨A</code></li>
+<li><code>↑A</code></li>
+<li><code>↑¨A</code></li>
+<li><code>2↑¨A</code></li>
+<li><code>2⊃A</code></li>
+<li><code>2⊃¨A</code></li>
+<li><code>2 3⊃¨A</code></li>
+</ol></li>
+<li><p>Evaluate:</p>
+<ol type="a">
+<li><code>+/ 1 2 3 4</code></li>
+<li><code>+/(1 2) (3 4)</code></li>
+<li><code>+/¨(1 2) (3 4)</code></li>
+<li><code>+/¨1 2 3 4</code></li>
+<li><code>+/¨(1 2) 3 4</code></li>
+<li><code>+/(1 2) 3 4</code></li>
+</ol></li>
+<li><p>Given the following variables:</p>
+<pre>      A← 'CHARLES'  'BROWN'
+      B← 'LUCY' 'SMITH'
+      C← 'WALTER' 'MUDD'
+      NAMES← A B C</pre>
+<p>Write an expression to select the following:</p>
+<ol type="a">
+<li>The first name in the <code>NAMES</code> vector.</li>
+<li>The third name in the <code>NAMES</code> vector.</li>
+<li>The first name of each individual in the NAMES vector.</li>
+<li>The last name of each individual in the NAME’S vector.</li>
+<li>The lengths of the last names.</li>
+</ol></li>
+<li><p>A light-year is the distance that light travels in one year. Using <strong>reduction</strong>, write an expression to compute the number of meters in a light-year given that a year is 365 days and that light travels at 300,000 meters per second.</p></li>
+<li><p>Suppose three people kept a weekly record of the length of time in minutes they slept each day:</p>
+<pre>      WK1A←480 400 360 380 400 350 500
+      WK1B←395 350 350 400 415 450 515
+      WK1C←345 430 355 500 430 300 480
+      WEEK1←WK1A WK1B WK1C</pre>
+<ol type="a">
+<li>Write an expression to determine the maximum amount of time each person slept during the course of WEEK1.</li>
+<li>Write an expression to determine the percentage of the week that each person spent sleeping.</li>
+</ol></li>
+</ol>
+<h3 id="section-3.2-programs-remember-expressions">Section 3.2 — Programs Remember Expressions<a href="#section-3.2-programs-remember-expressions" class="section-link">§</a></h3>
+<p>You saw how you could save time and typing by using variables to remember data. Not every computation you want to express can be written as a single <span class="small-caps">APL2</span> expression. Even if you can write a single expression, you don’t want to reenter the entire computation each time you need it. <span class="small-caps">APL2</span> provides a way to remember a set of expressions by giving the set a name. A set of remembered expressions is a <em>program</em>. You can write three kinds of programs in <span class="small-caps">APL2</span>. They are distinguished by the way they are used:</p>
+<ul>
+<li>Defined functions— Programs used just like <span class="small-caps">APL2</span> primitive functions.</li>
+<li>Defined operators— Programs used just like <span class="small-caps">APL2</span> primitive operators.</li>
+<li>Defined sequences— Programs used like <span class="small-caps">APL2</span> constants except that <span class="small-caps">APL2</span> computes the explicit result each time the program is used. (Note: These programs are often called <em>niladic functions</em>, but the term is a misnomer. These programs do not take arguments, cannot be applied with operators, and cannot be used like functions.)</li>
+</ul>
+<p>When you want to compute on data, you write a defined function. When you want to compute on functions and data, you write a defined operator. When you just want to gather expressions, you write a defined sequence.</p>
+<p>Programs are used in expressions in the same way as primitive operations. For instance, if a program is a monadic defined function, its argument is placed to the right of the program name.</p>
+<p>Just as you do not have to know how a primitive operation like <strong>shape</strong> or <strong>pick</strong> is coded to use it, you need not know how a program is coded to use it. To use a primitive operation or a program, you must know the following information:</p>
+<ul>
+<li>Its name</li>
+<li>Its purpose</li>
+<li>The number of arguments for a function and their characteristics</li>
+<li>The number of operands for an operator and their characteristics</li>
+<li>The characteristics of the result</li>
+</ul>
+<p>For example, <code>○</code> is a monadic primitive function. It returns a result of pi (3.14159…) times its argument. With this explanation, you should be able to write an expression to find the area of a circle whose radius is 3:</p>
+<pre>      ○3⋆2
+28.27433388</pre>
+<p><code>AVG</code> is a monadic defined function that calculates the average of its vector right argument. It returns an explicit result. Without knowing how <code>AVG</code> is coded, you can use it in expressions. For example, compute the average of a set of numbers:</p>
+<pre>      V←6 4 7 11
+      AVG V
+7</pre>
+<p>As another example, calculate the difference between the largest value in <code>V</code> and the average of <code>V</code>:</p>
+<pre>      (⌈/V)−AVG V
+4</pre>
+<p>In your <span class="small-caps">APL2</span> work, you will be using programs created by other people as well as programs you create yourself. This chapter explains the basics of program creation. <a href="chapter7.html">Chapter 7</a> presents further techniques for program creation.</p>
+<h4 id="program-structure">Program Structure<a href="#program-structure" class="section-link">§</a></h4>
+<p>Each program has this structure:</p>
+<center>
+<img src="images/program_structure.png">
+</center>
+<p>There are two distinct parts of the definition: the header and the body. The body is just the set of <span class="small-caps">APL2</span> expressions that <span class="small-caps">APL2</span> remembers and evaluates every time the program is used. The header is not an <span class="small-caps">APL2</span> expression. Rather, the header describes the program’s use. It is often called line zero of the function because it comes before line 1 and some editors number it zero.</p>
+<h5 id="defined-function-structure">Defined Function Structure<a href="#defined-function-structure" class="section-link">§</a></h5>
+<p>The following listing shows the definition of the <code>AVG</code> defined function used in the previous section. The definition begins and ends with a <strong>del</strong> (<code>∇</code>). The top line is the header; the numbered lines are the body. Line <code>[1]</code> is a <em>comment</em> line. The symbol <code>⍝</code> indicates that everything to its right is a comment and thus is not to be executed:</p>
+<pre>      ∇Z←AVG N
+[1]   ⍝ computes average of a vector
+[2]   Z←(+/N)÷⍴N
+[3]   ∇</pre>
+<p>The header contains the name of the function <code>AVG</code>. The name <code>N</code> to the right of the function name indicates that the program requires a right argument. Notice in the body of the program (at line <code>[2]</code>) the use of <code>N</code> in the expression that calculates the average. The value given as the right argument to <code>AVG</code> is the value used for <code>N</code>.</p>
+<p>The left arrow in the header means that this function produces an explicit result. The name <code>Z</code> to the left of the arrow indicates that in the program body name <code>Z</code> represents the result. The value <code>Z</code> is computed during execution of the function.</p>
+<p><a href="appendixB.html">Appendix B</a> shows how to use the <span class="small-caps">APL2</span> editors to enter <code>AVG</code> and other programs.</p>
+<h5 id="defined-operator-structure">Defined Operator Structure<a href="#defined-operator-structure" class="section-link">§</a></h5>
+<p>The listing below shows the definition of the <code>WORDWISE</code> defined operator. It is similar in structure to the defined function <code>AVG</code>. The top line is the header; the numbered lines are the body. The header of an operator differs from that of a defined function in that parentheses surround the name of the operator and the names of the operands. Whenever you look at a program definition, if the header contains parentheses, the program is a defined operator.</p>
+<pre>    ∇ Z←A(FN WORDWISE)B;DIGITS
+[1]  ⍝ Apply function FN to one digit numbers
+[2]  ⍝  written in English
+[3]  ⍝ Result is English, expressed as digits
+[4]   DIGITS←'ZERO' 'ONE' 'TWO' 'THREE' 'FOUR' 'FIVE'
+[5]   DIGITS←DIGITS,'SIX' 'SEVEN' 'EIGHT' 'NINE'
+[6]   A←10⊥¯1+DIGITS⍳⊂A
+[7]   B←10⊥¯1+DIGITS⍳⊂B
+[8]   Z←A FN B
+[9]   Z←(DIGITS,'POINT' 'MINUS')['0123456789.¯'⍳⍕Z]
+[10]∇</pre>
+<p>This program uses a lot of interesting primitive functions that are not introduced until later chapters. Nonetheless, you can use the operator because you know its name, its purpose, the required arguments and operands, and the result. Here are some sample uses of <code>WORDWISE</code>:</p>
+<pre>      'TWO' +WORDWISE 'THREE'
+FIVE
+
+      'FIVE' ×WORDWISE 'FOUR'
+TWO ZERO
+
+      'TWO' ÷WORDWISE 'FIVE'
+ZERO POINT FOUR
+
+      'TWO' −WORDWISE 'FIVE'
+MINUS THREE</pre>
+<h5 id="defined-sequence-structure">Defined Sequence Structure<a href="#defined-sequence-structure" class="section-link">§</a></h5>
+<p>The defined sequence header is the simplest form of the three types of programs. It has no operands or arguments. Often it does not have an explicit result.</p>
+<p>A defined sequence is usually the main program of an application. A user of the application enters only one name to get the program running. The program often prompts for some required data and calls some subprograms. The user of the application does not need to know anything about the syntax of <span class="small-caps">APL2</span>. For example, <code>PAVG</code> is a defined sequence that prompts for a student’s grades, calculates the average, and displays a message indicating the average:</p>
+<pre>      PAVG
+ENTER GRADES SEPARATED BY SPACES:
+⎕:
+      89 81 75 93
+YOUR GRADE AVERAGE IS 84.5</pre>
+<p>Here is the definition of <code>PAVG</code>. The prompt for input at line 3 uses <span class="small-caps">APL2</span> notation that is discussed in <a href="chapter7.html">Chapter 7</a>.</p>
+<pre>     ∇PAVG;X
+[1]  ⍝ asks for grades and computes average
+[2]  'ENTER GRADES SEPARATED BY SPACES:'
+[3]  X←⎕
+[4]  'YOUR GRADE AVERAGE IS',AVG X
+[5]  ∇</pre>
+<p><code>PAVG</code> is the program name. It has no arguments and no explicit result. The <code>X</code> after the semicolon identifies a <em>local</em> name—a name that has meaning only during execution of the program. All programs can have local names. Local names are discussed later in this chapter.</p>
+<p>Because this program does not produce an explicit result, you cannot use it in an expression which does further processing:</p>
+<pre>      100−PAVG
+ENTER GRADES SEPARATED BY SPACES:
+⎕:
+      90 85 92 99 88
+YOUR GRADE AVERAGE IS 90.8
+VALUE ERROR
+      100−PAVG
+          ^</pre>
+<p>Notice that the <code>VALUE ERROR</code> occurs after <span class="small-caps">APL2</span> executes the sequence. If a defined sequence is to have an explicit result, the header must contain a left arrow and the name of the explicit result.</p>
+<p>Here is a different average program that returns an explicit result that can be used in further calculations:</p>
+<pre>     ∇A←PAVGR;X
+[1]  ⍝ asks for of grades and computes average
+[2]  'ENTER GRADES SEPARATED BY SPACES:'
+[3]  X←⎕
+[4]  A←AVG X
+[5]  ∇
+
+     100−PAVGR
+ENTER GRADES SEPARATED BY SPACES:
+⎕:
+     90 85 92 99 88
+9.2</pre>
+<h4 id="defining-a-program">Defining a Program<a href="#defining-a-program" class="section-link">§</a></h4>
+<p>There are two parts to defining a program: the creative and the mechanical. In the creative part, you decide what you want the program to do and what header and <span class="small-caps">APL2</span> expressions are necessary for that purpose. In the mechanical part, you must enter the program in the proper form for <span class="small-caps">APL2</span>. For this, you use an <em>editor</em>. Every <span class="small-caps">APL2</span> system provides one or more editors. <a href="appendixB.html">Appendix B</a> describes two of these editors—the full-screen editor and the line editor.</p>
+<p>The <strong><em>del</em></strong> (<code>∇</code>) that you see at the beginning of the programs shown in the preceding sections switches you to an <span class="small-caps">APL2</span> editor and enters <em>definition mode</em>. What you type while in definition mode becomes part of the program. The <strong><em>del</em></strong> at the end of the program ends definition mode and returns you to <em>immediate execution</em> mode. In immediate execution mode, <span class="small-caps">APL2</span> executes the expressions you enter immediately.</p>
+<p>To enter any of the programs shown in this chapter so that you can try them out, type them exactly as they are shown. However, before you work the exercises, you should read <a href="appendixA.html">Appendix A</a> to learn how to use an editor.</p>
+<p>The command <code>)NMS</code>, which you have been using to display variable names, also displays defined function, operator, and sequence names. Defined functions and sequences have the suffix <code>.3</code> and defined operators have the suffix <code>.4</code>:</p>
+<pre>      )NMS
+CV1.2   CV2.2   D.2     H.2     PAVG.3  PAVGR.3
+RETAIL.2        SCORES.2        WORDWISE.4</pre>
+<p>The actual response you get to the command <code>)NMS</code> depends on the names you have defined.</p>
+<p>The rest of this chapter concentrates on the creative part of defining a program.</p>
+<h4 id="closer-look-at-the-header">Closer Look at the Header<a href="#closer-look-at-the-header" class="section-link">§</a></h4>
+<p>Headers contain three parts; only the first part is essential:</p>
+<ol>
+<li>Syntax to show the use of the program. The syntax identifies the program as a defined function, a defined operator, or a defined sequence and names the operands, arguments, and explicit result, if any.</li>
+<li>List of local names to identify those variables whose values will be assigned within the program for use only in the program.</li>
+<li>Comments to provide a description of the program.</li>
+</ol>
+<h5 id="header-syntax">Header Syntax<a href="#header-syntax" class="section-link">§</a></h5>
+<p>The syntax of the <code>AVG</code> program identifies it as a monadic defined function with an explicit result. There are four function headers that identify defined functions. These are shown in Table 3.1.</p>
+<table>
+<caption>Table 3.1 Defined Function Headers</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th class="r b"></th>
+<th class="l t r b" style="text-align: center;">Monadic</th>
+<th class="l t r b" style="text-align: center;">Dyadic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="l t r b"><strong>With Explicit Result</strong></td>
+<td class="l t r b" style="text-align: center;"><code>Z←FNAME R</code></td>
+<td class="l t r b" style="text-align: center;"><code>Z←L FNAME R</code></td>
+</tr>
+<tr>
+<td class="l t r b"><strong>Without Explicit Result</strong></td>
+<td class="l t r b" style="text-align: center;"><code>FNAME R</code></td>
+<td class="l t r b" style="text-align: center;"><code>L FNAME R</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>FNAME</code> is the name of the defined function. <code>Z</code> is a name for the explicit result; <code>L</code> and <code>R</code> are names for the left and right arguments. You can use any names you want. It is their position in the header that is important.</p>
+<p>The forms without explicit results limit the use of the defined functions in expressions and therefore are not frequently used. This book concentrates on the two forms with explicit results.</p>
+<p>The syntax of a defined operator identifies first whether the operator is monadic or dyadic and then whether the derived function is monadic or dyadic and with or without an explicit result. Table 3.2 shows the syntactic forms for defined operators whose derived functions have explicit results. The syntactic forms for defined operators whose derived functions have no explicit results are the same except that <code>Z←</code> does not appear in the header:</p>
+<table>
+<caption>Table 3.2 Defined Operator Headers</caption>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 40%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th class="r b"></th>
+<th class="l t r b" style="text-align: center;">Monadic Derived Function</th>
+<th class="l t r b" style="text-align: center;">Dyadic Derived Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="l t r b"><strong>Monadic Operator</strong></td>
+<td class="l t r b" style="text-align: center;"><code>Z←(F ONAME) R</code></td>
+<td class="l t r b" style="text-align: center;"><code>Z←L (F ONAME) R</code></td>
+</tr>
+<tr>
+<td class="l t r b"><strong>Dyadic Operator</strong></td>
+<td class="l t r b" style="text-align: center;"><code>Z←(F ONAME G) R</code></td>
+<td class="l t r b" style="text-align: center;"><code>Z←L (F ONAME G) R</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>ONAME</code> is the user name of the defined operator. <code>Z</code> is a name for the explicit result; <code>F</code> and <code>G</code> are names for the left and right operands; and <code>L</code> and <code>R</code> are names for the left and right arguments, respectively. You can use any names you want. It is their position that is important. The parentheses delimit the derived function name and are essential. Note that for monadic operators the operand is to the left of the operator name just as it is for a primitive operator.</p>
+<p>Defined sequences have two syntactic forms:</p>
+<center>
+<table>
+<caption>Table 3.3 Defined Sequence Headers</caption>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr class="header">
+<th class="r b"></th>
+<th class="l t r b" style="text-align: center;">Defined Sequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="l t r b"><strong>With Explicit Result</strong></td>
+<td class="l t r b" style="text-align: center;"><code>Z←SNAME</code></td>
+</tr>
+<tr>
+<td class="l t r b"><strong>Without Explicit Result</strong></td>
+<td class="l t r b" style="text-align: center;"><code>SNAME</code></td>
+</tr>
+</tbody>
+</table>
+</center>
+<p><code>SNAME</code> is the name of the defined sequence.</p>
+<h5 id="local-names">Local Names<a href="#local-names" class="section-link">§</a></h5>
+<p>The best way to understand operands, arguments, and other local names is to see some in action. The function <code>PVALUE</code>, shown next, calculates the amount of money you must invest in order to generate a given balance in a given amount of time at a given yearly interest rate:</p>
+<pre>      12000 PVALUE 5 10
+8000</pre>
+<p>Here is the definition of the function:</p>
+<pre>    ∇Z←AMT PVALUE NI;RATE   ⍝ present value
+[1] ⍝ AMT is the given balance
+[2] ⍝ NI[1] is years, NI[2] is interest rate
+[3] ⍝ Z is the amount to be invested
+[4]  RATE←NI[2]×.01      ⍝ rate into fraction
+[5]  Z←AMT÷1+NI[1]×RATE  ⍝ get present value
+[6]  ∇</pre>
+<p>The header includes names for the explicit result (<code>Z</code>) and the left (<code>AMT</code>) and right arguments (<code>NI</code>). It also includes a local variable—<code>RATE</code>—following the semicolon.</p>
+<p>When you call the defined function <code>PVALUE</code>, you give it values as the left and right arguments:</p>
+<pre>      12000 PVALUE 5 10</pre>
+<p>After you request execution of the program, and just before the expressions in the program start to execute, <span class="small-caps">APL2</span> implicitly evaluates these expressions:</p>
+<pre>      AMT←12000
+      NI←5 10</pre>
+<p>Then the program begins the computation you requested.</p>
+<p>The program computes a value that becomes the program’s <em>explicit result</em>. The header defines which of perhaps several internally computed values is to become the explicit result; the explicit result is the name to the left of the left arrow. Thus, in <code>PVALUE</code>, <code>Z</code> is the explicit result and <code>RATE</code> is not an explicit result even though <span class="small-caps">APL2</span> computes both each time the function is called.</p>
+<p>There is something special abput the names <code>Z</code>, <code>AMT</code>, <code>NI</code>, and <code>RATE</code> in <code>PVALUE</code> (that is, every name in the header except the name of the program). They have values only while the function is being evaluated.</p>
+<pre>      12000 PVALUE 5 10
+8000</pre>
+<p>Even though <code>RATE</code> gets a value inside the program, it does not have a value outside the program:</p>
+<pre>      RATE
+VALUE ERROR
+      RATE
+      ^</pre>
+<p>If the name <code>RATE</code> does have a value outside the program, the use of <code>RATE</code> inside the program does not affect the outside value:</p>
+<pre>      RATE←'A CHARACTER STRING'
+      12000 PVALUE 5 10
+8000
+      RATE
+A CHARACTER STRING</pre>
+<p>Names that have values only while a program is executing are <em>local names</em>. All of the names mentioned in the header (except for the name of the program itself) are local names and never conflict with values the same names have outside the program. The names that have values outside any program are <em>global names</em>. Names that are local to one program may be global to a called subprogram. During program execution, the local value of the name <em>shadows</em> the global value, meaning that the global value can’t be seen.</p>
+<p>Here is a summary of what the system does when a defined function is called:</p>
+<ol>
+<li>Gets names of all locals.</li>
+<li>Remembers current global values of names to be localized.</li>
+<li>Defines local names as having no values.</li>
+<li>Associates any arguments and operands to the operation by means of the local name of the argument or operand.</li>
+<li>Executes the function.</li>
+<li>If a result is specified in the header, remembers its local value.</li>
+<li>Deletes all local values.</li>
+<li>Restores values remembered in step 2.</li>
+<li>Sets the value remembered in step 6 as the explicit result.</li>
+</ol>
+<p>This summary covers all local names. Up to now, you know only about local names mentioned in the header. <a href="chapter7.html">Chapter 7</a> describes another set of local names called <em>labels</em>.</p>
+<p>The following analysis of a call of <code>PVALUE</code> applies the previous discussion to a real example:</p>
+<pre>      RATE←'A CHARACTER STRING'
+      12000 PVALUE 5 10</pre>
+<ol>
+<li>Names of locals are <code>Z</code>, <code>AMT</code>, <code>NI</code>, and <code>RATE</code>.</li>
+<li><code>RATE</code> has <code>'A CHARACTER STRING'</code> as value; <code>Z</code>, <code>NI</code>, and <code>AMT</code> have no global values.</li>
+<li><code>Z</code>, <code>RATE</code>, <code>NI</code>, and <code>AMT</code> now have no value.</li>
+</ol>
+<p>The system then performs these steps:</p>
+<ol start="4">
+<li><p>Does the following assignments:</p>
+<pre>      AMT←12000
+      NI←5 10</pre></li>
+<li><p>Executes <code>PVALUE</code>, causing <code>RATE</code> to get the value .1 and <code>Z</code> to get value the 8000.</p></li>
+<li><p>Remembers value of the result local name <code>Z</code>.</p></li>
+<li><p>Deletes values given to <code>AMT</code>, <code>NI</code>, <code>Z</code>, and <code>RATE</code>.</p></li>
+<li><p>Restores values remembered in step 2:</p>
+<pre>      RATE←'A CHARACTER STRING'</pre></li>
+<li><p>The value remembered in step 6 becomes the result of the function and (in this case) prints.</p></li>
+</ol>
+<p>A defined operator undergoes the same execution steps as a defined function except that there are local names for the operands as well as for the arguments.</p>
+<h5 id="comments">Comments<a href="#comments" class="section-link">§</a></h5>
+<p>The header may include a comment to describe something about the program. A comment may also appear within the body of the program at the end of a line or on a line by itself. The symbol <strong><em>lamp</em></strong> (<code>⍝</code>) indicates that everything following on the line is a comment and not to be executed.</p>
+<p>It is a good idea to include comments in your programs for these reasons:</p>
+<ul>
+<li>To remind yourself how the program works.</li>
+<li>To assist others who may want to learn or modify your program.</li>
+</ul>
+<h4 id="using-defined-functions-operators-and-sequences">Using Defined Functions, Operators and Sequences<a href="#using-defined-functions-operators-and-sequences" class="section-link">§</a></h4>
+<p>You use a defined function with an explicit result like any primitive function. You can use <code>AVG</code>, for instance, like any other <span class="small-caps">APL2</span> monadic function:</p>
+<ul>
+<li><p>You can display its result immediately:</p>
+<pre>       SCORE←95 83 75 62 99 78 81
+       AVG SCORE
+ 81.85714286</pre></li>
+<li><p>You can assign its result to a variable name:</p>
+<pre>       ASCORE←AVG SCORE
+       ASCORE
+81.85714286</pre></li>
+<li><p>You can use it in an expression with other functions and operators defined or primitive. For example, the difference between the high score and the average score is:</p>
+<pre>       (⌈/SCORE) − AVG SCORE
+ 17.14285714</pre></li>
+<li><p>You can make it the operand of an operator. If student scores reside in separate vectors <code>STDNT1</code>, <code>STDNT2</code>, <code>STDNT3</code>, the following expression determines the average of each student:</p>
+<pre>       STDNT1 ← 95 83 75 62 99 78 81
+       STDNT2 ← 93 73 78 60 95 75 80
+       STDNT3 ← 88 89 90 67 94 79 83
+
+       AVG¯ STDNT1 STDNT2 STDNT3
+ 81.85714286 79.14285714 84.28571429</pre></li>
+</ul>
+<p>You use a defined operator like any primitive operator.</p>
+<ul>
+<li>Its operands can be primitive, defined, or derived functions. Operators can form a limitless number of derived functions because you can apply them to defined as well as primitive functions.</li>
+<li>You can use a defined operator in an expression with other functions and operators.</li>
+</ul>
+<p>A defined sequence acts like a named constant. It looks like a variable except that you may not assign a new value to it using an assignment arrow (<code>←</code>).</p>
+<h4 id="errors-during-program-execution">Errors during Program Execution<a href="#errors-during-program-execution" class="section-link">§</a></h4>
+<p>When you are in definition mode, <span class="small-caps">APL2</span> does no error-checking except to validate headers. If a line has a syntax error, if a variable has no value, or if arguments are not conformable, you will not know it until you try to execute the program.</p>
+<p>When <span class="small-caps">APL2</span> detects an error during program execution, it interrupts execution and displays an error message along with the program line in which the error occurred and carets to indicate where the error occurred.</p>
+<p>Suppose, for instance, that the <code>AVG</code> program contained a typing error. You would see this message:</p>
+<pre>VALUE ERROR
+AVG[2] Z←(+/MUN)÷⍴NUM
+            ^</pre>
+<p>Whenever you encounter an error, you should clear it out—by using <code>→</code> or <code>)RESET</code>—or fix it and restart execution of the program. If you don’t clear the errors, you can fill the space available to you with partially evaluated expressions. <a href="chapter7.html">Chapter 7</a> discusses restarting execution of a program and <a href="appendixA.html">Appendix A</a> tells you how to use an editor to change an existing program.</p>
+<h4 id="good-apl2-programming-practices">Good APL2 Programming Practices<a href="#good-apl2-programming-practices" class="section-link">§</a></h4>
+<p>Good programming practices make programming easier—and program maintenance much easier. This section covers three important aspects of good <span class="small-caps">APL2</span> programming:</p>
+<ul>
+<li>Creating a toolbox of utility programs.</li>
+<li>Using comments liberally.</li>
+<li>Using local names.</li>
+</ul>
+<h5 id="creating-a-toolbox-of-utility-programs">Creating a Toolbox of Utility Programs<a href="#creating-a-toolbox-of-utility-programs" class="section-link">§</a></h5>
+<p>Once you have written a defined function, there is little reason ever again to enter the expressions that comprise it. You can always use the defined function. For example, <code>MN_DEV</code> is a function that calculates the mean deviation of a set of numbers <code>N</code>. It uses the function <code>AVG</code>:</p>
+<pre>      ∇MD←MN_DEV N
+[1]    ⍝ finds the mean deviation of N
+[2]    MD←(+/∣N−AVG N)÷N</pre>
+<p>A good tool is a program that accepts arguments and produces results (like <code>AVG</code>). It can be used in expressions as though it were primitive. Functions that do not take arguments or produce results do not make good tools. For example, <code>PAVG</code>, the program that prompts for input and prints an answer, can only be used by itself. <code>PAVGR</code> is a little better because at least its result can be used. It could not, however, be applied by an operator because it is a defined sequence not a defined function.</p>
+<p>With some notable exceptions, programs which prompt for input do not make good tools even if they are not defined sequences. If you ever applied the each operator to one of them with a 100-item argument, you would have to respond to 100 prompts. An exception is a program whose purpose is to prompt. <a href="chapter7.html">Chapter 7</a> shows some examples of such a program.</p>
+<p>Good programmers build toolboxes of useful programs they use over and over. As time goes by, they write less and less code to do a given job, relying on their toolboxes to save them repetitive efforts.</p>
+<h5 id="using-comments-liberally">Using Comments Liberally<a href="#using-comments-liberally" class="section-link">§</a></h5>
+<p>You can place comments in <span class="small-caps">APL2</span> in the header of a program, on a separate line in the program body, or at the end of a line of code. When <span class="small-caps">APL2</span> encounters the comment symbol (<code>⍝</code>) during execution of a program, it ignores all characters to the right of the symbol.</p>
+<p>Comments should include the purpose of the program; description and source of data used, including rank, type, and shape; meaning of local names; processing logic; and any other information that will make the program more understandable. You should describe any global names used in the program. Internal comments in the program should describe the results produced by that part of the program.</p>
+<h5 id="using-local-names">Using Local Names<a href="#using-local-names" class="section-link">§</a></h5>
+<p>As discussed earlier, local names are names that are assigned values and used only within the program and may hold intermediate results.</p>
+<p>Because you assign values to local names within the program, there is never any doubt what their values will be at any time during the program execution. If possible, you should always use values in a program that are local. Pass needed values as arguments to a program. Make an argument a nested vector if many values must be passed. If variables are specified outside the program and then used in the function, there is always the possibility that someone will assign a different value to the variable name and your program will have no control over this re-assignment. Also, by localizing variables, you ensure that your programs do not interfere with any variables that the user of your program may have assigned.</p>
+<p>If you want to have a global value available to several programs but want to protect it from being accidentally assigned a different value, you may define the value as a defined sequence instead of a variable. A defined sequence with an explicit result is used exactly like a variable except that you cannot replace its value using an assignment arrow:</p>
+<pre>      ∇Z←VALUE
+[1]   Z←45
+[2]   ∇
+      
+      10+VALUE
+55
+      VALUE←20
+SYNTAX ERROR
+      VALUE←20
+      ^    ^</pre>
+<h4 id="exercises-for-section-3.2">Exercises for Section 3.2<sup class="answers-note">[<a href="answers.html#section-3.2-programs-remember-expressions">Answers</a>]</sup><a href="#exercises-for-section-3.2" class="section-link">§</a></h4>
+<ol>
+<li><p>For the following function headers, state whether the header is a header for a function, an operator, or a sequence, or is an invalid header. If the header is valid, give the name of the program. If the header is invalid, say why. State whether an operator is monadic or dyadic. State whether the function (or derived function) is monadic or dyadic, and state whether an explicit result is produced.</p>
+<ol type="a">
+<li><code>∇Z←F X;Y Z</code></li>
+<li><code>∇Z←(B C) D;E;F</code></li>
+<li><code>∇F←A B</code></li>
+<li><code>∇F A B C</code></li>
+<li><code>∇F A B</code></li>
+<li><code>∇(A B C);Z</code></li>
+<li><code>∇Z←(A B C);Z</code></li>
+<li><code>∇Z←L (A B C);Z</code></li>
+<li><code>∇(A B C) LEFT;Z</code></li>
+</ol></li>
+<li><p>Define a dyadic function <code>DENTAL</code> that returns a two-item vector containing:</p>
+<ul>
+<li>The amount of the dental bill you have to pay.</li>
+<li>The amount of the dental bill your insurance company will pay.</li>
+</ul>
+<p>The function should have the following inputs:</p>
+<ul>
+<li>Percentage of the bill that the insurance company will cover after the deductible is subtracted.</li>
+<li>Deductible amount (amount that insurance does not cover).</li>
+<li>Total dental cost.</li>
+</ul>
+<p>Sample execution:</p>
+<pre>      .75 25 DENTAL 65
+35 30</pre></li>
+<li><p>Create the following functions and expression:</p>
+<ol type="a">
+<li>Define a function to compute the total cost of several items, given the cost per item and the quantity of each to be purchased.</li>
+<li>Define a function to compute the total cost of an item, given as arguments the sales price of the item and the sales tax stated as a percent.</li>
+<li>Using the functions created in parts a and b, write an expression to determine the cost of purchasing three pairs of jeans retailing at $19.50 each, and two sweaters retailing at $15.50 each, where the sales tax is 6.25%.</li>
+</ol>
+<p>Do not define a new function or change the functions created in the previous two parts.</p></li>
+<li><p>Define a function to determine the shipping charge for a parcel, given:</p>
+<ul>
+<li>Cubic foot charge</li>
+<li>Minimum charge</li>
+<li>Dimensions of the parcel in inches (One foot is 12 inches.)</li>
+</ul></li>
+<li><p>Define a function to determine the amount you would get in currency <code>Y</code> when you exchange currency <code>X</code> for it. Assume the function is given the following data:</p>
+<ul>
+<li>Service charge (in currency <code>Y</code>)</li>
+<li>Minimum service charge (in currency <code>Y</code>)</li>
+<li>Exchange rate in terms of currency <code>X</code></li>
+<li>Amount to be exchanged</li>
+</ul></li>
+<li><p>A survey containing multiple choice questions was answered by 85 different people. Question 1 had 4 parts. 10 people gave the first answer, 15 the second answer, 57 the third answer, and 3 the fourth answer. This data is represented in the variable <code>A1</code>:</p>
+<pre>      A1←10 15 57 3</pre>
+<p>The second question had five answers with this distribution:</p>
+<pre>      A2← 10 14 30 14 6</pre>
+<p>(One person did not answer.)</p>
+<p>Write a function to determine the percentage distribution of choices made for each question.</p>
+<p>Test case:</p>
+<pre>      DIST A1 A2
+11 17 67 3  13 18 40 18 8
+
+      DISPLAY A1 A2
+.→-----------------------------.
+| .→---------. .→------------. |
+| |11 17 67 3| |13 18 40 18 8| |
+| '∼---------' '∼------------' |
+'∊-----------------------------'</pre></li>
+<li><p>In several areas, the sales tax varies according to the nature of the item purchased. For example, in New York State there is no sales tax on most food.</p>
+<p>Write a dyadic function <code>TOTALCOST</code> to determine the total cost of sets of items each with its own sales tax.</p>
+<p>Test case:</p>
+<pre>      FOOD← 1.49 7.85 1.99
+      NONFOOD← 8.48 4.54
+      0 5.5 TOTALCOST FOOD NONFOOD
+25.07</pre></li>
+<li><p>Write a set of functions to allow a person to enter this expression and get the correct answer:</p>
+<pre>      WHAT IS 7 PLUS 9</pre></li>
+<li><p>Given the following nested vectors:</p>
+<pre>      W← 'ABCD' 'EFGHI' 'JKLMNOP'
+      I← (2 4) (1 3 5) (2 3 5 6)</pre>
+<p>Write an expression to use each item of <code>I</code> to index the corresponding item of <code>W</code>, giving:</p>
+<pre> BD  EGI  KLNO</pre>
+<p>Hint: Write a defined function that processes one index and then apply it with the <strong>each</strong> operator.</p>
+<p>This problem illustrates good <span class="small-caps">APL2</span> programming style. Solve the simple case first; then use operators to apply the simple solution to more complicated data.</p></li>
+<li><p>Write a one-line expression to compute the present value as an alternative to the function <code>PVALUE</code> shown in the section “Local Names.”</p></li>
+<li><p>The derivative of a function in mathematics is approximated by computing the function at two very close points and dividing by the distance between the points. The derivative of <math><mi>ƒ</mi></math> is <math><mo>(</mo><mi>ƒ</mi><mo>(</mo><mi>x</mi><mo>+</mo><mi>h</mi><mo>)</mo><mo>−</mo><mi>ƒ</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>)</mo><mo>÷</mo><mi>h</mi></math> for a small value of <math><mi>h</mi></math> (near zero).</p>
+<ol type="a">
+<li><p>Write a defined operator <code>PRIME</code> to approximate the derivative of an arbitrary function <code>F</code> at points <code>X</code>. <code>F</code> is the operand and <code>X</code> is the right argument of <code>PRIME</code>. Let <code>H</code> be <code>1E¯10</code>.</p></li>
+<li><p>This book introduces the functions <strong>exponential</strong> and <strong>logarithm</strong> in <a href="chapter6.html">Chapter 6</a>. Without knowing how those functions are defined, you should be able to make conclusions about their derivatives. Guess the derivative of <strong>exponential</strong> and <strong>logarithm</strong> by experimentation. Here are some good samples to try:</p>
+<pre>      ⋆⍳4
+      ⋆PRIME ⍳4
+      ⍟⍳3
+      ⍟PRIME ⍳4
+      ⍟PRIME ÷⍳3</pre></li>
+</ol>
+</li>
+<li><p>Examine the following two expressions. What situation could cause the <code>SYNTAX ERROR</code>?</p>
+<pre>      XX+10
+19
+      XX←XX+1
+SYNTAX ERROR
+      XX←XX+1
+      ^ ^</pre></li>
+</ol>
+
+  </main>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="chapter2.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="chapter4.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+    <footer>
+    
+  <a href="gemini://tranarchy.fish/~autumn/apl2/chapter3.gmi" title="View this page on gemini web"><img class="banner" src="/images/gemini.png" alt="best viewed in gemini://"/></a>
+
+
+<a href="https://en.wikipedia.org/wiki/Queer_Nation#Queer_Nation_in_other_locales"><img class="banner" alt="COCK SUCKING FAGGOT - QUEER NATION" src="/~autumn/img/cocksuckingfaggot.gif" /></a>
+<a href="https://social.tranarchy.fish/@autumnull"><img class="banner" alt="Follow me on GoToSocial" src="/~autumn/img/sloth_follow_me.gif"/></a>
+<a href="https://git.sr.ht/~autumnull/website/tree/main/item/pages/apl2/chapter3.html" title="View the source code for this page on sourcehut"><img class="banner" alt="view page source" src="/images/view_source.gif"/></a>
+<a href="https://anybrowser.org/campaign/"><img class="banner" alt="Best Viewed with Any Browser" src="/~autumn/img/anybrowser.gif" /></a>
+<a class="banner" href="/"><img class="banner" src="/images/tranarchy.gif" alt="Tranarchy" /></a>
+
+
+      <p>contact me: <code>curl cards.tranarchy.fish/~autumn/</code></p>
+    </footer>
+  </body>
+</html>
+

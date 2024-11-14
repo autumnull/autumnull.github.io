@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <title>Answers to Selected Problems</title>
+    <link rel="icon" type="image/png" href="/~autumn/img/lips.png"/>
+    
+    <link rel="stylesheet" href="/~autumn/style/colors.css" />
+    
+    <link rel="stylesheet" href="/~autumn/style/main.css" />
+    
+    <link rel="stylesheet" href="/~autumn/apl2/style.css" />
+    
+  </head>
+  <body>
+    <header>
+      
+        <a href="/~autumn/apl2/">^ back to APL2 at a Glance</a>
+      
+    </header>
+
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="bibliography.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="index-section.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+  <main>
+    <hr>
+<h2 id="answers-to-selected-problems">Answers to Selected Problems</h2>
+<p>The answers presented here use parentheses to indicate nesting. It’s alright if you use spacing to indicate nesting so your answers look like the results displayed by <span class="small-caps">APL2</span> as long as you can unambiguously tell that you have the correct answer.</p>
+<p>Because of the variety of functions in <span class="small-caps">APL2</span>, there is frequently more than one good solution to a problem. You may often come up with a different solution to a problem than the one shown here. If so, be sure that your solution is equivalent or better than the one shown.</p>
+<h3 id="chapter-1-working-with-apl2">Chapter 1: Working with APL2<a href="#chapter-1-working-with-apl2" class="section-link">§</a></h3>
+<h4 id="section-1.1-doing-ordinary-arithmetic">Section 1.1 — Doing Ordinary Arithmetic<a href="chapter1.html#exercises-for-section-1.1">↩︎</a><a href="#section-1.1-doing-ordinary-arithmetic" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><code>100</code></li>
+<li><code>10</code></li>
+<li><code>1</code></li>
+<li><code>0.1</code></li>
+<li><code>1400</code></li>
+<li><code>−¯314159</code></li>
+</ol></li>
+</ol>
+<h4 id="section-1.2-arithmetic-on-arrays">Section 1.2 — Arithmetic on Arrays<a href="chapter1.html#exercises-for-section-1.2">↩︎</a><a href="#section-1.2-arithmetic-on-arrays" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><p><code>21</code></p></li>
+<li><p><code>110 160</code></p>
+<p>You should be able to get this numerical answer even though the structure of the result has not been discussed.</p></li>
+<li><p>315</p></li>
+</ol></li>
+<li value=4><ol type="a">
+<li><code>X+Y</code></li>
+<li><code>X−Y</code></li>
+</ol></li>
+</ol>
+<h4 id="section-1.3-remembering-data">Section 1.3 — Remembering Data<a href="chapter1.html#exercises-for-section-1.3">↩︎</a><a href="#section-1.3-remembering-data" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><code>X</code> is 3</li>
+<li>no change</li>
+<li><code>Y</code> gets 4</li>
+<li>no change</li>
+<li><code>Y</code> gets 3</li>
+</ol></li>
+</ol>
+<h4 id="section-1.4-evaluation-of-expressions">Section 1.4 — Evaluation of Expressions<a href="chapter1.html#exercises-for-section-1.4">↩︎</a><a href="#section-1.4-evaluation-of-expressions" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><code>30</code></li>
+<li><code>5</code></li>
+<li><code>¯1</code></li>
+<li><code>5</code> redundant</li>
+<li><code>13</code></li>
+<li><code>20</code></li>
+<li><code>30</code></li>
+<li><code>30</code> rightmost pair redundant</li>
+<li><code>28</code></li>
+<li><code>28</code></li>
+<li><code>58</code> outer pair redundant</li>
+</ol></li>
+<li value=4><ol type="a">
+<li><code>10.1 10.2 10.5</code></li>
+<li><code>10.1 20.2 30.5</code></li>
+<li><code>(10.1 20.1) 30.2 (40.5 50.5 60.5)</code></li>
+<li><code>(10.1 20.2) 30.5</code></li>
+<li><code>10.1 (20.2 30.5)</code></li>
+<li><code>(10.1 20.1) (30.2 30.5)</code></li>
+</ol></li>
+<li value=6><ol type="a">
+<li><code>(2 3) 4 ((1 5)(6 7))</code></li>
+<li><code>(3 4)(2 3)</code></li>
+<li><code>(2 3) 10</code></li>
+<li><code>(1 2) 9</code></li>
+<li><code>(2 3) 9</code></li>
+<li><code>4 5 6</code></li>
+<li><code>4 5 6</code></li>
+<li><code>((1 5)(6 7)) 2 ((1 5)(6 7))</code></li>
+<li><code>(12 13) 14</code></li>
+<li><code>(4 6) 8</code></li>
+</ol></li>
+<li value=8><ol type="a">
+<li><code>1 2 3××/186281 365 24 60 60</code></li>
+<li><code>1 2 3××/1.6 186281 365 24 60 60</code></li>
+</ol></li>
+<li value=10><code>100×7 7.5 8.2×24</code></li>
+<li value=12><code>×/.01 STAX PRICE QTY</code></li>
+<li value=14><code>(A B)←B A</code> or <code>(B A)←A B</code></li>
+</ol>
+<h4 id="section-1.6-errors">Section 1.6 — Errors<a href="chapter1.html#exercises-for-section-1.6">↩︎</a><a href="#section-1.6-errors" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li>three stars</li>
+<li>two stars</li>
+<li>empty</li>
+<li>empty</li>
+</ol></li>
+</ol>
+<h3 id="chapter-2-working-with-vectors">Chapter 2: Working with Vectors<a href="#chapter-2-working-with-vectors" class="section-link">§</a></h3>
+<h4 id="section-2.1-functions-that-produce-vectors">Section 2.1 — Functions that Produce Vectors<a href="chapter2.html#exercises-for-section-2.1">↩︎</a><a href="#section-2.1-functions-that-produce-vectors" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><code>24 35</code></li>
+<li><code>24 35</code></li>
+<li><code>20 34 35</code></li>
+<li><code>20 34 35</code></li>
+<li><code>20 34 35</code></li>
+<li><code>24 35</code></li>
+<li><code>24 35</code></li>
+<li><code>44 55</code></li>
+<li><code>14 55</code></li>
+</ol></li>
+<li value=4><code>¯1+2×⍳10</code></li>
+<li value=6><code>MONTHS←MONTHS,65</code></li>
+</ol>
+<h4 id="section-2.2-character-data">Section 2.2 — Character Data<a href="chapter2.html#exercises-for-section-2.2">↩︎</a><a href="#section-2.2-character-data" class="section-link">§</a></h4>
+<ol>
+<li value=2><code>'I''VE GOT IT!'</code></li>
+<li value=4>All of these answers are one-item vectors:
+<ol type="a">
+<li><code>2</code></li>
+<li><code>7</code></li>
+<li><code>2</code></li>
+<li><code>2</code></li>
+<li><code>7</code></li>
+<li><code>2</code></li>
+<li><code>2</code></li>
+<li><code>8</code></li>
+<li><code>7</code></li>
+</ol></li>
+</ol>
+<h4 id="section-2.3-empty-vectors">Section 2.3 — Empty Vectors<a href="chapter2.html#exercises-for-section-2.3">↩︎</a><a href="#section-2.3-empty-vectors" class="section-link">§</a></h4>
+<ol>
+<li value=2><code>P ⍳0</code></li>
+</ol>
+<h4 id="section-2.4-functions-that-manipulate-vectors">Section 2.4 — Functions that Manipulate Vectors<a href="chapter2.html#exercises-for-section-2.4">↩︎</a><a href="#section-2.4-functions-that-manipulate-vectors" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><code>2</code></li>
+<li><code>1 4</code></li>
+<li><code>2 3</code></li>
+<li><code>3 1</code></li>
+<li><code>3 2 1</code></li>
+</ol></li>
+<li value=4><ol type="a">
+<li><code>DE 463</code></li>
+<li><code>463</code></li>
+<li><code>87</code></li>
+<li><code>FGHI</code></li>
+<li><code>G</code></li>
+<li><code>ABC 25</code></li>
+<li><code>ABC</code></li>
+<li><code>25</code></li>
+<li><code>FGHI 87 12</code></li>
+</ol></li>
+<li value=6><code>'TRIBUTARY'[4 5 6]</code> or <code>3↑3↓'TRIBUTARY'</code></li>
+</ol>
+<h4 id="section-2.5-scalar-functions">Section 2.5 — Scalar Functions<a href="chapter2.html#exercises-for-section-2.5">↩︎</a><a href="#section-2.5-scalar-functions" class="section-link">§</a></h4>
+<ol>
+<li value=2><code>−∣V</code></li>
+<li value=4><ol type="a">
+<li><code>3 2</code> (two-item vector)</li>
+<li><code>12</code> (scalar)</li>
+<li>(empty vector)</li>
+<li><code>10 20</code> (two-item vector)</li>
+<li><code>10</code> (one-item vector)</li>
+<li>(empty vector)</li>
+<li><code>10</code> (scalar)</li>
+</ol></li>
+<li value=6><ol type="a">
+<li><code>⌊80×5×7  &lt;--&gt;  57</code></li>
+<li><code>⌊80×2×7  &lt;--&gt;  22</code></li>
+<li><code>⌊5×(80−32)÷9  &lt;--&gt;  26</code></li>
+</ol></li>
+<li value=8><code>2.5⌈×/.02 100 1.5</code></li>
+<li value=10><ol type="a">
+<li><code>1500×(2+.09÷4)⋆2×L</code></li>
+<li><code>(5000×(1+12÷4)⋆3×4)−5000</code></li>
+</ol></li>
+<li value=12><code>AGE⌊39</code></li>
+<li value=14><ol type="a">
+<li>none</li>
+<li>second <code>−</code></li>
+<li>second <code>|</code></li>
+<li>both</li>
+<li><code>⌊</code></li>
+<li><code>−</code> and second <code>×</code></li>
+</ol></li>
+<li value=16><ol type="a">
+<li><code>(×/R1 R2)÷+/R1 R2</code></li>
+<li><code>(×/R)÷+/R</code></li>
+</ol></li>
+</ol>
+<h3 id="chapter-3-working-with-programs">Chapter 3: Working with Programs<a href="#chapter-3-working-with-programs" class="section-link">§</a></h3>
+<h4 id="section-3.1-operators-apply-to-functions">Section 3.1 — Operators Apply to Functions<a href="chapter3.html#exercises-for-section-3.1">↩︎</a><a href="#section-3.1-operators-apply-to-functions" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><code>10</code></li>
+<li><code>4 6</code> (a scalar)</li>
+<li><code>3 7</code> (simple)</li>
+<li><code>1 2 3 4</code></li>
+<li><code>3 3 4</code></li>
+<li><code>8 9</code> (scalar)</li>
+</ol></li>
+<li value=4><code>×/300000 365 24 60 60</code></li>
+</ol>
+<h4 id="section-3.2-programs-remember-expressions">Section 3.2 — Programs Remember Expressions<a href="chapter3.html#exercises-for-section-3.2">↩︎</a><a href="#section-3.2-programs-remember-expressions" class="section-link">§</a></h4>
+<ol>
+<li value=2><pre>    ∇ Z←PERDED DENTAL COST;PER;DED
+[1]  ⍝ compute dental cost
+[2]   (PER DED)←PERDED   ⍝ separate left arg
+[3]   Z←⌊PER×COST−DED    ⍝ part for insurance
+[4]   Z←(COST−Z)Z
+    ∇</pre></li>
+<li value=4><pre>    ∇ Z← MC CHARGE DIMEN;UC
+[1]  ⍝ compute shipping cost
+[2]  ⍝ MC is minimum charge and unit charge
+[3]  ⍝ DIMEN is three dimensions in inches
+[4]   (MC UC)←MC  ⍝ separate minimum and unit charges
+[5]   Z←MC⌈UC××/DIMEN÷12
+[6]   ∇</pre></li>
+<li value=6><pre>    ∇ Z← PERCENT V
+[1]   ⍝ compute percentage distribution
+[2]   ⍝ V — vector of sets of answers to questions
+[3]   ⍝ Z — vector of question percentages
+[4]    Z←⌊100×V÷+/¨V
+[5]    ∇</pre></li>
+<li value=8><pre>    ∇ Z←L PLUS R
+[1]   Z←L+R      ⍝ addition
+[2] ∇
+    ∇ Z←WHAT R
+[1]   Z←R        ⍝ do nothing
+[2] ∇
+    ∇ Z←IS R
+[1]   Z←R        ⍝ do nothing
+[2] ∇</pre></li>
+<li value=10><p>Assume three variables <code>AMT</code>, <code>YEARS</code>, and <code>RATE</code>.</p>
+<pre>     AMT÷1+YEARS×RATE×.01</pre></li>
+<li value=12><p><code>XX</code> is a defined sequence with an explicit result, not a variable.</p></li>
+</ol>
+<h3 id="chapter-4-working-in-the-apl2-environment">Chapter 4: Working in the APL2 Environment<a href="#chapter-4-working-in-the-apl2-environment" class="section-link">§</a></h3>
+<h4 id="section-4.1-libraries">Section 4.1 — Libraries<a href="chapter4.html#exercises-for-section-4.2">↩︎</a><a href="#section-4.1-libraries" class="section-link">§</a></h4>
+<ol>
+<li value=2><div class="line-block">1-i<br>
+2-f<br>
+3-p<br>
+4-d<br>
+5-n<br>
+6-l<br>
+7-h<br>
+8-a<br>
+9-m<br>
+10-r<br>
+11-g<br>
+12-q<br>
+13-j<br>
+14-c<br>
+15-e</div></li>
+</ol>
+<h3 id="chapter-5-working-with-arrays">Chapter 5: Working with Arrays<a href="#chapter-5-working-with-arrays" class="section-link">§</a></h3>
+<h4 id="section-5.1-properties-of-arrays">Section 5.1 — Properties of Arrays<a href="chapter5.html#exercises-for-section-5.1">↩︎</a><a href="#section-5.1-properties-of-arrays" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li>simple, shape 3, depth 1</li>
+<li>simple, shape 2, depth 1</li>
+<li>simple, shape empty, depth 0</li>
+<li>simple, shape 4, depth 1</li>
+<li>nested, shape 2, depth 2</li>
+<li>nested, shape 2, depth 3</li>
+<li>nested, shape 2, depth 4</li>
+</ol></li>
+<li value=4>yes—a scalar that contains an empty array.</li>
+</ol>
+<h4 id="section-5.2-building-and-displaying-arrays">Section 5.2 — Building and Displaying Arrays<a href="chapter5.html#exercises-for-section-5.2">↩︎</a><a href="#section-5.2-building-and-displaying-arrays" class="section-link">§</a></h4>
+<ol>
+<li value=2><p><code>5 0⍴0</code></p></li>
+<li value=4><ol type="a">
+<li><code>R C⍴0</code></li>
+<li><code>((⍴D),3)⍴0</code></li>
+</ol></li>
+<li value=6><p><code>2 3⍴ (⍳0)(⍳0)</code></p>
+<p>Right argument can be any non-empty array containing only empty arrays.</p></li>
+</ol>
+<h4 id="section-5.3-measuring-arrays">Section 5.3 — Measuring Arrays<a href="chapter5.html#exercises-for-section-5.3">↩︎</a><a href="#section-5.3-measuring-arrays" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><code>(⍳0)⍴(⍳0)(⍳0)</code><br>
+This is a scalar containing an empty vector.</li>
+<li><code>(⍳0)(⍳0)</code></li>
+<li><code>(⍳0)(⍳0)(⍳0)</code></li>
+<li><code>(⍳0)(⍳0)</code></li>
+<li><code>(⍳0)⍴(⍳0)(⍳0)</code><br>
+This is a scalar containing an empty vector.</li>
+<li><code>(⍳0)(⍳0)(⍳0)</code></li>
+<li><code>(⍳0)(⍳0)(⍳0)(⍳0)</code></li>
+<li><code>(1⍴3)(1⍴2)</code></li>
+<li><code>(1⍴3)(⍳0)</code></li>
+<li><code>(1⍴2)(⍳0)</code></li>
+<li><code>(1⍴2)(⍳0)</code></li>
+</ol></li>
+<li value=4>Depth is 1. The rest of the result depends on the argument.</li>
+</ol>
+<h4 id="section-5.4-unshaping-and-nested-shaping-of-arrays">Section 5.4 — Unshaping and Nested Shaping of Arrays<a href="chapter5.html#exercises-for-section-5.4">↩︎</a><a href="#section-5.4-unshaping-and-nested-shaping-of-arrays" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li>shape 2, depth 2</li>
+<li>shape 3, depth 2</li>
+<li>shape empty, depth 3</li>
+<li>shape empty, depth 4</li>
+<li>shape empty, depth 3</li>
+<li>shape 2 3, depth 1</li>
+<li>shape 3 4, depth 1</li>
+<li>shape 8, depth 1</li>
+<li>shape 2 3 4, depth 1</li>
+</ol></li>
+<li value=4><code>2 3⍴⊂'RAY'</code></li>
+<li value=6><code>V[2]←⊂M</code> or <code>(2⊃V)←M</code></li>
+</ol>
+<h4 id="section-5.5-manipulating-an-array-along-an-axis">Section 5.5 — Manipulating an Array along an Axis<a href="chapter5.html#exercises-for-section-5.5">↩︎</a><a href="#section-5.5-manipulating-an-array-along-an-axis" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li>shape <code>N M</code>, rank 2, depth 1</li>
+<li>shape <code>M N</code>, rank 2, depth 1</li>
+<li><code>AXIS ERROR</code></li>
+<li><code>AXIS ERROR</code></li>
+<li><code>AXIS ERROR</code></li>
+<li>shape<code>L I M J N K</code>, rank 6, depth 1</li>
+<li>shape<code>M I L J N K</code>, rank 6, depth 1</li>
+</ol></li>
+<li value=4><ol type="a">
+<li><code>I J</code></li>
+<li><code>J K</code></li>
+<li><code>I J</code></li>
+<li><code>AXIS ERROR</code></li>
+<li><code>AXIS ERROR</code></li>
+</ol></li>
+<li value=6><code>A←'AB' 'CDE'</code></li>
+<li value=8><ol type="a">
+<li><code>¯1↑[1]M</code></li>
+<li><code>1↑[2]M</code></li>
+<li><code>¯1↑[1]M</code></li>
+<li><code>¯1 ¯1↑[1 2]M</code></li>
+<li><code>¯1 ¯1 2↑[1 2 3]M</code> or <code>¯1 ¯1 2↑M ]</code></li>
+</ol></li>
+<li value=10><ol type="a">
+<li><p>shape 3 3, value:</p>
+<pre>11 12 13
+24 25 26
+37 38 39</pre></li>
+<li><p>shape 3 3, value:</p>
+<pre>11 22 33
+14 25 36
+17 28 39</pre></li>
+<li><p><code>RANK ERROR</code></p></li>
+<li><p>shape 2 4 3, value:</p>
+<pre> 110  220  330
+ 410  520  630
+ 710  820  930
+1010 1120 1230
+
+1310 1420 1530
+1610 1720 1830
+1910 2020 2130
+2210 2320 2430</pre></li>
+<li><p>shape 2 4 3, value:</p>
+<pre> 101  202  303
+ 404  505  606
+ 707  808  909
+1010 1111 1212
+
+1301 1402 1503
+1604 1705 1806
+1907 2008 2109
+2210 2311 2412</pre></li>
+<li><p>shape 2 4 3, value:</p>
+<pre> 101  202  303
+ 404  505  606
+ 707  808  909
+1010 1111 1212
+
+1301 1402 1503
+1604 1705 1806
+1907 2008 2109
+2210 2311 2412</pre></li>
+</ol></li>
+<li value=12><code>⊂[2]⊃[1] D</code> or <code>⊂[1]⊃[2] D</code></li>
+<li value=14><pre>    ∇ Z←APPEND R;MAT;S;AXIS
+[1]  ⍝ append scalar on each side of axis
+[2]   (MAT S AXIS)←R          ⍝ unpack argument
+[3]   Z←S,[AXIS]MAT,[AXIS]S   ⍝ append scalar
+[4] ∇</pre></li>
+<li value=16><code>M×[1]V</code></li>
+<li value=18><code>M⌊[2]V</code></li>
+</ol>
+<h4 id="section-5.6-other-functions-on-higher-rank-arrays">Section 5.6 — Other Functions on Higher-Rank Arrays<a href="chapter5.html#exercises-for-section-5.6">↩︎</a><a href="#section-5.6-other-functions-on-higher-rank-arrays" class="section-link">§</a></h4>
+<ol>
+<li value=2><code>↑⍴M</code></li>
+<li value=4><ol type="a">
+<li>shape 4, depth 3</li>
+<li>shape 4, depth 1</li>
+<li>shape empty, depth 2</li>
+<li>shape 2 3, depth 1</li>
+<li>shape empty, depth 0</li>
+<li>shape empty, depth 0</li>
+<li>shape empty, depth 2</li>
+<li><code>INDEX ERROR</code></li>
+<li>shape empty, depth 0</li>
+</ol></li>
+<li value=6><ol type="a">
+<li><code>'APL2' (10 20 30)</code></li>
+<li><code>6 'APL2' (10 20 30)</code></li>
+</ol></li>
+</ol>
+<h4 id="section-5.7-other-primitive-operators">Section 5.7 — Other Primitive Operators<a href="chapter5.html#exercises-for-section-5.7">↩︎</a><a href="#section-5.7-other-primitive-operators" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><p>shape 3 4, depth 1, value:</p>
+<pre>3  9 18 19
+8 10 14 18
+9 16 21 24</pre></li>
+<li><p>shape 3 4, depth 1, value:</p>
+<pre>3 ¯3  6 5
+8  6 10 6
+9  2  7 4</pre></li>
+<li><p>shape 3 4, depth 1, value:</p>
+<pre> 3  6  9 1
+11  8 13 5
+20 15 18 8</pre></li>
+<li><p>shape 3 4, depth 1, value:</p>
+<pre> 3  6  9  1
+¯5  4  5 ¯3
+ 4 11 10  0</pre></li>
+</ol></li>
+<li value=4><ol type="a">
+<li><p>shape 1, depth 2, value:</p>
+<pre> 22 44 66 88
+ 11 33 55 77
+ 99 22 44 66
+ 88 11 33 55</pre></li>
+<li><p>shape 2, depth 2, value:</p>
+<pre>  6 10 14    60 100 140
+  4  8 12    40  80 120
+ 11  6 10   110  60 100
+  9  4  8    90  40  80</pre></li>
+<li><p>shape 2, depth 2, value:</p>
+<pre>  3 7 11 15    30 70 110 150
+ 10 5  9 13   100 50  90 130
+ 17 3  7 11   170 30  70 110</pre></li>
+<li><p>shape empty, depth 2, value:</p>
+<pre> 0 0 0
+ 0 0 0
+ 0 0 0
+
+ 0 0 0
+ 0 0 0
+ 0 0 0
+
+ 0 0 0
+ 0 0 0
+ 0 0 0</pre></li>
+<li><p>shape empty, depth 2, value:</p>
+<pre> 0 0 0
+ 0 0 0
+ 0 0 0
+
+ 0 0 0
+ 0 0 0
+ 0 0 0
+
+ 0 0 0
+ 0 0 0
+ 0 0 0</pre></li>
+<li><p>shape 2, depth 2, value:</p>
+<pre>  6 15 24    ¯6 ¯15 ¯24
+ 33 42 51   ¯33 ¯42 ¯51
+ 60 69 78   ¯60 ¯69 ¯78</pre></li>
+<li><p>shape 2, depth 2, value:</p>
+<pre> 30 33 36   ¯30 ¯33 ¯36
+ 39 42 45   ¯39 ¯42 ¯45
+ 48 51 54   ¯48 ¯51 ¯54</pre></li>
+<li><p>shape 2, depth 2, value:</p>
+<pre> 12 15 18   ¯12 ¯15 ¯18
+ 39 42 45   ¯39 ¯42 ¯45
+ 66 69 72   ¯66 ¯69 ¯72</pre></li>
+<li><p>shape 2, depth 2, value:</p>
+<pre>  3  5    ¯3  ¯5
+  9 11    ¯9 ¯11
+ 15 17   ¯15 ¯17
+
+ 21 23   ¯21 ¯23
+ 27 29   ¯27 ¯29
+ 33 35   ¯33 ¯35
+
+ 39 41   ¯39 ¯41
+ 45 47   ¯45 ¯47
+ 51 53   ¯51 ¯53</pre></li>
+<li><p>shape 2, depth 2, value:</p>
+<pre> 11 13 15   ¯11 ¯13 ¯15
+ 17 19 21   ¯17 ¯19 ¯21
+ 23 25 27   ¯23 ¯25 ¯27
+ 29 31 33   ¯29 ¯31 ¯33
+ 35 37 39   ¯35 ¯37 ¯39
+ 41 43 45   ¯41 ¯43 ¯45</pre></li>
+<li><p>shape 2, depth 2, value:</p>
+<pre>  5  7  9    ¯5  ¯7  ¯9
+ 11 13 15   ¯11 ¯13 ¯15
+
+ 23 25 27   ¯23 ¯25 ¯27
+ 29 31 33   ¯29 ¯31 ¯33
+
+ 41 43 45   ¯41 ¯43 ¯45
+ 47 49 51   ¯47 ¯49 ¯51</pre></li>
+</ol></li>
+<li value=6><pre>      ∇Z←CHECK M
+[1]  ⍝ 1 for row in ascending order
+[2]  Z←∧/M=⌈\M
+[3] ∇</pre></li>
+<li value=8><code>N,/⍳S</code></li>
+<li value=10><code>63360 36 12 1 +.× 3 6 2 7</code></li>
+<li value=12><ol type="a">
+<li><p>shape 3 3, value:</p>
+<pre> 2   4    8
+ 5  25  125
+10 100 1000</pre></li>
+<li><p>shape 3 4, value:</p>
+<pre>1 2 3 4
+2 2 3 4
+3 3 3 4</pre></li>
+<li><p>shape 4 3, value:</p>
+<pre>1 1 1
+1 2 2
+1 2 3
+1 2 3</pre></li>
+<li><p>shape 3 2, value:</p>
+<pre> 5  6 4
+ 7  7 7
+ 8  8 8</pre></li>
+<li><p>shape 2 3, value:</p>
+<pre> 5 7  6 7  3 9 
+ 8 5  8 4  8 9 </pre></li>
+<li><p>shape 3 2, value:</p>
+<pre> A   10
+ BC  30 40
+ AB  10 20</pre></li>
+<li><p>shape 3 2, value:</p>
+<pre>AX
+BY
+CZ</pre></li>
+<li><p>shape 3 2, value:</p>
+<pre> 1 AB  1 CDE 
+ 2 AB  2 CDE 
+ 3 AB  3 CDE </pre></li>
+<li><p>shape 3 2, value:</p>
+<pre>  1 AB     1 CDE
+  2 AB     2 CDE
+  3 AB     3 CDE</pre></li>
+</ol></li>
+<li value=14><ol type="a">
+<li><p>shape 3 3, value:</p>
+<pre>1 2 3
+4 5 6
+7 8 9</pre></li>
+<li><p>shape 3 3, value:</p>
+<pre>  1 0 0 0   2 0 0 0   3 0 0 0  
+  0 4 0 0   0 5 0 0   0 6 0 0  
+  0 0 7 0   0 0 8 0   0 0 9 0  </pre></li>
+</ol></li>
+</ol>
+<h3 id="chapter-6-working-with-data">Chapter 6: Working with Data<a href="#chapter-6-working-with-data" class="section-link">§</a></h3>
+<h4 id="section-6.1-ways-of-comparing">Section 6.1 — Ways of Comparing<a href="chapter6.html#exercises-for-section-6.1">↩︎</a><a href="#section-6.1-ways-of-comparing" class="section-link">§</a></h4>
+<ol>
+<li value=2><code>A+2×(A&lt;0)×A</code></li>
+<li value=4><code>+/RETAIL&lt;10</code></li>
+<li value=6>keeps only the first <code>1</code></li>
+<li value=8><ol type="a">
+<li>shape 5,depth 1,value: <code>1 1 1 1 1</code></li>
+<li>shape 5, depth 1, value: <code>1 1 0 1 1</code></li>
+<li><code>LENGTH ERROR</code> (scalar function)</li>
+<li>shape empty, depth 0, value: <code>1</code></li>
+<li>shape empty, depth 0, value: <code>0</code></li>
+<li>shape empty, depth 0, value: <code>0</code></li>
+<li>shape empty, depth 0, value: <code>1</code></li>
+<li>shape empty, depth 0, value: <code>0</code></li>
+<li>shape empty, depth 0, value: <code>1</code></li>
+<li>shape empty, depth 0, value: <code>0</code></li>
+<li>shape empty, depth 0, value: <code>1</code></li>
+<li>shape empty, depth 0, value: <code>0</code></li>
+<li>shape 2,depth 2, value: <code>1 1 0 1 1 1 1 1</code></li>
+<li>shape empty, depth 0, value: <code>0</code></li>
+<li>shape 2, depth 1, value: <code>0 1</code></li>
+<li>shape 2,depth 2, value: <code>1 0 1 0 0 1 0</code></li>
+</ol></li>
+<li value=10><code>M+M=0</code></li>
+</ol>
+<h4 id="section-6.2-selecting-subsets-of-arrays">Section 6.2 — Selecting Subsets of Arrays<a href="chapter6.html#exercises-for-section-6.2">↩︎</a><a href="#section-6.2-selecting-subsets-of-arrays" class="section-link">§</a></h4>
+<ol>
+<li value=2><code>TM[1]</code> is always a scalar. <code>↑TM</code> is, in general, an arbitrary array and, in particular, it is a <code>2 2</code> matrix.</li>
+<li value=4><code>INVENTORY∼INVENTORY∼RLIST</code></li>
+<li value=6><code>((,M≠N)/,N)←’ ’</code></li>
+<li value=8><ol type="a">
+<li>depth 1, value: <code>EF</code></li>
+<li>depth 1, value: empty</li>
+<li>depth 1, value: <code>BYBY</code></li>
+<li>depth 1, value: <code>BYEBYE</code></li>
+<li>depth 2, value: <code>&nbsp;BYEBYE</code></li>
+<li>depth 2, value: <code>&nbsp;CAB DAD</code></li>
+<li>depth 2, value: <code>&nbsp;CB DAD</code></li>
+<li>depth 2, value: <code>&nbsp;CAB DAD</code></li>
+<li>depth 2, value: <code>&nbsp;C DD</code></li>
+</ol></li>
+<li value=10><ol type="a">
+<li><code>A  PL</code></li>
+<li><code>10 0 0 20 30</code></li>
+<li><code>A B C D E F</code></li>
+<li><pre>AB C D
+AB C D
+AB C D</pre></li>
+<li><pre>1 2 3 4
+0 0 0 0
+0 0 0 0
+1 2 3 4
+0 0 0 0
+1 2 3 4</pre></li>
+<li><code>LENGTH ERROR</code>; length of right argument is not the sum of the left argument.</li>
+<li><code>0</code></li>
+<li><code>0 0</code>; scalar containing two zeros</li>
+<li><code>(' ' 0)</code></li>
+<li><code>(0 ' ')</code></li>
+<li><code>'ABC' '   ' (⍳4) '   ' ('A' 4)</code></li>
+<li><code>(⍳4) (0 0 0 0) 'ABC' (0 0 0 0) ('A' 4)</code></li>
+<li><code>('A' 4) (' ' 0) (⍳4) (' ' 0) 'ABC'</code></li>
+<li><code>(4 'A') (0 ' ') (⍳4) (0 ' ') 'ABC'</code></li>
+</ol></li>
+<li value=10><code>(,M)←12</code></li>
+</ol>
+<h4 id="section-6.3-searching-and-sorting">Section 6.3 — Searching and Sorting<a href="chapter6.html#exercises-for-section-6.3">↩︎</a><a href="#section-6.3-searching-and-sorting" class="section-link">§</a></h4>
+<ol>
+<li value=2><code>(0≠∊,A)/,A</code></li>
+<li value=4><code>((∼(,A)∊⊂'N/A')/,A)←100</code></li>
+<li value=6><pre>    ∇ Z← I RECEIPT STOCK;T
+[1]  ⍝ Z:  a matrix listing of names and prices
+[2]  ⍝     matching I
+[3]  ⍝ STOCK:  vector of vectors, each item consists of
+[4]  ⍝  (inventory no.)(item name) (item price)
+[5]  ⍝ Assume that values of I are always found in stock
+[6]   T←↑¨STOCK
+[7]   Z←⊃1↓¨ STOCK[T⍳I]
+[8]  ∇</pre></li>
+<li value=8><ol type="a">
+<li><code>⍉M</code></li>
+<li><code>⌽M</code></li>
+<li><code>⊖M</code></li>
+</ol></li>
+<li value=10><ol type="a">
+<li><code>⌽A</code></li>
+<li><code>⊖A</code></li>
+<li><code>⌽⊖A</code></li>
+<li><code>1⌽A</code></li>
+<li><code>2⌽A</code></li>
+<li><code>0 1 2⌽A</code></li>
+<li><code>1 0 3⌽A</code></li>
+<li><code>1 0 2 0⊖A</code></li>
+</ol></li>
+<li value=12><ol type="a">
+<li><code>(1 1⍉M)←0</code></li>
+<li><code>(1 1⍉M)←'Z'</code></li>
+<li><code>(1 1⍉M)←Z'DIAG'</code></li>
+</ol></li>
+<li value=14><code>∧/,S=⍉S</code></li>
+<li value=16><ol type="a">
+<li><code>(⊂[2]M)∊⊂[2]N</code></li>
+<li><code>(⊂[2]N)⍳⊂[2]M</code></li>
+</ol></li>
+<li value=18><code>(⊂[2]M)⍳¨S</code> or <code>1++/∧\M≠S</code></li>
+<li value=20><ol type="a">
+<li><code>6 5 3 1 2 4</code></li>
+<li><code>4 2 1 3 5 6</code></li>
+<li><code>9 12 17 20 23 30</code></li>
+<li><code>30 23 20 17 12 9</code></li>
+<li><code>4 5 3 6 2 1</code></li>
+</ol></li>
+<li value=22><code>(⍴A)⍴V⍷,A</code></li>
+</ol>
+<h4 id="section-6.4-computation">Section 6.4 — Computation<a href="chapter6.html#exercises-for-section-6.4">↩︎</a><a href="#section-6.4-computation" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><p><code>A×.95⋆5</code></p>
+<p>(When you enter the sixth country, you have crossed five borders.)</p></li>
+<li><p>90</p></li>
+</ol></li>
+<li value=4><code>((⌈2⍟N)⍴2)⊤N</code></li>
+<li value=6><code>'0123456789ABCDEF'[1+(8⍴16)⊤N]</code></li>
+<li value=8><ol type="a">
+<li><code>○2×45</code></li>
+<li><code>○(2×45+10)−2×45</code> or <code>○20</code></li>
+<li><code>○20</code></li>
+</ol></li>
+<li value=10><code>0 24 60 60 ⊤800×800×8×6000÷2.16E4</code></li>
+<li value=12><ol type="a">
+<li><pre> 1  0  0 0
+¯1  1  0 0
+ 0 ¯1  1 0
+ 0  0 ¯1 1</pre></li>
+<li><pre>1 ¯1  0  0
+0  1 ¯1  0
+0  0  1 ¯1
+0  0  0  1</pre></li>
+</ol></li>
+<li value=14><ol type="a">
+<li><code>2705</code></li>
+<li><code>94</code></li>
+<li><code>70</code></li>
+<li><code>88</code></li>
+<li><code>888</code></li>
+<li><code>136</code></li>
+<li><code>71</code></li>
+<li><code>71</code></li>
+<li><code>71</code></li>
+<li><code>27</code></li>
+<li><code>194</code></li>
+<li><code>69 156 234</code></li>
+<li><code>27 13</code></li>
+<li><code>5445</code></li>
+</ol></li>
+</ol>
+<h4 id="section-6.5-generating-random-numbers">Section 6.5 — Generating Random Numbers<a href="chapter6.html#exercises-for-section-6.5">↩︎</a><a href="#section-6.5-generating-random-numbers" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><code>?6 6 6 6</code></li>
+<li><code>5?52</code></li>
+<li><code>2 3 5 7 11 13[?6]</code></li>
+<li><code>(?10)⍴?25</code></li>
+<li><code>?3 4⍴99</code></li>
+<li><code>.01×?99</code></li>
+</ol></li>
+</ol>
+<h3 id="chapter-7-working-with-program-control">Chapter 7: Working with Program Control<a href="#chapter-7-working-with-program-control" class="section-link">§</a></h3>
+<h4 id="section-7.1-control-of-execution-branching">Section 7.1 — Control of Execution: Branching<a href="chapter7.html#exercises-for-section-7.1">↩︎</a><a href="#section-7.1-control-of-execution-branching" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><code>→(I=1 2 3)/L1 L2 L3</code> (Falls through if <code>I</code> is incorrect.)</li>
+<li><code>→(L1 L2 L3)[I]</code> (Fails if <code>I</code> is incorrect.)</li>
+</ol></li>
+<li value=4><ol type="a">
+<li><code>A</code> simple</li>
+<li><code>N</code> integer</li>
+<li>first three characters of <code>ANS</code> are <code>'END'</code></li>
+<li><code>C</code> is 5</li>
+<li><code>C</code> is not 5</li>
+<li><code>WORD</code> contains a vowel</li>
+<li>Three-way branch for negative, zero, or positive (assuming three names are labels)</li>
+<li><code>ANS</code> is empty</li>
+</ol></li>
+</ol>
+<h4 id="section-7.2-debugging-your-program">Section 7.2 — Debugging Your Program<a href="chapter7.html#exercises-for-section-7.2">↩︎</a><a href="#section-7.2-debugging-your-program" class="section-link">§</a></h4>
+<ol>
+<li value=2>experimentation only</li>
+</ol>
+<h4 id="section-7.3-prompting-for-input">Section 7.3 — Prompting for Input<a href="chapter7.html#exercises-for-section-7.3">↩︎</a><a href="#section-7.3-prompting-for-input" class="section-link">§</a></h4>
+<ol>
+<li value=2><code>⍎¨⊂[2]M</code></li>
+<li value=4><code>⍎(∊N),'←⍎¨N'</code></li>
+<li value=6><ol type="a">
+<li><code>⊃⍕¨⊂[2]M</code></li>
+<li>none— shorter row would be padded</li>
+</ol></li>
+</ol>
+<h4 id="section-7.4-output-with-quad-and-quote-quad">Section 7.4 — Output with Quad and Quote-Quad<a href="chapter7.html#exercises-for-section-7.4">↩︎</a><a href="#section-7.4-output-with-quad-and-quote-quad" class="section-link">§</a></h4>
+<ol>
+<li value=2><code>⎕←AVER←(+/X)÷⍴X←⎕</code></li>
+</ol>
+<h4 id="section-7.5-controlling-output">Section 7.5 — Controlling Output<a href="chapter7.html#exercises-for-section-7.5">↩︎</a><a href="#section-7.5-controlling-output" class="section-link">§</a></h4>
+<ol>
+<li value=2><pre>    ∇ Z←NUMBER A;R
+[1]   R←↑⍴A
+[2]   Z←⊃[2]'[',¨(⊂[2]⍕(R,1)⍴⍳R),¨']',¨⊂[2]A
+[3] ∇</pre></li>
+<li value=4><p>(<strong>Note:</strong> “<code>∼</code>” indicates where blanks appear in the result, to assist you in seeing the spacing.)</p>
+<p>For: <code>W←93.725  ¯27.8  ¯192.83  6754</code></p>
+<ol type="a">
+<li><p>shape 40:</p>
+<pre>      '−5,551.55 '⍕W
+    93.73    −27.8    −192.83  6,754    
+∼∼∼∼     ∼∼∼∼     ∼∼∼∼       ∼∼     ∼∼∼∼</pre></li>
+<li><p>shape 48:</p>
+<pre>      '$5,551.50CR '⍕W
+    93.73      $27.80CR   $192.83CR  6,754.00   
+∼∼∼∼     ∼∼∼∼∼∼        ∼∼∼         ∼∼        ∼∼∼</pre></li>
+<li><p>shape 52:</p>
+<pre>      '$_5,553.10CR '⍕W
+   $ 93.73      $ 27.80CR   $ 192.83CR $ 6,754.00
+∼∼∼ ∼     ∼∼∼∼∼∼ ∼       ∼∼∼ ∼        ∼ ∼        ∼∼∼</pre></li>
+<li><p>shape 48:</p>
+<pre>      '$ −5,551.55 '⍕W
+$     93.73 $    −27.8  $   −192.83 $  6,754    
+ ∼∼∼∼∼     ∼ ∼∼∼∼     ∼∼ ∼∼∼       ∼ ∼∼     ∼∼∼∼</pre></li>
+<li><p>shape 48:</p>
+<pre>      '$_−5,551.55 '⍕W
+      93.73    $ −27.8    $ −192.83    6,754    
+∼∼∼∼∼∼     ∼∼∼∼ ∼     ∼∼∼∼ ∼       ∼∼∼∼     ∼∼∼∼</pre></li>
+<li><p>shape 56:</p>
+<pre>      '$_5,554.10_CR '⍕W
+$    93.73    $    27.80 CR $   192.83 CR $ 6,754.00    
+ ∼∼∼∼     ∼∼∼∼ ∼∼∼∼     ∼  ∼ ∼∼∼      ∼  ∼ ∼        ∼∼∼∼</pre></li>
+<li><p>error:</p>
+<pre>      '5,555.55 '⍕W
+DOMAIN ERROR  (no provision for negative sign)</pre></li>
+</ol></li>
+</ol>
+<h4 id="section-7.6-control-of-execution-iteration">Section 7.6 — Control of Execution: Iteration<a href="chapter7.html#exercises-for-section-7.6">↩︎</a><a href="#section-7.6-control-of-execution-iteration" class="section-link">§</a></h4>
+<ol>
+<li value=2><pre>    ∇ Z←INTERVAL N;I
+[1]  ⍝ loop simulating monadic iota
+[2]   Z←⍳0
+[3]   I←1
+[4]  L1:→(I&gt;N)/0
+[5]   Z←Z,I
+[6]   I←I+1
+[7]   →L1
+[8] ∇</pre></li>
+</ol>
+<h4 id="section-7.7-control-of-execution-recursion">Section 7.7 — Control of Execution: Recursion<a href="chapter7.html#exercises-for-section-7.7">↩︎</a><a href="#section-7.7-control-of-execution-recursion" class="section-link">§</a></h4>
+<ol>
+<li value=2><ol type="a">
+<li><pre>    ∇ Z←ADDREC R
+[1]  ⍝ recursive routine to add up numbers
+[2]   Z←R
+[3]   →(2&gt;⍴R)/0
+[4]   Z←ADDREC(R[1]+R[2]),2↓R
+[5] ∇</pre></li>
+<li><pre>    ∇ Z←ADDLOOP R;I
+[1]  ⍝ looping routine to add up numbers
+[2]   I←Z←0
+[3]  L1:I←I+1
+[4]   →(I&gt;⍴R)/0
+[5]   Z←Z+R[I]
+[6]   →L1
+[7] ∇</pre>
+(It is generally more efficient to use indexing rather than to use <code>↑R</code> and <code>↓R</code>.)</li>
+<li><code>+/R</code></li>
+</ol></li>
+<li value=4><pre>    ∇ Z←INTERVALR N;I
+[1]  ⍝ recursive routine simulating monadic iota
+[2]   Z←⍳0
+[3]   →(N≤0)/0
+[4]   Z←(INTERVAL N−1),N
+[5] ∇</pre></li>
+<li value=6><code>⍴MDEPTH ⍴MDEPTH A</code></li>
+<li value=8><pre>    ∇ Z←(F MDEPTH1 N)R
+[1]  ⍝ apply F to each array of depth N
+[2]   →(N&lt;≡R)/L1      ⍝ branch not requested depth
+[3]   Z←F R                    ⍝ F of simple
+[4]   →0                       ⍝ exit
+[5]  L1:Z←(F MDEPTH1 N)¨R      ⍝ recur
+[6] ∇</pre></li>
+<li value=10><pre>    ∇ Z←L(F DDEPTHB)R
+[1]  ⍝ apply F to each simple array in R
+[2]   →(1&lt;≡R)/I1      ⍝ branch not simple
+[3]   Z←L F R                  ⍝ F of simple
+[4]   →0                       ⍝ exit
+[5]  L1:Z←(⊂L)(F DDEPTHB)¨R    ⍝ recur
+[6] ∇</pre></li>
+</ol>
+<h3 id="chapter-8-working-with-applications">Chapter 8: Working with Applications<a href="#chapter-8-working-with-applications" class="section-link">§</a></h3>
+<h4 id="section-8.1-a-magazine-collection">Section 8.1 — A Magazine Collection<a href="chapter8.html#exercises-for-section-8.1">↩︎</a><a href="#section-8.1-a-magazine-collection" class="section-link">§</a></h4>
+<ol>
+<li value=2><pre>    ∇ Z←SORTUPBY R;N
+[1]  ⍝ R is the field to sort on, matrix
+[2]   (N Z)←R
+[3]   Z←Z[⍋Z[;N];]
+[4]  ∇</pre></li>
+<li value=4><pre>     ∇ADD R;IN
+[1]  ⍝ R is the new issue number
+[2]  L1:'enter values for issue number ' R
+[3]   '    ' 'Vol' 'No' 'Year' 'Mon' 'Price' 'Value' 'Own'
+[4]   IN←⍎⍞                          ⍝ read input
+[5]   →((,7)≡⍴IN)/OK                 ⍝ must be 7 items
+[6]   ‘error - enter 7 items'
+[7]   →L1
+[8]  OK:MAG←MAG,[1]R,IN              ⍝ add new row
+[9]  ∇</pre></li>
+</ol>
+<h4 id="section-8.2-simulation-of-a-vector-computer">Section 8.2 — Simulation of a Vector Computer<a href="chapter8.html#exercises-for-section-8.2">↩︎</a><a href="#section-8.2-simulation-of-a-vector-computer" class="section-link">§</a></h4>
+<ol>
+<li value=2><pre>    ∇ LOADS R;V;A;S
+[1]   (V A)←R
+[2]  ⍝ load scalar register V from address in A
+[3]   SR[V]←MM[A]
+[4] ∇
+
+    ∇ STORES R;V;A
+[1]   (V A)←R
+[2]  ⍝ store scalar register V in address A
+[3]   MM[A]←SR[V]
+[4] ∇</pre></li>
+<li value=4><pre>     ∇ VPROBLEM4
+[1]   26 SETMEMORY 10 9 87 6 5 4 3
+[2]   3 SETMEMORY 26
+[3]   4 SETMEMORY 7
+[4]   1 SETMEMORY O
+[5]   LOADS 2 1
+[6]  LOOP:LOADVCT 4
+[7]   →(0=VCT)/0
+[8]   LOADV 4 3 1
+[9]   PLUSREDUCE 4 2
+[10]  →LOOP
+[11] ∇</pre></li>
+</ol>
+<h4 id="section-8.3-a-puzzle-solving-program">Section 8.3 — A Puzzle-Solving Program<a href="chapter8.html#exercises-for-section-8.3">↩︎</a><a href="#section-8.3-a-puzzle-solving-program" class="section-link">§</a></h4>
+<ol>
+<li value=2><pre>    ∇ Z←STRT(MOVE SEARCH1CHK)G;B;M;NEWP;CNT
+[1]  ⍝ find path from start to goal
+[2]  ⍝ STRT ←→ starting position
+[3]  ⍝ I ←→ count of loops
+[4]  ⍝ G ←→ goal position
+[5]  ⍝ MOVE ←→ program to compute next positions
+[6]   M←,⊂,⊂STRT             ⍝ initial path is STRT
+[7]   Z←⍳0                   ⍝ return empty on failure
+[8]   I←0                    ⍝ initial count
+[9]  LOOP:→(0=⍴M)/0          ⍝ quit no more paths
+[10]  ⍝(G≡B←↑↑M)/DONE        ⍝ done if goal
+[11]  NEWP←MOVE B            ⍝ compute new positions
+[12]  NEWP←(∼NEWP∊↑,/M)/NEWP ⍝ keep new positions
+[13]  M←(1↓M),(⊂¨NEWP),¨M[1] ⍝ add to paths
+[14]  I←I+1                  ⍝ increment loop count
+[15]  →(0≠20∣I)/LOOP         ⍝ continue if not 20 loops
+[16]  ⍞←I 'LOOPS - CONTINUE? (Y/N)'
+[17]  →('Y'∊⍞)/LOOP          ⍝ back for next path
+[18]  →0                     ⍝ exit early
+[19] DONE:Z←⌽↑M              ⍝ return with path
+[20]∇</pre></li>
+<li value=4><pre>     ∇ Z←MOVE8 M;IB;MI;IN
+[1]  ⍝ move generator for 8 puzzle
+[2]   IB←(,M∊' ')/,MI←(⍳3)∘.,⍳3
+[3]   IN←(IN∊MI)/IN←,(0 1)(0 ¯1)(1 0)(¯1 0)∘.+IB
+[4]   Z←IN RMOVE8¨⊂M
+[5]   Z←Z (Z≡¨⊂3 3⍴'1238 4765')
+[6]  ∇
+
+     ∇Z←RMOVE8 M
+[1]  ⍝ recursive replacer, subfunction of MOVE8
+[2]   (IB⊃Z)←(⊂I)⊃Z←M
+[3]   ((⊂I)⊃Z)←' '
+[4]  ∇</pre></li>
+<li value=6><pre>     ∇Z←EST1 P
+[1]  ⍝ number out of position est for 8 puzzle
+[2]   Z←+/,P≠3 3⍴'1238 4765'
+[3]  ∇</pre></li>
+</ol>
+
+  </main>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="bibliography.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="index-section.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+    <footer>
+    
+  <a href="gemini://tranarchy.fish/~autumn/apl2/answers.gmi" title="View this page on gemini web"><img class="banner" src="/images/gemini.png" alt="best viewed in gemini://"/></a>
+
+
+<a href="https://en.wikipedia.org/wiki/Queer_Nation#Queer_Nation_in_other_locales"><img class="banner" alt="COCK SUCKING FAGGOT - QUEER NATION" src="/~autumn/img/cocksuckingfaggot.gif" /></a>
+<a href="https://social.tranarchy.fish/@autumnull"><img class="banner" alt="Follow me on GoToSocial" src="/~autumn/img/sloth_follow_me.gif"/></a>
+<a href="https://git.sr.ht/~autumnull/website/tree/main/item/pages/apl2/answers.html" title="View the source code for this page on sourcehut"><img class="banner" alt="view page source" src="/images/view_source.gif"/></a>
+<a href="https://anybrowser.org/campaign/"><img class="banner" alt="Best Viewed with Any Browser" src="/~autumn/img/anybrowser.gif" /></a>
+<a class="banner" href="/"><img class="banner" src="/images/tranarchy.gif" alt="Tranarchy" /></a>
+
+
+      <p>contact me: <code>curl cards.tranarchy.fish/~autumn/</code></p>
+    </footer>
+  </body>
+</html>
+

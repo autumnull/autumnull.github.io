@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <title>Chapter 2: Working with Vectors</title>
+    <link rel="icon" type="image/png" href="/~autumn/img/lips.png"/>
+    
+    <link rel="stylesheet" href="/~autumn/style/colors.css" />
+    
+    <link rel="stylesheet" href="/~autumn/style/main.css" />
+    
+    <link rel="stylesheet" href="/~autumn/apl2/style.css" />
+    
+  </head>
+  <body>
+    <header>
+      
+        <a href="/~autumn/apl2/">^ back to APL2 at a Glance</a>
+      
+    </header>
+
+<header>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="chapter1.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="chapter3.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</header>
+  <main>
+    <div class="chapter-rule">
+    <hr class="chapter-long">
+    <p>Chapter</p>
+    <hr class="chapter-short">
+    <div>
+        <div>
+            2
+        </div>
+    </div>
+</div>
+<h2>Working with Vectors</h2>
+<p><span class="small-caps">APL2</span> collects data in arrays. Every function in <span class="small-caps">APL2</span> applies to arrays and produces an array as a result. The simplest arrays are simple scalars. They contain a single number or a single character. Other arrays contain numbers, characters, or mixtures of numbers and characters. This chapter presents the fundamentals of array manipulation by concentrating on vectors—linear arrangements of data. <a href="chapter5.html">Chapter 5</a> applies the discussion to other arrays.</p>
+<p><span class="small-caps">APL2</span> provides functions that measure and produce vectors, which may contain numbers or characters, or both, or which may be empty of data. <span class="small-caps">APL2</span> broadens the arithmetic functions and extends them to vectors.</p>
+<h3 id="section-2.1-functions-that-produce-vectors">Section 2.1 — Functions that Produce Vectors<a href="#section-2.1-functions-that-produce-vectors" class="section-link">§</a></h3>
+<p>A vector is the simplest data structure that can contain more than one item. This section presents three functions for measuring and producing vectors:</p>
+<ul>
+<li><strong>shape</strong></li>
+<li><strong>interval</strong></li>
+<li><strong>catenate</strong></li>
+</ul>
+<h4 id="measuring-the-size-of-a-vector-shape">Measuring the Size of a Vector: Shape<a href="#measuring-the-size-of-a-vector-shape" class="section-link">§</a></h4>
+<p>The monadic function <strong>shape</strong> (<code>⍴</code>), when applied to a vector, tells you how many items are in the vector. The number of items is the <em>length</em> of the vector:</p>
+<pre>      ⍴ 10 20 30 440
+4
+      PRICE←(6.95 2.5) (7.95 3.55 295) 12.95
+      ⍴PRICE
+3</pre>
+<p>The shape of the shape of an array is the <em>rank</em> of the array:</p>
+<pre>      ⍴⍴ 10 20 30 40
+1
+      ⍴⍴PRICE
+1</pre>
+<p>Thus, the shape of a vector is a one-item vector and a vector has rank 1.</p>
+<p><a href="chapter5.html">Chapter 5</a> discusses the ranks of all arrays.</p>
+<h4 id="producing-consecutive-integers-interval">Producing Consecutive Integers: Interval<a href="#producing-consecutive-integers-interval" class="section-link">§</a></h4>
+<p>Here’s an example of a function that produces a vector of numbers from a single number:</p>
+<pre>      ⍳6
+1 2 3 4 5 6</pre>
+<p>This function, called <strong>interval</strong>, generates a vector whose items are an increasing sequence of consecutive integers starting with 1 and ending with the requested integer. The shape of the result of <strong>interval</strong> is the same value as the right argument:</p>
+<pre>      ⍴⍳6
+6</pre>
+<p>When the mathematician Gauss was a student, he was asked to add up the first hundred integers as a punishment. He noted that 100+1 is 101, 99+2 is 101, and that there are 50 such pairings. He immediately wrote down the answer— 50×101 or 5050— to the amazement of the teacher. Using <span class="small-caps">APL2</span>, you need not be so clever. You merely enter this:</p>
+<pre>      +/⍳100
+5050</pre>
+<p>You can generate any sequence of equally spaced numbers by a simple expression using <strong>interval</strong>. The argument of <strong>interval</strong> is the length of the sequence. Multiply by the difference between two numbers, and add a constant to make the first item right:</p>
+<pre>      constant + increment × ⍳ length</pre>
+<p>Such a sequence of numbers is an <em>arithmetic progression</em>. This expression yields the first six even integers:</p>
+<pre>      2×⍳6
+2 4 6 8 10 12</pre>
+<p>To obtain six even integers starting with the number <code>10</code>, you enter this expression:</p>
+<pre>      8+2×⍳6
+10 12 14 16 18 20</pre>
+<p>Multiplying by a negative number gives a decreasing progression:</p>
+<pre>      ¯1×⍳6
+¯1 ¯2 ¯3 ¯4 ¯5 ¯6
+      7+¯1×⍳6
+6 5 4 3 2 1</pre>
+<h4 id="joining-vectors-catenate">Joining Vectors: Catenate<a href="#joining-vectors-catenate" class="section-link">§</a></h4>
+<p><span class="small-caps">APL2</span> provides the function <strong>catenate</strong> to join two arrays. This example shows how <strong>catenate</strong> works to save time and reduce chances of errors.</p>
+<p><code>RETAIL</code> is the name previously assigned to represent the cost of long-playing records, cassette tapes, and compact discs at a record store:</p>
+<pre>      RETAIL←6.95 7.95 12.95</pre>
+<p>Now the store begins to sell video disks and video tapes, so <code>RETAIL</code> should be a five-item vector rather than a three-item vector. You can redefine the value:</p>
+<pre>      RETAIL←6.95 7.95 12.95 25.95 15.85</pre>
+<p>However, if <code>RETAIL</code> had hundreds of items, it would not be realistic to redefine the value of the variable every time you need to add items. Redefining over and over again would be inefficient and error-prone.</p>
+<p>The function <strong>catenate</strong> (<code>,</code>) takes two arrays and joins them end to end to form one array. Thus, instead of retyping the values in <code>RETAIL</code>, you can just join new numbers to the existing numbers. First, restore the original value of <code>RETAIL</code>. Then use <strong>catenate</strong> to append the new values:</p>
+<pre>      RETAIL←6.95 7.95 12.95
+      RETAIL←RETAIL,25.95 15.95</pre>
+<p>Now <code>RETAIL</code> has the desired value:</p>
+<pre>      RETAIL
+6.95 7.95 12.95 25.95 15.95</pre>
+<h5 id="catenate-versus-vector-notation">Catenate Versus Vector Notation<a href="#catenate-versus-vector-notation" class="section-link">§</a></h5>
+<p>You should carefully note the difference between using <strong>catenate</strong> to append numbers to a list and using vector notation.</p>
+<p>In simple cases, <strong>catenate</strong> and vector notation produce the same result as in this example:</p>
+<pre>      5,7
+5 7
+      5 7
+5 7</pre>
+<p>The results of these simple expressions might fool you into thinking that vector notation implies catenation. A slightly more complicated example illustrates a difference:</p>
+<pre>      5,7+10
+5 17
+      5 7+10
+15 17</pre>
+<p>These two expressions differ only by a comma. Remember that in <span class="small-caps">APL2</span> <em>comma</em> represents a function, not punctuation. The left argument of <strong>addition</strong> is the scalar 7 in the first case and 5 7 in the second case. <span class="small-caps">APL2</span> always forms vectors with vector notation, if it can, before applying functions.</p>
+<p>As a further example, look at these expressions involving the variable <code>RETAIL</code>, set back to its original value:</p>
+<pre>      RETAIL←6.95 7.95 12.95
+
+      RETAIL,25.95 15.95
+6.95 7.95 12.95 25.95 15.95
+
+      ⍴RETAIL,25.95 15.95
+5
+
+      RETAIL  25.95 15.95
+6.95 7.95 12.95 25.95 15.95
+
+      ⍴RETAIL 25.95 15.95
+3</pre>
+<p>The expression with <strong>catenate</strong> joins the three values in <code>RETAIL</code> to the two new values giving a five-item result. In the display of this result, single blanks separate the items.</p>
+<p>The expression with vector notation forms a three-item list whose first item is the value of <code>RETAIL</code> and whose second and third items are the numbers given. In the display of this result, two blanks separate the group of three that comes from <code>RETAIL</code> from the others.</p>
+<p>The use of <code>DISPLAY</code> shows the difference more explicitly:</p>
+<pre>      DISPLAY RETAIL,25.95 15.95
+.→--------------------------.
+|6.95 7.95 12.95 25.95 15.95|
+'∼--------------------------'
+      
+      DISPLAY RETAIL 25.95 15.95
+.→-----------------------------.
+| .→--------------.            |
+| |6.95 7.95 12.95| 25.95 15.95|
+| '∼--------------'            |
+'∊-----------------------------'</pre>
+<h4 id="exercises-for-section-2.1">Exercises for Section 2.1<sup class="answers-note">[<a href="answers.html#section-2.1-functions-that-produce-vectors">Answers</a>]</sup><a href="#exercises-for-section-2.1" class="section-link">§</a></h4>
+<ol>
+<li><p>Evaluate the following expressions:</p>
+<ol type="a">
+<li><code>⍳5</code></li>
+<li><code>⍳5+2</code></li>
+<li><code>2+⍳5</code></li>
+<li><code>¯2+⍳5</code></li>
+<li><code>−2+⍳5</code></li>
+<li><code>2×15</code></li>
+<li><code>.5×⍳5</code></li>
+<li><code>¯2+.5×⍳5</code></li>
+<li><code>−2+.5×⍳5</code></li>
+</ol></li>
+<li><p>Evaluate the following expressions:</p>
+<ol type="a">
+<li><code>20 30 + 4 5</code></li>
+<li><code>20 30 + 4,5</code></li>
+<li><code>20,30 + 4 5</code></li>
+<li><code>20,30 + 4,5</code></li>
+<li><code>20,30 + (4,5)</code></li>
+<li><code>(20,30) + 4 5</code></li>
+<li><code>(20,30) + (4,5)</code></li>
+<li><code>(10 20 + 30) + 4 5</code></li>
+<li><code>(10,20 + 30) + 4 5</code></li>
+</ol></li>
+<li><p>Write an expression using <strong>interval</strong> to generate each of the following vectors:</p>
+<ol type="a">
+<li><code>7 12 17 22 27 32</code></li>
+<li><code>¯1.7 ¯1.4 ¯1.1 ¯.8 ¯.5 ¯.2</code></li>
+<li><code>¯1.5 ¯.75 0 .75 1.5 2.25</code></li>
+</ol></li>
+<li><p>Write an expression to generate the first ten odd numbers.</p></li>
+<li><p>Write a progression to produce the following:</p>
+<ol type="a">
+<li>A simple vector of the first five even numbers followed by the first five odd numbers.</li>
+<li>A two-item vector, whose first item is the first five odd numbers and whose second item is the first five even numbers.</li>
+</ol></li>
+<li><p>Let <code>MONTHS</code> be a vector that contains the maximum monthly temperatures in Celsius for the first three months of the year.</p>
+<pre>      MONTHS← 9 13 18</pre>
+<p>If the maximum monthly temperature for April is 65 degrees Fahrenheit, write a single expression to include in <code>MONTH</code> the maximum April temperature in Celsius.</p></li>
+<li><p>Evaluate the following expressions:</p>
+<ol type="a">
+<li><code>⍴(⍳5),10 20</code></li>
+<li><code>⍴(⍳5) 10 20</code></li>
+<li><code>⍴(⍳5),(10 20)</code></li>
+<li><code>⍴(⍳5) (10 20)</code></li>
+</ol></li>
+</ol>
+<h3 id="section-2.2-character-data">Section 2.2 — Character Data<a href="#section-2.2-character-data" class="section-link">§</a></h3>
+<p>You write a <em>character</em> as a symbol surrounded by single quotation marks. Unlike numbers, where one value may have many representations, there is only one way to write a given character as a constant: the graphic for the character surrounded by single quotation marks. For example, you write the character that begins this sentence as follows:</p>
+<pre>      'F'
+F</pre>
+<p>The single quotation marks on input are punctuation and indicate the presence of a character. They are not part of the data and so are not displayed when <span class="small-caps">APL2</span> displays the character data.</p>
+<p>You write a <em>blank</em> character as a single space surrounded by single quotation marks:</p>
+<pre>      ' '</pre>
+<p>A single character is a simple scalar.</p>
+<h4 id="character-vectors">Character Vectors<a href="#character-vectors" class="section-link">§</a></h4>
+<p>To construct a character vector, you can write the individual characters in quotation marks separated by blanks. This expression is a three-item vector of characters:</p>
+<pre>      'A' 'B' 'C'
+ABC</pre>
+<p>A simple vector containing only characters is a <em>character string</em>.</p>
+<p>When every item of a vector is a simple character scalar, there is a more compact notation for writing the vector. The vector:</p>
+<pre>      'A' 'B' 'C'</pre>
+<p>may be written as:</p>
+<pre>      'ABC'</pre>
+<p>This compact notation is permissible as long as the three characters are not part of a longer vector. For example:</p>
+<pre>      'A' 'B' 'C' 'D'</pre>
+<p>is not</p>
+<pre>      ('A' 'B' 'C') 'D'</pre>
+<p>or</p>
+<pre>      'ABC' 'D'</pre>
+<p>The first expression is not equivalent to the other two expressions. The first expression is a four-item simple character vector (which could be written as <code>'ABCD'</code>). The second and third expressions are equivalent.</p>
+<p>The rewriting rule for simple character vectors extends to give a compact notation for writing a vector of character vectors:</p>
+<pre>      ('J' 'I' 'M') ('J' 'O' 'H' 'N')
+JIM JOHN</pre>
+<p>may be written</p>
+<pre>      'JIM' 'JOHN'
+JIM JOHN</pre>
+<p>To construct a character string that itself contains the single quotation mark, you must write the single quotation mark twice. For example, this is the way you would assign the word <em>don’t</em> to the variable <code>W</code>:</p>
+<pre>      W←'DON''T'
+      W
+DON'T</pre>
+<p><code>W</code> contains five characters:</p>
+<pre>      ⍴W
+5</pre>
+<p>In the expression that assigned <code>W</code>, the outermost quotation marks delimit the data and the paired inner quotation marks represent a single quote character.</p>
+<p>How would you write the scalar constant consisting of a single quotation mark? You write any other scalar character by putting it in quotes:</p>
+<pre>      'A'
+A</pre>
+<p>If the character is a single quotation mark, you must double it and then put it within the pair of delimiting quotation marks. That is, to write a scalar character quote, you must enter four quotation marks—the character quotation mark doubled and the required surrounding quotation marks:</p>
+<pre>      ''''
+'</pre>
+<h4 id="vectors-with-both-numbers-and-characters">Vectors with Both Numbers and Characters<a href="#vectors-with-both-numbers-and-characters" class="section-link">§</a></h4>
+<p>Characters and numbers may exist in the same array. Here are two examples with <code>DISPLAY</code> applied to the results so you can see the structure:</p>
+<pre>      DISPLAY 'LPS',6.95
+.→-------.
+|LPS 6.95|
+'+-------'
+      DISPLAY 'LPS' 6.95
+.→-----------.
+| .→--.      |
+| |LPS| 6.95 |
+| '---'      |
+'∊-----------'</pre>
+<p>The first expression is a four-item vector with characters as the first three items and a number as the last item. The <code>+</code> along the bottom of the box indicates a mixture of characters and numbers. The second is a two-item vector with a character vector as its first item and a number as the second item. The box surrounding the character vector has no symbol along the bottom.</p>
+<p>By using characters and numbers in an array, the record store can keep track of its products and prices in one array:</p>
+<pre>      PRD←('LPS' 6.95)('TAPES' 7.95)('CDS' 12.95)
+      PRD
+  LPS 6.95    TAPES 7.95    CDS 12.95
+
+      DISPLAY PRD
+.→------------------------------------------------.
+| .→-----------. .→-------------. .→------------. |
+| | .→--.      | | .→----.      | | .→--.       | |
+| | |LPS| 6.95 | | |TAPES| 7.95 | | |CDS| 12.95 | |
+| | '---'      | | '-----'      | | '---'       | |
+| '∊-----------' '∊-------------' '∊------------' |
+'∊------------------------------------------------'</pre>
+<h4 id="functions-that-work-on-characters">Functions that Work on Characters<a href="#functions-that-work-on-characters" class="section-link">§</a></h4>
+<p>You can apply functions that don’t do some sort of calculation to characters. For example, <strong>catenate</strong> can join any two vectors. In the following example, <strong>catenate</strong> joins two character vectors:</p>
+<pre>      CV1←'BILLY'
+      CV2←'JOE'
+      CV1,CV2
+BILLYJOE</pre>
+<p>This result is a character string containing eight characters.</p>
+<p>Functions that do calculation don’t work on characters:</p>
+<pre>      ⍳'A'
+DOMAIN ERROR
+      ⍳'A'
+      ^
+      →</pre>
+<h4 id="exercises-for-section-2.2">Exercises for Section 2.2<sup class="answers-note">[<a href="answers.html#section-2.2-character-data">Answers</a>]</sup><a href="#exercises-for-section-2.2" class="section-link">§</a></h4>
+<ol>
+<li><p>Let <code>A</code>, <code>B</code>, and <code>C</code> be defined as follows:</p>
+<pre>      A←'CAT'
+      B←'DOG'
+      C←'MOUSE'</pre>
+<p>Determine the shape of the vectors resulting from the following expressions. (Remember: form vectors before applying functions.)</p>
+<ol type="a">
+<li><code>A B C</code></li>
+<li><code>A,B,C</code></li>
+<li><code>A B,C</code></li>
+<li><code>A,B C</code></li>
+<li><code>(A B) C</code></li>
+<li><code>(A,B),C</code></li>
+<li><code>(A B),C</code></li>
+<li><code>(A,B) C</code></li>
+</ol></li>
+<li><p>Write an expression to create this simple character vector:</p>
+<pre>      I'VE GOT IT!</pre></li>
+<li><p>Create the four-item character vector containing the words “I’VE”, “GOT?”, “IT”, and the punctuation “!”.</p></li>
+<li><p>Evaluate the following expressions: |</p>
+<ol type="a">
+<li><code>⍴'ABC' 'WXYZ'</code></li>
+<li><code>⍴'ABC','WXYZ'</code></li>
+<li><code>⍴'ABC' (⍳4)</code></li>
+<li><code>⍴('ABC') 'WXYZ'</code></li>
+<li><code>⍴'ABC',(14)</code></li>
+<li><code>⍴('J' 'I' 'M')('J' 'O' 'H‘ 'N')</code></li>
+<li><code>⍴'JIM' 'JOHN'</code></li>
+<li><code>⍴'JIM''JOHN'</code></li>
+<li><code>⍴'JIM','JOHN'</code></li>
+</ol></li>
+<li><p>Suppose variables J, S, and W contain the deposit data for J. Jones, S. Smith, and W. White, respectively. Write an expression to collect together under one variable called <code>DEPOSITS</code> each name and its corresponding deposit data.</p></li>
+</ol>
+<h3 id="section-2.3-empty-vectors">Section 2.3 — Empty Vectors<a href="#section-2.3-empty-vectors" class="section-link">§</a></h3>
+<p>All of the vectors produced in examples so far have had one or more items. It is possible to have a vector containing no data and having length zero. Such a vector is an <em>empty vector</em>.</p>
+<h4 id="creating-an-empty-vector">Creating an Empty Vector<a href="#creating-an-empty-vector" class="section-link">§</a></h4>
+<p>You’ve seen the function <strong>interval</strong> used to generate a vector of consecutive integers starting with 1. The expression <code>⍳N</code> produces a vector of length <code>N</code>.</p>
+<p>This expression produces a vector of three consecutive integers:</p>
+<pre>      ⍳3
+1 2 3</pre>
+<p>This expression gives a vector of one consecutive integer of which there is only one:</p>
+<pre>      ⍳1
+1</pre>
+<p>Although it prints like a simple scalar, it is in fact a vector:</p>
+<pre>      DISPLAY ⍳1
+.→.
+|1|
+'∼'</pre>
+<p>This expression produces a vector of zero consecutive integers:</p>
+<pre>      ⍳0
+      </pre>
+<p><code>⍳0</code> is an empty vector of numbers. The empty vector appears as a blank line on output.</p>
+<p>You create an empty character vector by putting no character between quotation marks:</p>
+<pre>      ''
+      </pre>
+<p>Here is <code>DISPLAY</code> applied to empty numeric and character vectors:</p>
+<pre>      DISPLAY ⍳0
+.⊖.
+|0|
+'∼'
+      DISPLAY ''
+.⊖.
+| |
+'-'</pre>
+<p>The <code>⊖</code> at the top of the box indicates an empty array. The zero inside the box indicates a numeric empty vector, and the blank inside the box indicates a character empty vector.</p>
+<p>The length of an empty vector is zero:</p>
+<pre>      ⍴⍳0
+0
+      ⍴''
+0</pre>
+<h4 id="using-empty-vectors">Using Empty Vectors<a href="#using-empty-vectors" class="section-link">§</a></h4>
+<p>Empty vectors don’t contain data, so you wouldn’t expect to do a lot of useful computing with them. However, they allow you to establish variables that will have non-empty values later on.</p>
+<p>You have been using the variable <code>RETAIL</code> to keep track of the prices of objects at the record store. When you want to add more prices, you catenate new values onto the existing list. In a real application, you may be keeping track of many lists of values.</p>
+<p>A good scheme in designing such an application is to determine what quantities you want to keep track of and decide on names for each of them. Initialize each name by assigning an empty vector as its value:</p>
+<pre>      WHAT←''
+      RETAIL←⍳0
+      DISCOUNT←⍳0</pre>
+<p>Now when you get some data, you can use <strong>catenate</strong> to append it to each variable:</p>
+<pre>      WHAT←WHAT,'LPS' 'TAPES' 'CDS'
+      RETAIL←RETAIL,6.95 7.95 12.95
+      DISCOUNT←DISCOUNT,.9 .9 1</pre>
+<p>Scalars are arrays without shape. Thus, if you apply <strong>shape</strong> to a scalar, the result is a numeric empty vector:</p>
+<pre>      ⍴5
+
+      ⍴'A'
+
+      DISPLAY ⍴5
+.⊖.
+|0|
+'∼'
+      DISPLAY ⍴'A'
+.⊖.
+|0|
+'∼'</pre>
+<p>The rank of a scalar is zero:</p>
+<pre>      ⍴⍴'A'
+0</pre>
+<p>As you learn more <span class="small-caps">APL2</span>, it will become increasingly important for you to know whether a single item array is a scalar or a one-item vector. For example, the result of <strong>shape</strong> applied to a vector is a one-item vector. That is why applying <strong>shape</strong> again gives you 1 as the rank of the vector. If the result of <strong>shape</strong> were a scalar number, applying <strong>shape</strong> to that scalar would result in an empty vector.</p>
+<p>The discussions of functions in this and the remaining chapters tell you the structure of arrays produced by the functions.</p>
+<h4 id="exercises-for-section-2.3">Exercises for Section 2.3<sup class="answers-note">[<a href="answers.html#section-2.3-empty-vectors">Answers</a>]</sup><a href="#exercises-for-section-2.3" class="section-link">§</a></h4>
+<ol>
+<li>Evaluate the following expressions:
+<ol type="a">
+<li><code>⍴⍳2</code></li>
+<li><code>⍴⍳1</code></li>
+<li><code>⍴⍳0</code></li>
+<li><code>⍴''</code></li>
+<li><code>⍴' '</code></li>
+<li><code>⍴'AB'</code></li>
+<li><code>⍴'A B'</code></li>
+<li><code>⍴'A''B'</code></li>
+</ol></li>
+<li>Suppose function <code>P</code> is a monadic function which takes as right argument a list of data. Write an expression that will call <code>P</code> when the list is empty.</li>
+</ol>
+<h3 id="section-2.4-functions-that-manipulate-vectors">Section 2.4 — Functions that Manipulate Vectors<a href="#section-2.4-functions-that-manipulate-vectors" class="section-link">§</a></h3>
+<p>You have seen some ways to group data into vectors. <span class="small-caps">APL2</span> functions, in general, operate on entire arrays all at once. Sometimes you may want to operate on only part of an array. This section presents five <span class="small-caps">APL2</span> functions for extracting data from vectors and a way to replace items in vectors:</p>
+<ul>
+<li><strong>pick</strong></li>
+<li><strong>first</strong></li>
+<li><strong>take</strong></li>
+<li><strong>drop</strong></li>
+<li><strong>indexing</strong></li>
+<li><strong>selective assignment</strong></li>
+</ul>
+<h4 id="selecting-items-from-a-vector-pick">Selecting Items from a Vector: Pick<a href="#selecting-items-from-a-vector-pick" class="section-link">§</a></h4>
+<p>Given the <code>PRD</code> vector, suppose that only the item describing cassette tapes is of interest.</p>
+<pre>      PRD←('LPS' 6.95)('TAPES' 7.95)('CDS' 12.95)</pre>
+<p>The following expression uses the function <strong>pick</strong> (<code>⊃</code>) to select the second item from <code>PRD</code>:</p>
+<pre>      2⊃PRD
+TAPES 7.95</pre>
+<p>This result is the two-item vector that is the second item of <code>PRD</code>.</p>
+<p>If you want only the name of the second product, you can apply <strong>pick</strong> twice:</p>
+<pre>      1⊃2⊃PRD
+TAPES</pre>
+<p>By using a vector left argument, you can make this selection in a single operation:</p>
+<pre>      2 1⊃PRD
+TAPES</pre>
+<p>The left argument means first select the second item (<code>'TAPES' 7.95</code>), then select the first item from that (<code>'TAPES'</code>).</p>
+<p>A three-item left argument further narrows the selection to one character from the product name:</p>
+<pre>      2⊃1⊃4⊃PRD
+E</pre>
+<p>Do you see why the numbers 2 1 4 selected the <code>E</code> in <code>TAPES</code>? The vector of numbers means select the vector that is the second item of <code>PRD</code>. Then select the first item of that vector (giving <code>'TAPES'</code>). Finally, select the fourth item of that vector (<code>'E'</code>).</p>
+<center>
+<img src="images/pick_example.png">
+</center>
+<h4 id="selecting-items-from-a-vector-first">Selecting Items from a Vector: First<a href="#selecting-items-from-a-vector-first" class="section-link">§</a></h4>
+<p>The monadic function first (<code>↑</code>) selects the leading item of its argument. You can think of <strong>first</strong> as a special case of <strong>pick</strong>. The following expression shows the relationship between <strong>first</strong> and <strong>pick</strong>. In this book the symbol <code>&lt;--&gt;</code> (not an <span class="small-caps">APL2</span> symbol) means “equivalent to.”</p>
+<pre>      (↑V)   &lt;--&gt;   (1⊃V)</pre>
+<p>Compare the following two expressions, and you’ll see that they produce the same result:</p>
+<pre>      ↑PRD
+LPS 6.95
+      ⍴↑PRD
+2
+      1⊃PRD
+LPS 6.95
+      ⍴1⊃PRD
+2</pre>
+<p>There is another interesting property of <strong>first</strong>. When applied to empty vectors, it returns an array that identifies the type of data used to construct the empty vector. For example:</p>
+<pre>      ↑⍳0
+0
+      ↑''
+   &lt;---(blank)</pre>
+<p>You may think that <strong>first</strong> is an unnecessary function, but, you’ll see in <a href="chapter5.html">Chapter 5</a> that it is useful with data structures more complicated than vectors.</p>
+<h4 id="selecting-items-from-a-vector-take">Selecting Items from a Vector: Take<a href="#selecting-items-from-a-vector-take" class="section-link">§</a></h4>
+<p>When the symbol <code>↑</code> has a left argument as well as a right argument, the function performed is <strong>take</strong>. To select adjacent items in a vector, you indicate in the left argument how many consecutive items to select from the right argument. For example:</p>
+<pre>      4↑'TAPES'
+TAPE
+      3↑5 7 9 11 13
+5 7 9</pre>
+<p>A negative left argument selects consecutive items from the right end of the vector instead of from the beginning:</p>
+<pre>      ¯4↑'TAPES'
+APES
+      ¯3↑5 7 9 11 13
+9 11 13</pre>
+<p>By successive applications of <strong>take</strong>, you can select items from the middle of a vector:</p>
+<pre>      3↑¯4↑'TAPES'
+APE
+      2↑¯3↑ 5 7 9 11 13
+9 11</pre>
+<p>If you attempt to take more data than you have from a simple vector, <span class="small-caps">APL2</span> pads the result with either blanks or zeros, according to whether the first item of the right argument is a character or a number:</p>
+<pre>      ¯8↑'TAPES'
+   TAPES
+      7↑5 7 9 11 13
+5 7 9 11 13 0 0</pre>
+<p>When you take more that you have from a nested array, the result is padded with items that look like the first item but with numbers replaced with zeros and characters replaced with blanks:</p>
+<pre>      3↑(2 'A' 3) (19 'B' 21)
+ 2 A 3  19 B 21  0   0
+      DISPLAY 3↑(2 'A' 3) (19 'B' 21)
+.→--------------------------.
+| .→----. .→------. .→----. |
+| |2 A 3| |19 B 21| |0   0| |
+| '+----' '+------' '+----' |
+'∊--------------------------'</pre>
+<p><strong>Take</strong> applied to a vector always returns a vector result.</p>
+<pre>      1↑'APPLE"
+A
+      ⍴1↑'APPLE'
+1</pre>
+<p>Notice the important difference between <strong>take</strong> and <strong>first</strong>. <strong>First</strong> returns the contents of the first item of its argument, which can be any array at all. <strong>Take</strong> returns a number of items, as specified by its left argument; so a <code>1↑</code> produces a one-item vector that contains as its only item the first item of its argument:</p>
+<pre>      ↑'LPS' 'TAPES' 'CDS'
+LPS
+      ⍴↑'LPS' 'TAPES' 'CDS'
+3
+       DISPLAY ↑'LPS' 'TAPES' 'CDS'
+.→--.
+|LPS|
+'---'
+      1↑'LPS' 'TAPES' 'CDS'
+LPS
+      ⍴1↑'LPS' 'TAPES' 'CDS'
+1
+       DISPLAY 1↑'LPS' 'TAPES' 'CDS'
+.→------.
+| .→--. |
+| |LPS| |
+| '---' |
+'∊------'</pre>
+<h4 id="selecting-items-from-a-vector-drop">Selecting Items from a Vector: Drop<a href="#selecting-items-from-a-vector-drop" class="section-link">§</a></h4>
+<p>With the function <strong>drop</strong>, you can discard consecutive leading or trailing items:</p>
+<pre>      3↓'TAPES'
+ES
+      3↓5 7 9 11 13
+11 13</pre>
+<p>A negative left argument indicates how many items to discard from the right end of the right argument:</p>
+<pre>      ¯2↓'TAPES'
+TAP
+      ¯3↓5 7 9 11 13
+5 7</pre>
+<p>Applying <strong>drop</strong> consecutively allows you to select items from the middle of a vector:</p>
+<pre>      ¯1↓2↓'TAPES'
+PE</pre>
+<p>If you attempt to drop more data than you have, the result is an empty vector:</p>
+<pre>      10↓'TAPES'
+
+      ⍴10↓'TAPES'
+0
+      16↓5 7 9 11 13
+
+      ⍴16↓5 7 9 11 13
+0</pre>
+<p><strong>Drop</strong> applied to a scalar or a vector always returns a vector result.</p>
+<h4 id="selecting-items-from-a-vector-indexing">Selecting Items from a Vector: Indexing<a href="#selecting-items-from-a-vector-indexing" class="section-link">§</a></h4>
+<p>You may select items from a vector by specifying the position of the item in the vector. The operation that does this kind of selecting is <strong>indexing</strong>. You write, inside square brackets, the numbers that indicate the items selected:</p>
+<pre>      'TAPES'[2]
+A
+      (5 7 9 11 13)[4]
+11</pre>
+<p>Whereas <strong>take</strong> and <strong>drop</strong> applied to vectors always return a vector, the array returned by <strong>indexing</strong> depends on the array used as the index. In the preceding examples, the index is a scalar so the result is a scalar.</p>
+<p>The shape of the result is always the same as the shape of the index. This rule for the shape of the result applies even when the array being indexed is nested. For example, in this expression the result is a scalar because the index is a scalar. It is nested because the second item of the array indexed is not a simple scalar:</p>
+<pre>       ('SCOTT' 'STACY')[2]
+STACY
+      ⍴('SCOTT' 'STACY')[2]
+
+        DISPLAY ('SCOTT' 'STACY')[2]
+.---------,
+| .→----. |
+| |STACY| |
+| '-----' |
+'∊--------'</pre>
+<p>Here are some examples in which the index is a vector:</p>
+<pre>      'TAPES'[3 2 5 1 4]
+PASTE
+      'TAPES'[1 4 2]
+TEA
+      (5 7 9 11 13)[4 2 1]
+11 7 5</pre>
+<p>If the index is a vector, the result is a vector of the same length.</p>
+<p>Notice that parentheses are needed to index a numeric vector constant. This is because square brackets for indexing apply to the array immediately to the left of the brackets. Indexing is evaluated before vectors are formed. Application of this rule explains why the following expression works as you would expect:</p>
+<pre>      A1← 5 7 9 11 13
+      A2← 10 20 30
+      A1[2] A2[3] A1(4]
+7 30 11</pre>
+<p>You can select the same item more than once by using its index number more than once:</p>
+<pre>      'TAPES'[5 4 4 3]
+SEEP</pre>
+<p>You can do any computation inside the brackets as long as the result is integers that select items from the left argument. Suppose you had a vector of ones and zeros that represented a code. You can convert the vector to Morse code in either of these ways:</p>
+<pre>      CODE←0 0 1 0 1 1
+      ('DOT' 'DASH')[1+CODE]
+DOT DOT DASH DOT DASH DASH
+
+      '.-'[1+CODE]
+..-.--</pre>
+<p>Because the explicit result of <strong>indexing</strong> is an array, you can, of course, do further computations on it:</p>
+<pre>      RETAIL←6.95 7.95 12.95
+      2 4 × RETAIL[1 3]
+13.9 51.8</pre>
+<p>At first glance, <strong>indexing</strong> with a scalar and <strong>pick</strong> seem to make selections in the same way. However, they are distinct. <strong>Pick</strong> gives you the array at the indicated position. <strong>Indexing</strong> with a scalar, gives you a scalar containing the array at the indicated position. The following example shows the difference in the selection:</p>
+<pre>      ('DOT' 'DASH')[1]
+DOT
+      ⍴('DOT' 'DASH')[1]
+
+      DISPLAY ('DOT' 'DASH')[1]
+.-------.
+| .→--. |
+| |DOT| |
+| '---' |
+'∊------'
+
+      1⊃'DOT' 'DASH'
+DOT
+      ⍴1⊃'DOT' 'DASH'
+3
+      DISPLAY 1⊃'DOT' 'DASH'
+.→--.
+|DOT|
+'---'</pre>
+<h4 id="replacing-items-in-a-vector-selective-assignment">Replacing Items in a Vector: Selective Assignment<a href="#replacing-items-in-a-vector-selective-assignment" class="section-link">§</a></h4>
+<p>Any expression that selects items from an array can be written on the left of an assignment arrow to indicate replacement of the selected items. Here are some examples using selection functions you’ve just seen:</p>
+<pre>      PRD←('LPS' 6.95)('TAPES' 7.95)('CDS' 12.95)
+
+      2 1⊃PRD
+TAPES
+
+      (2 1⊃PRD)←'SPOOLS'
+
+      PRD
+  LPS 6.95    SPOOLS 7.95    CDS 12.95
+
+      W←'TAPES'
+
+      4↑W
+TAPE
+      (4↑W)←'-'
+
+      W
+----S
+
+      W[1 3]←'⎕⌹'
+      W
+⎕-⌹-S</pre>
+<p>Selective assignment is discussed in more detail in <a href="chapter6.html">Chapter 6</a>.</p>
+<h4 id="exercises-for-section-2.4">Exercises for Section 2.4<sup class="answers-note">[<a href="answers.html#section-2.4-functions-that-manipulate-vectors">Answers</a>]</sup><a href="#exercises-for-section-2.4" class="section-link">§</a></h4>
+<ol>
+<li><p>Given the following:</p>
+<pre>      A« "ABCD' (10 20 30) ((2 4) (1 3 5))</pre>
+<p>Evaluate:</p>
+<ol type="a">
+<li><code>⍴A</code></li>
+<li><code>↑A</code></li>
+<li><code>⍴↑A</code></li>
+<li><code>1⊃A</code></li>
+<li><code>⍴1⊃A</code></li>
+<li><code>A[1]</code></li>
+<li><code>⍴Al1]</code></li>
+<li><code>¯1↑A</code></li>
+<li><code>1↓A</code></li>
+<li><code>↑2↓A</code></li>
+<li><code>↑↑2↓A</code></li>
+<li><code>↑↑↑2↓A</code></li>
+<li><code>↑↑↑↑2↓A</code></li>
+</ol></li>
+<li><p>For <code>A</code> defined in exercise 1, fill in a left argument that selects the value shown as the result:</p>
+<ol type="a">
+<li><pre>   _____⊃A
+10 20 30</pre></li>
+<li><pre>   _____⊃A
+D</pre></li>
+<li><pre>   _____⊃A
+30</pre></li>
+<li><pre>   _____⊃A
+2 4</pre></li>
+<li><pre>   _____⊃A
+1</pre></li>
+</ol></li>
+<li><p>For a numeric vector <code>V</code>, write expressions for the following:</p>
+<ol type="a">
+<li>Shift <code>V</code> left two places, replacing the emptied positions with zeros.</li>
+<li>Shift <code>V</code> right three places, replacing the emptied positions with zeros.</li>
+</ol>
+<p>Test your expressions on this vector:</p>
+<pre>      V←10 4.1 7 ¯3.6 5.2 ¯23.6</pre>
+<p>The answers should look like this:</p>
+<ol type="a">
+<li><code>7 ¯3.6 5.2 ¯23.6 00</code></li>
+<li><code>00 0 10 4.1 7</code></li>
+</ol></li>
+<li><p>Given the vector <code>DATA</code>:</p>
+<pre>      DATA←('ABC' 25) ('DE' 463) ('FGHI' 87 12)</pre>
+<p>Evaluate:</p>
+<ol type="a">
+<li><code>2⊃DATA</code></li>
+<li><code>2 2⊃DATA</code></li>
+<li><code>3 2⊃DATA</code></li>
+<li><code>3 1⊃DATA</code></li>
+<li><code>3 1 2⊃DATA</code></li>
+<li><code>↑DATA</code></li>
+<li><code>↑↑DATA</code></li>
+<li><code>(↑DATA)[2]</code></li>
+<li><code>DATA[3]</code></li>
+</ol></li>
+<li><p>The vector <code>DIRECTORY</code> is a vector of two-item vectors. The first item is the last name of an individual. The second item is that person’s telephone number, represented as a three-item vector (area code, exchange, and number). For example, the first two items of <code>DIRECTORY</code> are as follows:</p>
+<pre>      DISPLAY 2↑DIRECTORY
+.→-------------------------------------------------.
+| .→---------------------. .→--------------------. |
+| | .→--. .→-----------. | | .→-. .→-----------. | |
+| | |ITO| |212 555 1234| | | |EX| |312 555 9797| | |
+| | '---' '∼-----------' | | '--' '∼-----------' | |
+| '∊---------------------' '∊--------------------' |
+'∊-------------------------------------------------'</pre>
+<p>Write expressions for the following:</p>
+<ol type="a">
+<li>The name and telephone number for the second entry.</li>
+<li>The area code for the first entry.</li>
+<li>The name from the first entry.</li>
+<li>The name from the second entry.</li>
+</ol></li>
+<li><p>Write an expression to select BUT from the word TRIBUTARY.</p></li>
+<li><p>Given the following variables:</p>
+<pre>      CH←'AAABCDEF'
+      DAT←'ABC' (⍳4) 'DEFG' (10 20 30) 'IJ' (7 9)</pre>
+<p>Evaluate the following expressions:</p>
+<ol type="a">
+<li><code>CH[3]</code></li>
+<li><code>CHL3 1 2]</code></li>
+<li><code>CH[¯1+2×⍳3]</code></li>
+<li><code>DAT[3 4]</code></li>
+<li><code>DAT[2+⍳4]</code></li>
+</ol></li>
+</ol>
+<h3 id="section-2.5-scalar-functions">Section 2.5 — Scalar Functions<a href="#section-2.5-scalar-functions" class="section-link">§</a></h3>
+<p><span class="small-caps">APL2</span> applies a <em>scalar function</em> to each simple scalar in its argument or arguments. You have already seen some scalar functions: <strong>addition</strong>, <strong>subtraction</strong>, <strong>negation</strong>, <strong>multiplication</strong>, and <strong>division</strong>. The other functions you have seen—<strong>interval</strong>, <strong>catenate</strong>, <strong>pick</strong>, <strong>first</strong>, <strong>drop</strong>, and <strong>indexing</strong>—are not scalar functions.</p>
+<p>This section discusses scalar functions in general and introduces these additional scalar functions:</p>
+<ul>
+<li>power</li>
+<li>maximum</li>
+<li>minimum</li>
+<li>floor</li>
+<li>ceiling</li>
+<li>magnitude</li>
+<li>direction</li>
+<li>residue</li>
+<li>reciprocal</li>
+</ul>
+<h4 id="scalar-conformability-and-scalar-extension">Scalar Conformability and Scalar Extension<a href="#scalar-conformability-and-scalar-extension" class="section-link">§</a></h4>
+<p><span class="small-caps">APL2</span> defines the scalar functions first on simple scalar arguments. Here is <em>addition</em> applied between two simple scalars:</p>
+<pre>      2 + 5
+7</pre>
+<p>When you apply a scalar function between arguments that are not simple scalars, <span class="small-caps">APL2</span> decomposes the operation into simpler cases until finally it applies the function between simple scalars.</p>
+<p>When arguments have the correct shape for a function (as opposed to the correct values), the arguments <em>conform</em>. For a dyadic scalar function, arguments of the same length conform. For example, the following expression shows <strong>addition</strong> applied between conforming vectors, giving a result whose shape matches the shape of the arguments:</p>
+<pre>      2 3 4 + 5 6 7
+7 9 11</pre>
+<p><span class="small-caps">APL2</span> evaluates <strong>addition</strong> between conforming vectors by applying the function between corresponding items, one from each argument. The items are paired as follows:</p>
+<pre>      (2+5) (3+6) (4+7)
+7 9 11</pre>
+<p>The preceding expression reduces the vector addition into three simple scalar additions.</p>
+<p>If neither of the arguments is a scalar, the arguments must have the same length. Otherwise, a <code>LENGTH ERROR</code> results:</p>
+<pre>      3 5+2 1 7
+LENGTH ERROR
+      3 5+2 1 7
+      ^  ^</pre>
+<p>Here is an example of <strong>subtraction</strong> that, when applied between conforming vectors, still results in an error:</p>
+<pre>      'ABC' − 1 2 3
+DOMAIN ERROR
+      'ABC' − 1 2 3
+      ^     ^</pre>
+<p>A <code>DOMAIN ERROR</code> results because the values in the vectors are not all numbers even though the lengths of the vectors are correct.</p>
+<p>Here is an example of <strong>subtraction</strong> between conforming vectors whose values are correct for the function:</p>
+<pre>      9 8 6 ¯5 − 4 ¯2 8 ¯3
+5 10 ¯2 ¯2</pre>
+<p>You can view the expression in terms of the <strong>subtraction</strong> of simple scalars:</p>
+<pre>      (9−4) (8−¯2) (6−8) (¯5−¯3)
+5 10 ¯2 ¯2</pre>
+<p>For monadic scalar functions, all arguments conform. The shape of the result is the same as the shape of the argument.</p>
+<pre>      −2 3 4
+¯2 ¯3 ¯4</pre>
+<p><strong>Negation</strong> is accomplished by applying the function to each item of the argument. The function is applied as follows:</p>
+<pre>      (−2) (−3) (−4)
+¯2 ¯3 ¯4</pre>
+<p>The dyadic scalar functions permit one argument to be a scalar even when the other argument is not a scalar. In this case, the arguments always conform, because the scalar combines with each item of the non-scalar argument. Thus, the following expression adds 1 to each item of a vector:</p>
+<pre>      1 + 2 3 4
+3 4 5</pre>
+<p>The shape of the result always matches the shape of the non-scalar argument. The scalar argument is paired with each item of the non-scalar argument as follows:</p>
+<pre>      (1+2) (1+3) (1+4)
+3 4 5</pre>
+<p>This pairing of the scalar with the array argument is called <em>scalar extension</em>.</p>
+<p>Scalar extension applies as well when the non-scalar array is empty. For example, the result of adding 2 to an empty vector has the shape of the empty vector and this is empty:</p>
+<pre>      2+⍳0
+
+      ⍴2+⍳0
+0
+      DISPLAY 2+⍳0
+.⊖.
+|0|
+'∼'</pre>
+<p>For non-scalar functions, the result, if one of the arguments is empty, depends on the definition of the function. For example, <strong>catenate</strong> is not a scalar function. Catenating a scalar with an empty vector results in a one-item vector:</p>
+<pre>      3,''
+3
+      ⍴3,''
+1</pre>
+<h4 id="scalar-functions-and-nested-arrays">Scalar Functions and Nested Arrays<a href="#scalar-functions-and-nested-arrays" class="section-link">§</a></h4>
+<p>When you apply scalar functions to nested arrays, <span class="small-caps">APL2</span> decomposes the operation so that the scalar function applies to simple arrays. For example, here is <strong>multiplication</strong> applied between two conforming nested arrays:</p>
+<pre>      1 (2 3) × 10 (20 30)
+10  40 90</pre>
+<p>You can view this application in terms of simple arrays as this:</p>
+<pre>      (1×10) (2 3×20 30)
+10  40 90</pre>
+<p>Then you can view the simple arrays in terms of simple scalars as this:</p>
+<pre>      (1×10) ((2×20)(3×30))
+10  40 90</pre>
+<p>Scalar extension works on nested arrays the same way as for simple arrays:</p>
+<pre>      1+(2 3) (4 5 6)
+3 4  5 6 7</pre>
+<p>The scalar argument pairs with each item in the nested argument as follows:</p>
+<pre>      (1+2 3) (1+4 5 6)
+3 4  5 6 7</pre>
+<p>In summary, <span class="small-caps">APL2</span> defines the scalar functions on simple scalar arguments, then extends them to other arrays by decomposing them into operations on simple scalars.</p>
+<h4 id="additional-scalar-functions">Additional Scalar Functions<a href="#additional-scalar-functions" class="section-link">§</a></h4>
+<p>In demonstrating the definition of a scalar function, it is always enough to show how the function works on simple scalar arguments, because every scalar function ultimately applies to simple scalar arguments. Using vector arguments to illustrate the scalar functions allows a single expression to demonstrate many cases at one time.</p>
+<h5 id="scalar-function-power">Scalar Function: Power<a href="#scalar-function-power" class="section-link">§</a></h5>
+<p>You may have heard of King Shirham of India who wanted to honor his grand vizier, Sissa Ben Dahir, for inventing the game of chess (Gamow 1947). Dahir requested one grain of wheat on the first square of a chess board, two grains on the second square, four on the third, eight on the fourth, and so on until square 64 had twice the number of grains as square 63.</p>
+<p>This seems like a reasonable request. You could compute it as follows (don’t try it):</p>
+<pre>      1+2+(2×2)+(2×2×2)+(2×2×2×2)+...</pre>
+<p>Operations like this produce really big numbers. In this case, the exact answer is 18,446,744,073,709,551,615 which represents the world’s wheat crop for two thousand years (assuming two billion bushels a year and five million grains per bushel). This number is probably larger than your computer can represent exactly.</p>
+<p>The <strong>power</strong> function, or <strong>exponentiation</strong>, expresses products of repeated numbers. The number to be multiplied by itself has a superscript number that indicates the number of times the multiplication takes place. In <span class="small-caps">APL2</span>, the mathematical expression 2³ (or <code>2×2×2</code>) has this form:</p>
+<pre>      2⋆3
+8</pre>
+<p>The right argument of <strong>power</strong> is called the exponent. It is important to remember that in <span class="small-caps">APL2</span>, <code>⋆</code> is the <strong>power</strong> function, and <code>×</code> is the <strong>multiplication</strong> function.</p>
+<p>If you use <strong>power</strong>, you would calculate the number of grains on the last square as follows:</p>
+<pre>      2⋆63
+9,223372037E18</pre>
+<p>Notice that <span class="small-caps">APL2</span>, by default, gives only the first 10 digits. The actual answer is 9223372036854775808.</p>
+<p>Now with less typing, you could compute the number of grains on all the squares by entering the following expression (don’t try it):</p>
+<pre>      1+(2⋆1)+(2⋆2)+(2⋆3)+(2⋆4)+ ... +(2⋆63)
+1.844674407E19</pre>
+<p>You can write this computation more compactly using <strong>reduction</strong>:</p>
+<pre>      1++/2⋆⍳63
+1.844674407E19</pre>
+<p>You can write this computation even more compactly if you notice the following property of powers:</p>
+<pre>                  1+(2⋆1) &lt;--&gt;  3 &lt;--&gt; ¯1+2⋆2
+            1+(2⋆1)+(2⋆2) &lt;--&gt;  7 &lt;--&gt; ¯1+2⋆3
+      1+(2⋆1)+(2⋆2)+(2⋆3) &lt;--&gt; 15 &lt;--&gt; ¯1+2⋆4
+1+(2⋆1)+(2⋆2)+(2⋆3)+(2⋆4) &lt;--&gt; 31 &lt;--&gt; ¯1+2⋆5</pre>
+<p>You can conclude that</p>
+<pre>1+(2⋆1)+(2⋆2)+(2⋆3)+(2⋆4)+ ... +(2⋆63) &lt;--&gt; ¯1+2⋆64</pre>
+<p>Thus, the same answer is computed as follows:</p>
+<pre>      ¯1+2⋆64
+1.844674407E19</pre>
+<h5 id="scalar-functions-maximum-and-minimum">Scalar Functions: Maximum and Minimum<a href="#scalar-functions-maximum-and-minimum" class="section-link">§</a></h5>
+<p><strong>Minimum</strong> (<code>⌊</code>) returns the smaller of its arguments, and <strong>maximum</strong> (<code>⌈</code>) returns the larger of its arguments:</p>
+<pre>      5⌊3
+3
+      5 8 3 ¯6 ¯2⌊6 2 3 ¯7 4
+5 2 3 ¯7 ¯2
+      5⌈3
+5
+      5 8 3 ¯6 ¯2⌈6 2 3 ¯7 4
+6 8 3 ¯6 4</pre>
+<h5 id="scalar-functions-floor-and-ceiling">Scalar Functions: Floor and Ceiling<a href="#scalar-functions-floor-and-ceiling" class="section-link">§</a></h5>
+<p><strong>Floor</strong> (<code>⌊</code>) applied to a number returns the biggest integer not bigger than the number. <strong>Ceiling</strong> (<code>⌈</code>) applied to a number returns the smallest integer not smaller than the number.</p>
+<pre>      ⌊7.3 7.9 ¯7.2 7
+7 7 ¯8 7
+      ⌈7.3 7.9 ¯7.2 7
+8 8 ¯7 7</pre>
+<p>Notice that neither <strong>floor</strong> nor <strong>ceiling</strong> has any effect on a number that is already an integer.</p>
+<p><strong>Floor</strong> by itself does not round numbers to the nearest integer:</p>
+<pre>      ⌊6.35 6.45 6.55 6.65
+6 6 6 6</pre>
+<p>In order to round in this example, you need to adjust the numbers so that any number 6.5 or above becomes 7 or above. You can do this by adding .5. Then use <strong>floor</strong> to get rid of the fractional part:</p>
+<pre>⌊.5 + 6.35 6.45 6.55 6.65
+6 6 7 7</pre>
+<p>If you deal with amounts of money in a currency that uses fractional denominations, rounding requires more mechanism. For example, U.S. money has .01 dollar—a penny—as the smallest unit of money.</p>
+<p>Suppose you have three bank accounts represented by the variable <code>AMOUNT</code>:</p>
+<pre>      AMOUNT←150.20 331.35 331.25</pre>
+<p>On a given day, the bank is going to credit 5% interest to each account. The amount of interest it credits is this:</p>
+<pre>      AMOUNT×.05
+7.51 16.5675 16.5625</pre>
+<p>Your new balance is this:</p>
+<pre>      AMOUNT+AMOUNT×.05
+157.71 347.9175 347.8125</pre>
+<p>You can factor out <code>AMOUNT</code> in the above expression and simplify it to:</p>
+<pre>      AMOUNT×1.05
+157.71 347.9175 347.8125</pre>
+<p>The bank is going to round these quantities to the nearest penny. How would you compute the round? You can add .005 to each amount but you can’t use <strong>floor</strong> directly to discard the unwanted digits. One method for rounding decimal fractions is to adjust the numbers to integers, add .5, take the floor, and readjust. For U.S. money, the adjustment factor is 100. Here’s an expression to round your new balance:</p>
+<pre>      .01×⌊.5+100×AMOUNT×1.05
+157.71 347.92 347.81</pre>
+<p>Notice that the first amount is exact, the second rounded up, and the third rounded down.</p>
+<p>There are two cautions about this method of rounding that depend on the actual application. First, a bank would never round this way. If every account in the bank happened to round up, the sum of the amounts in the accounts would be more money than the bank had—an intolerable situation. Banks do not really round by adding half a penny. Instead, they round by adding a computed quantity such that the sum of the rounded amounts equals the round of the summed amounts. Here’s an example where adding .5 would cause a problem for the bank:</p>
+<pre>      AMTR←136.557 121.406 380.816 149.777 721.566</pre>
+<p>Here is the rounded amount:</p>
+<pre>      .01×⌊.5+100×AMTR
+136.56 121.41 380.82 149.78 721.57</pre>
+<p>This is a correct round, but if you compare the sum of the original amounts to the sum of the rounded amounts, you see that the bank is out almost two cents:</p>
+<pre>      +/.01×⌊.5+100×AMTR
+1510.14
+      +/AMTR
+1510.122</pre>
+<p>The second caution has to do with the precision of the computer you are using. On most computers, integer computations are exact and fractional computations are approximate. Even a machine whose internal hardware is decimal cannot do fractions exactly. (Can you compute <code>1÷3</code> exactly?) Therefore, in dealing with critical computations (and many people consider money critical), it is better to represent amounts as integer pennies rather than fractional dollars. If you do this, the rounding expression becomes simpler and computational errors caused by machine internal representations are reduced.</p>
+<p>Here’s the rounding expression for pennies:</p>
+<pre>      AMOUNT1←15020 33135 33125
+      ⌊.5+AMOUNT1×1.05
+15771 34792 34781</pre>
+<p>In this case, the amount of money in the rounded amounts is the same as when you rounded the fractional numbers. This is almost always the case, making the problem with fractional approximation, should one occur, all the more insidious.</p>
+<h5 id="scalar-functions-magnitude-and-direction">Scalar Functions: Magnitude and Direction<a href="#scalar-functions-magnitude-and-direction" class="section-link">§</a></h5>
+<p>The monadic <strong>magnitude</strong> function (<code>∣</code>)—also called <strong>absolute value</strong>—always returns a nonnegative number. If you imagine the real numbers laid out on a line with zero at the center, the <strong>magnitude</strong> function measures the distance of a number from zero. This has the effect of mapping negative numbers into the corresponding positive number as pictured here:</p>
+<center>
+<img src="images/magnitude.png">
+</center>
+<pre>      ∣¯3 3 0
+3 3 0</pre>
+<p>The <strong>direction</strong> function (<code>×</code>) reports only the sign of a number, ignoring its magnitude. The result is <code>1</code> for a positive number, <code>¯1</code> for a negative number, and <code>0</code> for zero.</p>
+<center>
+<img src="images/direction.png">
+</center>
+<pre>      ×¯3 3 0
+¯1 1 0</pre>
+<p><strong>Direction</strong> and <strong>magnitude</strong> are complementary in that the following identity holds:</p>
+<pre>      A &lt;--&gt; (×A) × (∣A)</pre>
+<h5 id="scalar-functions-residue-and-reciprocal">Scalar Functions: Residue and Reciprocal<a href="#scalar-functions-residue-and-reciprocal" class="section-link">§</a></h5>
+<p>The function residue (<code>∣</code>) gives the remainder after division:</p>
+<pre>      2∣3 0 4 5
+1 0 0 1
+      10∣35.4
+5.4
+      1.1∣3.6
+0.3</pre>
+<p>An interesting case of <strong>residue</strong> uses a left argument of <code>1</code>. Remainder after division by 1 gives the fractional part of a number:</p>
+<pre>      1∣13.5 29 3.45
+0.5 0 0.45</pre>
+<p>In mathematics, <strong>residue</strong> is sometimes called <em>modulo</em>, and computing a residue is called <em>taking the modulus</em>.</p>
+<p><strong>Residue</strong> and <strong>floor</strong> are related in that for a given number <code>N</code>, <code>⌊N</code> is the integer part of the number, and <code>1∣N</code> is the fractional part. This relationship gives rise to the following identity:</p>
+<pre>      N &lt;--&gt; (⌊N)+1∣N</pre>
+<p><strong>Residue</strong> on negative numbers may not give the answer that you expect:</p>
+<pre>      10∣23 ¯17
+3 3</pre>
+<p>Why is the remainder after division by <code>10</code> the same for these two numbers? A look at a number line divided into intervals of length 10 helps explain this. <code>10∣N</code> for any <code>N</code> maps to some number in the interval 0 to 10 (including zero, not including 10). Thus, <code>10∣23</code> is <code>3</code> because if you pick up the interval from 20 to 30 and lay it down on the interval from 0 to 10, the number <code>23</code> will fall on top of the number <code>3</code>. Any number that is a multiple of <code>10</code> away from <code>23</code> will map to the number <code>3</code>.</p>
+<pre>      23−10×¯1+⍳6
+23 13 3 ¯7 ¯17 ¯27
+      10∣23−10×¯1+⍳6
+3 3 3 3 3 3</pre>
+<p>Here is a picture that shows this:</p>
+<center>
+<img src="images/residue.png">
+</center>
+<p>If you have a number <code>N</code>, you would expect dividing <code>N</code> and <code>−N</code> to give the same quotient and remainder except for sign. Here is a counterexample:</p>
+<pre>      V←¯35.4 35.4
+      10∣V
+4.6 5.4</pre>
+<p>If you put <code>¯35.4</code> into the equation that relates <strong>floor</strong> and <strong>residue</strong>, you’ll see that <strong>residue</strong> is giving the proper answer for negative numbers.</p>
+<p>If you look at where <code>¯35.4</code> and <code>35.4</code> fall on a number line, you’ll see that the <strong>residue</strong> function is doing the same thing to both numbers. In each case, the result subtracted from the original number gives a multiple of <code>10</code>.</p>
+<p>If you really want to get the same answer regardless of sign, always apply <strong>residue</strong> to a positive number:</p>
+<pre>      10∣∣V
+5.4 5.4</pre>
+<p>If you want to preserve the sign, multiply by the <strong>direction</strong>:</p>
+<pre>      (×V)×10∣∣V
+¯5.4 5.4</pre>
+<p><strong>Reciprocal</strong> (<code>÷</code>) is another function related to division. It returns 1 divided by its argument:</p>
+<pre>      ÷5 10
+0.2 0.1
+      ÷15
+1 0.5 0.3333333333 0.25 0.2</pre>
+<p>Although <strong>reciprocal</strong> is scarcely less difficult than just writing <code>1÷...</code>, it is useful enough to appear as a function key on many electronic calculators.</p>
+<h4 id="exercises-for-section-2.5">Exercises for Section 2.5<sup class="answers-note">[<a href="answers.html#section-2.5-scalar-functions">Answers</a>]</sup><a href="#exercises-for-section-2.5" class="section-link">§</a></h4>
+<ol>
+<li><p>Evaluate the following expressions:</p>
+<ol type="a">
+<li><code>16⋆2</code></li>
+<li><code>2⋆4</code></li>
+<li><code>2 3 4 ⋆ 2</code></li>
+<li><code>4 ⋆ 1 2 3</code></li>
+<li><code>2 3 4 ⋆ 1 2 3</code></li>
+<li><code>(2 3) 4 ⋆ 2 (12 3)</code></li>
+<li><code>25 ⌈ 6</code></li>
+<li><code>25 ⌊ 6</code></li>
+<li><code>25 5 ⌈ 6</code></li>
+<li><code>25 ⌊ 35 ¯37</code></li>
+<li><code>10 ¯12 5 ⌈ 4 ¯8 0</code></li>
+<li><code>¯10 12 ¯5 ⌊ 4 ¯8 0</code></li>
+<li><code>13 15 ⌈ (11 14) (16 10 14)</code></li>
+<li><code>2 (3 5) ⌈ (1 4)(6 4)</code></li>
+<li><code>(2 3) 5 ⌈ (1 4)(6 4)</code></li>
+<li><code>(2 3) 4 ⋆ 2</code></li>
+<li><code>(2 3) 4 ⋆ 2 3</code></li>
+<li><code>(2 3) 4 ⋆ (2 3) 1</code></li>
+<li><code>(2 3) 4 ⋆ (2 3) (1 2 3)</code></li>
+</ol></li>
+<li><p>Write an expression to guarantee that no numbers of a vector <code>V</code> will be positive.</p></li>
+<li><p>Evaluate the following expressions:</p>
+<ol type="a">
+<li><code>5,''</code></li>
+<li><code>(⍳0) 5</code></li>
+<li><code>5 ''</code></li>
+<li><code>⍳0+5</code></li>
+<li><code>5+⍳0</code></li>
+<li><code>''+5</code></li>
+<li><code>5+''</code></li>
+</ol></li>
+<li><p>State the value and the shape of each of the following expressions:</p>
+<ol type="a">
+<li><code>2+1 0</code></li>
+<li><code>2+10</code></li>
+<li><code>2+⍳0</code></li>
+<li><code>10×⍳2</code></li>
+<li><code>10×⍳1</code></li>
+<li><code>10×⍳0</code></li>
+<li><code>10×1</code></li>
+</ol></li>
+<li><p>Write an expression to change negative numbers in array <code>A</code> to zero while leaving the non-negative numbers unchanged.</p></li>
+<li><p>Most people over 15 years old give their age as an integer. This includes an 80-year-old woman who likes to report a smaller number for her age:</p>
+<ol type="a">
+<li>How old is she if you don’t count weekends?</li>
+<li>Some people only live for weekends. How old is she only counting weekends?</li>
+<li>If she is 80 years old Fahrenheit, how old is she Celsius?</li>
+</ol></li>
+<li><p>A parcel shipper has the following charges: a basic charge of 15 cents per cubic foot with a minimum charge of 50 cents.</p>
+<p>Assuming the vector <code>DMEN</code> contains the three dimensions of a box, in inches, write an expression to determine its shipping cost.</p></li>
+<li><p>A bank’s service charge to exchange money from currency X to currency Y is 2% of the value of the new currency Y but with a minimum charge of 2.50 units of currency Y. Write an expression to determine the service charge levied on 100 units of currency X if the exchange rate for <code>Y</code> is <code>1.51×X</code>.</p></li>
+<li><p>Show at least three ways to make the scalar <code>5</code> into a one-item vector.</p></li>
+<li><p>The total payment <code>F</code> owed on an amount of principal <code>P</code> on which interest <code>R</code> is compounded periodically is given by this equation:</p>
+<center>
+<math>
+    <mrow>
+        <mi>F</mi>
+        <mo>=</mo>
+        <mi>P</mi>
+        <mo>&InvisibleTimes;</mo>
+        <msup>
+            <mrow>
+                <mo>(</mo>
+                <mn>1</mn>
+                <mo>+</mo>
+                <mi>R</mi>
+                <mo>)</mo>
+            </mrow>
+            <mi>n</mi>
+        </msup>
+    </mrow>
+</math>
+</center>
+<p>where:</p>
+<ul>
+<li><code>P</code> is the principal.</li>
+<li><code>R</code> is the rate of interest per period stated decimally.</li>
+<li><code>N</code> is the number of periods.</li>
+</ul>
+<ol type="a">
+<li>Write an expression to determine the total amount to be repaid on a two-year loan of $1500 at a 9% annual interest compounded quarterly.</li>
+<li>Write an expression to determine the total interest charges paid on a three-year $5000 loan at a 12% annual interest rate compounded quarterly.</li>
+</ol></li>
+<li><p>The following formula computes the total monthly payment <code>MP</code> made on a conventional mortgage loan:</p>
+<center>
+<math>
+    <mrow>
+        <mi>MP</mi>
+        <mo>=</mo>
+        <mi>loan</mi>
+        <mo>×</mo>
+        <mfrac>
+            <mrow>
+                <mi>MIR</mi>
+                <mo>×</mo>
+                <msup>
+                    <mrow>
+                        <mo>(</mo>
+                        <mn>1</mn>
+                        <mo>+</mo>
+                        <mi>MIR</mi>
+                        <mo>)</mo>
+                    </mrow>
+                    <mrow>
+                        <mi>Y</mi>
+                        <mo>+</mo>
+                        <mn>12</mn>
+                    </mrow>
+                </msup>
+            </mrow>
+            <mrow>
+                <msup>
+                    <mrow>
+                        <mo>(</mo>
+                        <mn>1</mn>
+                        <mo>+</mo>
+                        <mi>MIR</mi>
+                        <mo>)</mo>
+                    </mrow>
+                    <mrow>
+                        <mi>Y</mi>
+                        <mo>+</mo>
+                        <mn>12</mn>
+                    </mrow>
+                </msup>
+                <mo>-</mo>
+                <mn>1</mn>
+            </mrow>
+        </mfrac>
+    </mrow>
+</math>
+</center>
+<p>where:</p>
+<ul>
+<li><code>MIR</code> is the monthly interest rate.</li>
+<li><code>Y</code> is the number of years.</li>
+</ul>
+<p>Write an expression to determine the total monthly payment of a 30-year loan of $600,000 at 12% annual rate of interest.</p></li>
+<li><p>Write an expression that, given Jack Benny’s chronological age, will compute his admitted age which is never greater than 39.</p></li>
+<li><p>If <code>ƒ</code> is a dyadic scalar function, indicate the results of the following:</p>
+<ol type="a">
+<li><code>⍴ 2 4 5 ƒ 1 3 6</code></li>
+<li><code>⍴⍴ 2 4 5 ƒ 1 3 6</code></li>
+<li><code>9 6 4 3 ƒ 4 5</code></li>
+</ol></li>
+<li><p>Circle the monadic functions in the following expressions:</p>
+<ol type="a">
+<li><code>¯3+4</code></li>
+<li><code>3−−7</code></li>
+<li><code>3∣∣12 ¯1113 10</code></li>
+<li><code>÷÷4</code></li>
+<li><code>¯3 4 7 9⌈9 2 3,⌊6.7</code></li>
+<li><code>−3 9 6××¯2 7 0</code></li>
+</ol></li>
+<li><p>Suppose you have seven people playing a card game using a deck with 52 cards. If all cards are dealt in turn to the players until all cards have been distributed, write the <span class="small-caps">APL2</span> expression to compute the number of people who get an extra card.</p></li>
+<li><p>Here is an electrical network consisting of a set of resistors connected in parallel:</p>
+<center>
+<img src="images/resistors.png">
+</center>
+<p>The effective resistance from <code>A</code> to <code>B</code> is computed by this mathematical formula:</p>
+<center>
+<math>
+    <mrow>
+        <mfrac>
+            <mrow>
+                <mi>R1</mi>
+                <mo>×</mo>
+                <mi>R2</mi>
+                <mo>×</mo>
+                <mi>R3</mi>
+                <mo>×</mo>
+                <mo>...</mo>
+                <mo>×</mo>
+                <mi>RN</mi>
+            </mrow>
+            <mrow>
+                <mi>R1</mi>
+                <mo>+</mo>
+                <mi>R2</mi>
+                <mo>+</mo>
+                <mi>R3</mi>
+                <mo>+</mo>
+                <mo>...</mo>
+                <mo>+</mo>
+                <mi>RN</mi>
+            </mrow>
+        </mfrac>
+    </mrow>
+</math>
+</center>
+</li>
+</ol>
+<ol type="a">
+<li>Write an expression to solve for the effective resistance if there are two resistors with values <code>R1</code> and <code>R2</code>.</li>
+<li>Write an expression to solve for the effective resistance if there is a set of resistors whose values are represented in the vector <code>R</code>.</li>
+</ol>
+
+  </main>
+<footer>
+<table width=100%>
+    <tr>
+        <td style="text-align: left">
+            [<a href="chapter1.html"><code>←</code></a>]
+        </td>
+        <td style="text-align: center">
+            [<a href="contents.html"><code>↑</code></a>]
+        </td>
+        <td style="text-align: right">
+            [<a href="chapter3.html"><code>→</code></a>]
+        </td>
+    </tr>
+</table>
+</footer>
+    <footer>
+    
+  <a href="gemini://tranarchy.fish/~autumn/apl2/chapter2.gmi" title="View this page on gemini web"><img class="banner" src="/images/gemini.png" alt="best viewed in gemini://"/></a>
+
+
+<a href="https://en.wikipedia.org/wiki/Queer_Nation#Queer_Nation_in_other_locales"><img class="banner" alt="COCK SUCKING FAGGOT - QUEER NATION" src="/~autumn/img/cocksuckingfaggot.gif" /></a>
+<a href="https://social.tranarchy.fish/@autumnull"><img class="banner" alt="Follow me on GoToSocial" src="/~autumn/img/sloth_follow_me.gif"/></a>
+<a href="https://git.sr.ht/~autumnull/website/tree/main/item/pages/apl2/chapter2.html" title="View the source code for this page on sourcehut"><img class="banner" alt="view page source" src="/images/view_source.gif"/></a>
+<a href="https://anybrowser.org/campaign/"><img class="banner" alt="Best Viewed with Any Browser" src="/~autumn/img/anybrowser.gif" /></a>
+<a class="banner" href="/"><img class="banner" src="/images/tranarchy.gif" alt="Tranarchy" /></a>
+
+
+      <p>contact me: <code>curl cards.tranarchy.fish/~autumn/</code></p>
+    </footer>
+  </body>
+</html>
+

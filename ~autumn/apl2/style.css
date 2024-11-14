@@ -1,0 +1,413 @@
+/*******************
+ * General Styling *
+ *******************/
+
+body {
+	width: 86%;
+	max-width: 52em;
+	margin: auto;
+	padding: 0% 7%;
+	font-family: "CenturySchoolbook", Century, serif;
+}
+
+body > h1, 
+body > h2, 
+body > h3, 
+body > h4, 
+body > h5, 
+body > hr {
+	margin-left: -4%;
+}
+
+h1 {
+	/* main title only */
+	font-size: 350%;
+	font-style: italic;
+	text-align: center;
+}
+
+h2 {
+	/* chapter headings */
+	font-size: 260%;
+	margin-top: 3em;
+	margin-bottom: 3em;
+}
+
+h3 {
+	font-style: italic;
+	font-size: 150%;
+}
+
+h4 {
+	font-size: 130%;
+}
+
+h5 {
+	font-style: italic;
+	font-size: 110%;
+}
+
+hr {
+	border: none;
+	border-top: 0.4rem solid var(--head);
+	border-bottom: 0.1rem solid var(--head);
+	height: 0.2rem
+}
+
+p {
+	text-align: justify;
+}
+
+math {
+	font-family: "Asana Math";
+}
+
+center > math {
+	/* make 'display' math bigger */
+	font-size: 140%;
+}
+
+main img {
+	max-width: 100%;
+	height: auto;
+	image-rendering: auto;
+}
+
+figcaption {
+	font-size: 80%;
+}
+
+ul {
+	padding-left: 1rem;
+}
+
+ul li {
+	padding-left: 1.25rem;
+}
+
+/*
+ul li::marker {
+	content: url("assets/bullet.svg");
+}
+*/
+
+ul.no-marker {
+	padding-left: 0;
+}
+
+ul.no-marker li::marker {
+	content: none;
+}
+
+ul.no-marker li::before {
+	/* zero width space for screen-reader compatibility on Safari */
+	content: "\200B";
+}
+
+table {
+	margin: 1em 0em;
+	border-collapse: collapse;
+	display: block;
+	overflow: auto;
+	padding: 1px;
+}
+
+table th,
+table td {
+	padding: 0.1rem 0.6rem;
+	vertical-align: top;
+	text-align: left;
+}
+
+table caption {
+	caption-side: bottom;
+	font-size: 80%;
+	text-align: left;
+	padding-top: 0.25rem;
+	padding-left: 1rem;
+}
+
+table pre {
+	overflow: visible;
+}
+
+/* table cells with given borders (top, bottom, left right) */
+.t {
+	border-top: 2px solid var(--code-bg);
+}
+
+.b {
+	border-bottom: 2px solid var(--code-bg);
+}
+
+.l {
+	border-left: 2px solid var(--code-bg);
+}
+
+.r {
+	border-right: 2px solid var(--code-bg);
+}
+
+header > table,
+footer > table {
+	display: table;
+}
+
+code, pre {
+	font-family: "IBM APL2","Courier",monospace;
+}
+
+pre {
+	margin-left: 2%;
+	padding: 0.1em;
+	overflow: auto;
+}
+
+a.section-link {
+	margin-left: 0.3em;
+}
+
+span.small-caps {
+	font-variant: all-small-caps;
+	font-style: normal;
+}
+
+/* block of single-line formatted text*/
+div.line-block {
+	margin-top: 1.3rem;
+	margin-bottom: 1.3rem;
+}
+
+div.chapter-rule {
+	display: flex;
+	clear: both;
+	margin-left: -4%;
+	font-size: 1.7rem;
+	font-weight: bold;
+	color: var(--head);
+}
+
+div.chapter-rule hr {
+	margin: 0;
+	margin-top: 3.9rem;
+}
+
+hr.chapter-long {
+	flex-grow: 20;
+}
+
+hr.chapter-short {
+	flex-grow: 1;
+}
+
+div.chapter-rule p {
+	margin-top: 3.2rem;
+	margin-left: 0.3rem;
+	margin-right: 0.3rem;
+	font-style: italic;
+}
+
+div.chapter-rule div {
+	border: 0.15rem solid var(--head);
+	width: 7rem;
+	height: 7rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+div.chapter-rule > div > div {
+	border: 0.1rem solid var(--head);
+	width: 80%;
+	height: 65%;
+	font-size: 2.5em;
+	padding-top: 15%;
+}
+
+div.chapter-rule + h2 {
+	margin-top: 2em;
+}
+
+sup.answers-note {
+	font-size: 60%;
+}
+
+section.footnotes {
+	margin-left: -4%;
+	font-size: 70%;
+}
+
+section.footnotes hr {
+	width: 20%;
+	height: 0;
+	margin-left: 0;
+	border: 0.1rem solid var(--head);
+}
+
+section.footnotes ol {
+	padding-left: 1rem;
+}
+
+/**************
+ * Cover Page *
+ **************/
+
+div.cover {
+	font-family: Arial, sans-serif;
+}
+
+div.cover p.indented {
+	text-align: left;
+	text-indent: 1.2rem;
+}
+
+img.cover-img {
+	border: 0.1rem solid var(--head);
+}
+
+img.logo {
+	margin: 1.5rem 0rem;
+}
+
+p.isbn {
+	text-align: right;
+	font-family: "OCR-A";
+}
+
+/************
+ * Contents *
+ ************/
+
+ul.contents-list * {
+	padding-left: 0;
+}
+
+ul.contents-list > li {
+	margin: 1em 0em;
+}
+
+ul.contents-list ul ul,
+li.contents-appendix > ul > li {
+	padding-left: 1em;
+}
+
+li.contents-chapter > ul > li {
+	margin: 0.5em 0em;
+}
+
+/**************
+ * Postscript *
+ **************/
+
+div.chapter-rule.postscript p {
+	margin: 0rem 0.3rem;
+}
+
+div.chapter-rule.postscript hr {
+	margin-top: 0.7rem;
+}
+
+div.chapter-rule.postscript + h2 {
+	margin-top: 2.8em;
+}
+
+/**************
+ * Appendices *
+ **************/
+
+/* bullet dinkus in appendices C and D */
+hr.bullet {
+	border: 0;
+	height: 1rem;
+	width: 1rem;
+	background-image: url("assets/bullet.svg");
+	background-repeat: no-repeat;
+	margin: 2em auto;
+}
+
+/* authors in appendix D */
+p.joke-author {
+	text-align: right;
+	font-style: italic;
+	font-size: 80%;
+}
+
+/* star footnote in appendix E */
+li#fnstar::marker {
+	content: "★";
+}
+
+/************
+ * Glossary *
+ ************/
+
+table.glossary td {
+	padding: 0.6rem 0rem;
+}
+
+/****************
+ * Bibliography *
+ ****************/
+
+ul.bibliography > li {
+	text-indent: -1.5em;
+	padding-left: 1.5em;
+	margin-bottom: 0.5em;
+}
+
+/*********
+ * Index *
+ *********/
+
+ul.index-list {
+	margin-left: -4%;
+	column-count: 2;
+}
+
+ul.index-list h4 {
+	column-span: all;
+}
+
+ul.index-list li {
+	/* indent all but first line */
+	text-indent: -0.7em;
+	padding-left: 0.7em;
+}
+
+/**************
+ * Font Faces * 
+ **************/
+
+@font-face {
+	font-family: "IBM APL2";
+	src: url("assets/APL2UnicodeItalic.otf");
+}
+
+@font-face {
+	font-family: "CenturySchoolbook";
+	src: url("assets/C059-Roman.otf");
+}
+
+@font-face {
+	font-family: "CenturySchoolbook";
+	src: url("assets/C059-Bold.otf");
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: "CenturySchoolbook";
+	src: url("assets/C059-Italic.otf");
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "CenturySchoolbook";
+	src: url("assets/C059-BdIta.otf");
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: "OCR-A";
+	src: url("assets/OCRA.ttf");
+}
