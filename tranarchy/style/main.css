@@ -30,7 +30,7 @@ img.hangout {
 }
 
 ul.pages + p::after {
-	content: url("/~autumn/img/lips.png");
+	content: url("/tranarchy/img/lips.png");
 	margin: 0.2em;
 	image-rendering: pixelated;
 }
