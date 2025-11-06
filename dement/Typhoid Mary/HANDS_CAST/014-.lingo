@@ -1,0 +1,5 @@
+on startMovie
+  set timeoutLength to 120*60  -- 2min
+  when timeOut then Â
+  go to "timeout sequence"
+end startMovie

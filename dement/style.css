@@ -1,0 +1,20 @@
+body { background: black; }
+img, div { position: absolute; }
+div { line-height: 0px; }
+#main-stage, #fade-stage {
+	width: 640px;
+	height: 480px;
+	overflow: hidden;
+	display: block;
+	margin: auto;
+	position: fixed;
+}
+#fade-stage {
+	pointer-events: none;
+	position: fixed;
+	opacity: 0;
+}
+/*@font-face {
+	font-family: 'Times';
+	src: url('fonts/Times 24.ttf');
+}*/
